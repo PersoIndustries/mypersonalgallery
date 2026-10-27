@@ -1,4 +1,5 @@
 # Platform improvements
+- [ ] Fix invitation/recovery callback timing and provide an expired-link recovery form; verify public states and tests.
 - [x] Add multi-task selection and contextual copy in Dev; export tests cover complete selected records.
 - [x] Check daily historical metrics: none exists; record implementation as DEV platform-33, payments remain disabled.
 - [x] Add assistance/FAQ page to reduce support requests.
