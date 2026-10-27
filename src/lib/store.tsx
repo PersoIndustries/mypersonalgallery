@@ -17,8 +17,8 @@ interface StoreValue extends Catalog {
 }
 const StoreContext=createContext<StoreValue|null>(null);
 const empty:Catalog={museums:[],objects:[],users:[]};
-export function StoreProvider({children}:{children:ReactNode}){
- const [state,setState]=useState<Catalog>(empty);const [currentUserId,setUserId]=useState<string|null>(null);const [isAdmin,setAdmin]=useState(false);const [ready,setReady]=useState(false);const [theme,setTheme]=useState<'dark'|'light'>('dark');
+export function StoreProvider({children,initialCatalog}:{children:ReactNode;initialCatalog:Catalog}){
+ const [state,setState]=useState<Catalog>(initialCatalog);const [currentUserId,setUserId]=useState<string|null>(null);const [isAdmin,setAdmin]=useState(false);const [ready,setReady]=useState(false);const [theme,setTheme]=useState<'dark'|'light'>('dark');
  const privateCatalog=useServerFn(getPrivateCatalog);const mutate=useServerFn(mutateCatalog);const queryClient=useQueryClient();const navigate=useNavigate();const router=useRouter();
  const refresh=useCallback(async()=>{
   const {data:{user}}=await supabase.auth.getUser();

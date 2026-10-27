@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
-  head: () => ({meta:[{title:"Your collection overview — MyOwnMuseum"},{name:"description",content:"Your collection overview."},{property:"og:title",content:"Your collection overview — MyOwnMuseum"},{property:"og:description",content:"Your collection overview."},{name:"robots",content:"noindex"}]}),
+  head: () => ({meta:[{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"},{title:"Your collection overview — MyOwnMuseum"},{name:"description",content:"Your collection overview."},{property:"og:title",content:"Your collection overview — MyOwnMuseum"},{property:"og:description",content:"Your collection overview."},{name:"robots",content:"noindex"}]}),
   component: DashboardOverview,
 });
 

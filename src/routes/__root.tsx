@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { getPublicCatalog } from "@/lib/catalog.functions";
 import { StoreProvider } from "@/lib/store";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -83,6 +84,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: ({context}) => context.queryClient.ensureQueryData({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()}),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -129,10 +131,11 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const {data:catalog}=useSuspenseQuery({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()});
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider>
+      <StoreProvider initialCatalog={catalog}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">

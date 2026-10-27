@@ -1,9 +1,11 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { getPrivateCatalog } from "@/lib/catalog.functions";
 import { Code2, Shield } from "lucide-react";
 
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  beforeLoad: async () => {const state=await getPrivateCatalog();if(!state.isAdmin)throw new Error("Administrator access required");},
   head: () => ({
     meta: [
       {property:"og:type",content:"website"},
