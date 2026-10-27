@@ -388,5 +388,9 @@
   "·": "·",
   "· open": "· open",
   "— built for collectors.": "— built for collectors.",
-  "≈": "≈"
+  "≈": "≈",
+  "Too many attempts. Please wait a few minutes before requesting another link.": "Too many attempts. Please wait a few minutes before requesting another link.",
+  "Request another link in {seconds}s": "Request another link in {seconds}s",
+  "Why do I see \"email rate limit exceeded\" when requesting a password link?": "Why do I see \"email rate limit exceeded\" when requesting a password link?",
+  "For security, a new recovery or invitation email can be requested only once per minute, and only a few per hour for the same address. Wait for the countdown on the button, then try again. If the limit persists, wait up to an hour, check your spam folder and use only the newest email you received; older links stop working.": "For security, a new recovery or invitation email can be requested only once per minute, and only a few per hour for the same address. Wait for the countdown on the button, then try again. If the limit persists, wait up to an hour, check your spam folder and use only the newest email you received; older links stop working."
 }
