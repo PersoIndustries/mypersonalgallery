@@ -42,7 +42,7 @@ const toForm = (o: CollectionObject | null, category: string): Form => ({
     history: o?.history ?? "",
     modelUrl: o?.modelUrl ?? "",
     price: o?.price ?? "",
-    links: (o?.links ?? []).map((l) => `${l.label} | ${l.url}`).join("\n"),
+    links: (o?.links ?? []).map((l) => `${t(l.label)} | ${l.url}`).join("\n"),
     isVisible: o?.isVisible !== false,
     hiddenFeatures: o?.hiddenFeatures ?? [],
 });
@@ -118,7 +118,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
         }
     };
     const field = (id: keyof Form, label: string, placeholder?: string) => (<div className="space-y-2">
-      <Label htmlFor={`oe-${id}`}>{label}</Label>
+      <Label htmlFor={`oe-${id}`}>{t(label)}</Label>
       <Input id={`oe-${id}`} value={f[id] as string} placeholder={placeholder} onChange={(e) => set(id, e.target.value as never)}/>
     </div>);
     return (<Dialog open={open} onOpenChange={onOpenChange}>
@@ -153,7 +153,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
                 </SelectTrigger>
                 <SelectContent>
                   {CONDITIONS.map((c) => (<SelectItem key={c} value={c}>
-                      {c}
+                      {t(c)}
                     </SelectItem>))}
                 </SelectContent>
               </Select>
@@ -166,7 +166,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
                 </SelectTrigger>
                 <SelectContent>
                   {CATEGORIES.map((c) => (<SelectItem key={c} value={c}>
-                      {c}
+                      {t(c)}
                     </SelectItem>))}
                 </SelectContent>
               </Select>
@@ -203,7 +203,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
               {FEATURES.filter((x) => !x.museumOnly).map((feat) => {
             const enabled = museumFlags[feat.key];
             return (<label key={feat.key} className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm ${enabled ? "" : "opacity-40"}`}>
-                    {feat.label}
+                    {t(feat.label)}
                     <Switch disabled={!enabled} checked={enabled && !f.hiddenFeatures.includes(feat.key)} onCheckedChange={(v) => set("hiddenFeatures", v
                     ? f.hiddenFeatures.filter((k) => k !== feat.key)
                     : [...f.hiddenFeatures, feat.key])}/>

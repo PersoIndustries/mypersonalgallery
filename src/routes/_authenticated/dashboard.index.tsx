@@ -26,7 +26,7 @@ function DashboardOverview() {
     ];
     return (<div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((s) => (<Card key={s.label}>
+        {stats.map((s) => (<Card key={t(s.label)}>
             <CardContent className="flex items-center gap-4 pt-6">
               <span className="flex size-10 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
                 <s.icon className="size-5"/>
@@ -34,7 +34,7 @@ function DashboardOverview() {
               <div>
                 <p className="font-display text-3xl leading-none">{s.value}</p>
                 <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
-                  {s.label}
+                  {t(s.label)}
                 </p>
               </div>
             </CardContent>

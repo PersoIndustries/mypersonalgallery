@@ -79,7 +79,7 @@ function Explore() {
 
       <div className="scrollbar-thin mt-5 flex gap-2 overflow-x-auto pb-2">
         {["All", ...CATEGORIES].map((c) => (<Button key={c} size="sm" variant={category === c ? "default" : "outline"} onClick={() => setCategory(c)} className="shrink-0">
-            {c}
+            {t(c)}
           </Button>))}
       </div>
 

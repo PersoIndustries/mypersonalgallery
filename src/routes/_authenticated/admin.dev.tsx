@@ -105,9 +105,9 @@ function DevPage() {
           </div>
         </div>
         {counts.map((c) => (<div key={c.key} className="rounded-lg border border-border bg-card p-4">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">{c.label}</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">{t(c.label)}</p>
             <p className="mt-1 font-display text-3xl">{c.open}</p>
-            <p className="text-xs text-muted-foreground">{c.hint}{t(" \u00B7 open")}</p>
+            <p className="text-xs text-muted-foreground">{t(c.hint)}{t(" \u00B7 open")}</p>
           </div>))}
       </div>
 
@@ -123,7 +123,7 @@ function DevPage() {
           <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("All statuses")}</SelectItem>
-            {STATUSES.map((s) => (<SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>))}
+            {STATUSES.map((s) => (<SelectItem key={s.key} value={s.key}>{t(s.label)}</SelectItem>))}
           </SelectContent>
         </Select>
         <form className="flex w-full gap-2 sm:ml-auto sm:w-auto" onSubmit={(e) => {
@@ -159,19 +159,19 @@ function DevPage() {
               <Select value={task.priority} onValueChange={(v) => update(task.id, { priority: v as TaskPriority })}>
                 <SelectTrigger className="h-8 w-20"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {PRIORITIES.map((p) => <SelectItem key={p.key} value={p.key}>{p.label}</SelectItem>)}
+                  {PRIORITIES.map((p) => <SelectItem key={p.key} value={p.key}>{t(p.label)}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Select value={task.status} onValueChange={(v) => update(task.id, { status: v as TaskStatus })}>
                 <SelectTrigger className="h-8 w-32"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {STATUSES.map((s) => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
+                  {STATUSES.map((s) => <SelectItem key={s.key} value={s.key}>{t(s.label)}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Select value={task.area} onValueChange={(v) => update(task.id, { area: v as TaskArea })}>
                 <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {AREAS.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                  {AREAS.map((a) => <SelectItem key={t(a)} value={t(a)}>{t(a)}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Scale label={t("Impact")} value={task.impact} onChange={(impact) => update(task.id, { impact })}/>

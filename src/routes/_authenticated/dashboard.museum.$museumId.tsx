@@ -191,8 +191,8 @@ function MuseumSetup() {
             <CardContent className="space-y-1">
               {FEATURES.map((feat) => (<label key={feat.key} className="flex items-center justify-between gap-4 rounded-md px-2 py-2 hover:bg-muted/50">
                   <span>
-                    <span className="block text-sm">{feat.label}</span>
-                    <span className="block text-xs text-muted-foreground">{feat.hint}</span>
+                    <span className="block text-sm">{t(feat.label)}</span>
+                    <span className="block text-xs text-muted-foreground">{t(feat.hint)}</span>
                   </span>
                   <Switch checked={flags[feat.key]} onCheckedChange={(v) => setFlag(feat.key, v)}/>
                 </label>))}

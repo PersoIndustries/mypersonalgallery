@@ -55,8 +55,8 @@ function Home() {
             { label: "Museums", value: museums.length },
             { label: "Objects catalogued", value: objects.length },
             { label: "Collectors", value: users.length },
-        ].map((s) => (<div key={s.label}>
-                  <dt className="eyebrow">{s.label}</dt>
+        ].map((s) => (<div key={t(s.label)}>
+                  <dt className="eyebrow">{t(s.label)}</dt>
                   <dd className="mt-1 font-display text-3xl text-primary">{s.value}</dd>
                 </div>))}
             </dl>
@@ -130,12 +130,12 @@ function Home() {
                 title: "Share it publicly",
                 body: "Every museum gets a public page and every object a permanent link you can send to fellow collectors.",
             },
-        ].map((f) => (<div key={f.title}>
+        ].map((f) => (<div key={t(f.title)}>
                 <span className="flex size-11 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-primary/25">
                   <f.icon className="size-5"/>
                 </span>
-                <h3 className="mt-4 font-display text-xl">{f.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                <h3 className="mt-4 font-display text-xl">{t(f.title)}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(f.body)}</p>
               </div>))}
           </div>
         </div>
@@ -151,9 +151,9 @@ function Home() {
             { label: "Military Gear", icon: Landmark },
             { label: "Watches", icon: Sparkles },
             { label: "Cameras", icon: Camera },
-        ].map((c) => (<Button key={c.label} asChild variant="outline" size="sm">
+        ].map((c) => (<Button key={t(c.label)} asChild variant="outline" size="sm">
               <Link to="/explore" search={{ q: c.label }}>
-                <c.icon className="size-3.5"/> {c.label}
+                <c.icon className="size-3.5"/> {t(c.label)}
               </Link>
             </Button>))}
         </div>

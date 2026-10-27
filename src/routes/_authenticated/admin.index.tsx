@@ -28,8 +28,8 @@ function AdminOverview() {
     return (<div className="space-y-6">
       <div className="flex items-center justify-between"><h2 className="font-display text-3xl">{t("Platform overview")}</h2><Button variant="ghost" size="icon" aria-label={t("Refresh metrics")} onClick={() => void client.invalidateQueries({ queryKey: ['admin-metrics'] })}><RefreshCw className="size-4"/></Button></div>
       <div className="grid gap-4 sm:grid-cols-4">
-        {stats.map((s) => (<div key={s.label} className="rounded-lg border border-border bg-card p-5">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p>
+        {stats.map((s) => (<div key={t(s.label)} className="rounded-lg border border-border bg-card p-5">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">{t(s.label)}</p>
             <p className="mt-2 font-display text-4xl">{s.value}</p>
           </div>))}
       </div>

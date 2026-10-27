@@ -188,7 +188,7 @@ function DashboardMuseums() {
                 </SelectTrigger>
                 <SelectContent>
                   {CATEGORIES.map((c) => (<SelectItem key={c} value={c}>
-                      {c}
+                      {t(c)}
                     </SelectItem>))}
                 </SelectContent>
               </Select>
