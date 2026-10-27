@@ -392,5 +392,9 @@
   "Manuals, schematics, PDFs": "Manuales, esquemas y PDF",
   "External references": "Referencias externas",
   "Estimated market value": "Valor de mercado estimado",
-  "Score = priority (P0 40 · P1 30 · P2 20 · P3 10) + impact × 4 − effort × 2. Switch to manual order to arrange with the arrows.": "Puntuación = prioridad + impacto × 4 − esfuerzo × 2. Usa el orden manual para organizar con las flechas."
+  "Score = priority (P0 40 · P1 30 · P2 20 · P3 10) + impact × 4 − effort × 2. Switch to manual order to arrange with the arrows.": "Puntuación = prioridad + impacto × 4 − esfuerzo × 2. Usa el orden manual para organizar con las flechas.",
+  "Too many attempts. Please wait a few minutes before requesting another link.": "Demasiados intentos. Espera unos minutos antes de solicitar otro enlace.",
+  "Request another link in {seconds}s": "Solicitar otro enlace en {seconds} s",
+  "Why do I see \"email rate limit exceeded\" when requesting a password link?": "¿Por qué aparece \"email rate limit exceeded\" al pedir un enlace de contraseña?",
+  "For security, a new recovery or invitation email can be requested only once per minute, and only a few per hour for the same address. Wait for the countdown on the button, then try again. If the limit persists, wait up to an hour, check your spam folder and use only the newest email you received; older links stop working.": "Por seguridad, solo se puede solicitar un nuevo correo de recuperación o invitación una vez por minuto, y pocos por hora para la misma dirección. Espera a que termine la cuenta atrás del botón y vuelve a intentarlo. Si el límite continúa, espera hasta una hora, revisa la carpeta de spam y usa solo el correo más reciente; los enlaces anteriores dejan de funcionar."
 }
