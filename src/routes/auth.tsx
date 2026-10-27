@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useStore } from '@/lib/store';
 import { CountrySelect } from '@/components/country-select';
 import { supabase } from '@/integrations/supabase/client';
+import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
 export const Route = createFileRoute('/auth')({ validateSearch: (s: Record<string, unknown>): {
         mode?: 'signup' | undefined;
     } => ({ mode: s['mode'] === 'signup' ? 'signup' : undefined }), head: () => ({ meta: [{ title: 'Curator access — MyOwnMuseum' }, { name: 'description', content: 'Sign in or create your curator account.' }, { property: 'og:title', content: 'Curator access — MyOwnMuseum' }, { property: 'og:description', content: 'Sign in to manage your digital museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }), component: AuthPage });
@@ -46,14 +47,16 @@ function AuthPage() {
     const reset = async () => { if (!email.trim()) {
         toast.error(t("Enter your email first"));
         return;
-    } setBusy(true); try {
+    } if (cooldown.left > 0) return; setBusy(true); try {
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + '/reset-password' });
         if (error)
             throw error;
+        cooldown.start();
         setNotice('If an account exists, a password reset email is on its way.');
     }
     catch (e) {
-        toast.error(e instanceof Error ? e.message : 'Unable to send email');
+        if (isRateLimitError(e)) { cooldown.start(); toast.error(t('Too many attempts. Please wait a few minutes before requesting another link.')); }
+        else toast.error(e instanceof Error ? e.message : t('Unable to send email'));
     }
     finally {
         setBusy(false);
