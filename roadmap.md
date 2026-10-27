@@ -1,4 +1,6 @@
 # Platform improvements
+- [ ] Add multi-task selection and contextual copy in Dev.
+- [ ] Check daily historical metrics and record missing work in Dev.
 - [x] Add assistance/FAQ page to reduce support requests.
 - [x] Add extensible English/Spanish default-interface localization; never translate user museum content.
 - [x] Bound public data and image caching; isolate private data.
