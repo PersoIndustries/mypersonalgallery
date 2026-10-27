@@ -5,10 +5,12 @@ import { SEED_TASKS } from '../dev-tasks';
 
 test('multi-task export includes only selected IDs and current complete records', () => {
   const rows = SEED_TASKS.map(task => ({ ...task }));
-  rows[0] = { ...rows[0], description: 'Current edited requirements' };
+  const first = rows[0];
+  assert.ok(first);
+  rows[0] = { ...first, description: 'Current edited requirements' };
   const chosen = selectedDevTasks(rows, new Set(['t1', 't3', 'deleted-id']));
   assert.deepEqual(chosen.map(task => task.id), ['t1', 't3']);
-  assert.equal(chosen[0].description, 'Current edited requirements');
+  assert.equal(chosen[0]?.description, 'Current edited requirements');
   const brief = formatDevTaskBrief(chosen, 'Reproduce on mobile');
   for (const task of chosen) {
     assert.ok(brief.includes(task.id));
