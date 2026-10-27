@@ -10,28 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ExploreRouteImport } from './routes/explore'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminDevRouteImport } from './routes/admin.dev'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
-import { Route as DashboardMuseumsRouteImport } from './routes/dashboard.museums'
-import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as MSlugRouteImport } from './routes/m.$slug'
 import { Route as OObjectIdRouteImport } from './routes/o.$objectId'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
-import { Route as DashboardMuseumMuseumIdRouteImport } from './routes/dashboard.museum.$museumId'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminDevRouteImport } from './routes/_authenticated/admin.dev'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardMuseumsRouteImport } from './routes/_authenticated/dashboard.museums'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardMuseumMuseumIdRouteImport } from './routes/_authenticated/dashboard.museum.$museumId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -39,40 +35,25 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AdminDevRoute = AdminDevRouteImport.update({
-  id: '/dev',
-  path: '/dev',
-  getParentRoute: () => AdminRoute,
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/_authenticated/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardMuseumsRoute = DashboardMuseumsRouteImport.update({
-  id: '/museums',
-  path: '/museums',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => DashboardRoute,
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/_authenticated/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MSlugRoute = MSlugRouteImport.update({
   id: '/m/$slug',
@@ -89,73 +70,106 @@ const UUsernameRoute = UUsernameRouteImport.update({
   path: '/u/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardMuseumMuseumIdRoute = DashboardMuseumMuseumIdRouteImport.update({
-  id: '/museum/$museumId',
-  path: '/museum/$museumId',
-  getParentRoute: () => DashboardRoute,
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminDevRoute = AuthenticatedAdminDevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardMuseumsRoute =
+  AuthenticatedDashboardMuseumsRouteImport.update({
+    id: '/museums',
+    path: '/museums',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardMuseumMuseumIdRoute =
+  AuthenticatedDashboardMuseumMuseumIdRouteImport.update({
+    id: '/museum/$museumId',
+    path: '/museum/$museumId',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/admin/dev': typeof AdminDevRoute
-  '/dashboard/museums': typeof DashboardMuseumsRoute
-  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
-  '/admin/': typeof AdminIndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/museum/$museumId': typeof DashboardMuseumMuseumIdRoute
+  '/admin/dev': typeof AuthenticatedAdminDevRoute
+  '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
-  '/admin/dev': typeof AdminDevRoute
-  '/dashboard/museums': typeof DashboardMuseumsRoute
-  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
-  '/admin': typeof AdminIndexRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/museum/$museumId': typeof DashboardMuseumMuseumIdRoute
+  '/admin/dev': typeof AuthenticatedAdminDevRoute
+  '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/admin/dev': typeof AdminDevRoute
-  '/dashboard/museums': typeof DashboardMuseumsRoute
-  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
-  '/admin/': typeof AdminIndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/museum/$museumId': typeof DashboardMuseumMuseumIdRoute
+  '/_authenticated/admin/dev': typeof AuthenticatedAdminDevRoute
+  '/_authenticated/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/auth'
-    | '/dashboard'
     | '/explore'
-    | '/admin/dev'
-    | '/dashboard/museums'
-    | '/dashboard/settings'
+    | '/reset-password'
+    | '/admin'
+    | '/dashboard'
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
+    | '/admin/dev'
+    | '/dashboard/museums'
+    | '/dashboard/settings'
     | '/admin/'
     | '/dashboard/'
     | '/dashboard/museum/$museumId'
@@ -164,39 +178,42 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/explore'
-    | '/admin/dev'
-    | '/dashboard/museums'
-    | '/dashboard/settings'
+    | '/reset-password'
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
+    | '/admin/dev'
+    | '/dashboard/museums'
+    | '/dashboard/settings'
     | '/admin'
     | '/dashboard'
     | '/dashboard/museum/$museumId'
   id:
     | '__root__'
     | '/'
-    | '/admin'
     | '/auth'
-    | '/dashboard'
     | '/explore'
-    | '/admin/dev'
-    | '/dashboard/museums'
-    | '/dashboard/settings'
+    | '/reset-password'
+    | '/_authenticated/admin'
+    | '/_authenticated/dashboard'
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
-    | '/admin/'
-    | '/dashboard/'
-    | '/dashboard/museum/$museumId'
+    | '/_authenticated/admin/dev'
+    | '/_authenticated/dashboard/museums'
+    | '/_authenticated/dashboard/settings'
+    | '/_authenticated/admin/'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/museum/$museumId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
   ExploreRoute: typeof ExploreRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
   MSlugRoute: typeof MSlugRoute
   OObjectIdRoute: typeof OObjectIdRoute
   UUsernameRoute: typeof UUsernameRoute
@@ -211,25 +228,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore': {
@@ -239,40 +242,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/dev': {
-      id: '/admin/dev'
-      path: '/dev'
-      fullPath: '/admin/dev'
-      preLoaderRoute: typeof AdminDevRouteImport
-      parentRoute: typeof AdminRoute
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/museums': {
-      id: '/dashboard/museums'
-      path: '/museums'
-      fullPath: '/dashboard/museums'
-      preLoaderRoute: typeof DashboardMuseumsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/settings': {
-      id: '/dashboard/settings'
-      path: '/settings'
-      fullPath: '/dashboard/settings'
-      preLoaderRoute: typeof DashboardSettingsRouteImport
-      parentRoute: typeof DashboardRoute
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/m/$slug': {
       id: '/m/$slug'
@@ -295,52 +284,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/museum/$museumId': {
-      id: '/dashboard/museum/$museumId'
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/dev': {
+      id: '/_authenticated/admin/dev'
+      path: '/dev'
+      fullPath: '/admin/dev'
+      preLoaderRoute: typeof AuthenticatedAdminDevRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/museums': {
+      id: '/_authenticated/dashboard/museums'
+      path: '/museums'
+      fullPath: '/dashboard/museums'
+      preLoaderRoute: typeof AuthenticatedDashboardMuseumsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/museum/$museumId': {
+      id: '/_authenticated/dashboard/museum/$museumId'
       path: '/museum/$museumId'
       fullPath: '/dashboard/museum/$museumId'
-      preLoaderRoute: typeof DashboardMuseumMuseumIdRouteImport
-      parentRoute: typeof DashboardRoute
+      preLoaderRoute: typeof AuthenticatedDashboardMuseumMuseumIdRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
   }
 }
 
-interface AdminRouteChildren {
-  AdminDevRoute: typeof AdminDevRoute
-  AdminIndexRoute: typeof AdminIndexRoute
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminDevRoute: typeof AuthenticatedAdminDevRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminDevRoute: AdminDevRoute,
-  AdminIndexRoute: AdminIndexRoute,
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminDevRoute: AuthenticatedAdminDevRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
-interface DashboardRouteChildren {
-  DashboardMuseumsRoute: typeof DashboardMuseumsRoute
-  DashboardSettingsRoute: typeof DashboardSettingsRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardMuseumMuseumIdRoute: typeof DashboardMuseumMuseumIdRoute
+interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardMuseumsRoute: typeof AuthenticatedDashboardMuseumsRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardMuseumMuseumIdRoute: typeof AuthenticatedDashboardMuseumMuseumIdRoute
 }
 
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardMuseumsRoute: DashboardMuseumsRoute,
-  DashboardSettingsRoute: DashboardSettingsRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-  DashboardMuseumMuseumIdRoute: DashboardMuseumMuseumIdRoute,
-}
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
+  {
+    AuthenticatedDashboardMuseumsRoute: AuthenticatedDashboardMuseumsRoute,
+    AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+    AuthenticatedDashboardMuseumMuseumIdRoute:
+      AuthenticatedDashboardMuseumMuseumIdRoute,
+  }
 
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
+const AuthenticatedDashboardRouteWithChildren =
+  AuthenticatedDashboardRoute._addFileChildren(
+    AuthenticatedDashboardRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
-  DashboardRoute: DashboardRouteWithChildren,
   ExploreRoute: ExploreRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
   MSlugRoute: MSlugRoute,
   OObjectIdRoute: OObjectIdRoute,
   UUsernameRoute: UUsernameRoute,
