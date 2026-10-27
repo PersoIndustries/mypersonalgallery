@@ -1,4 +1,6 @@
 # Platform improvements
+- [ ] Add assistance/FAQ page to reduce support requests.
+- [ ] Add extensible English/Spanish default-interface localization; never translate user museum content.
 - [ ] Bound public data and image caching; isolate private data.
 - [ ] Verify admin-only screens and endpoints.
 - [ ] Add real platform and monetization metrics; prepare private plan selection without payments.
