@@ -1,11 +1,11 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { getPrivateCatalog } from "@/lib/catalog.functions";
+import { assertAdmin } from "@/lib/platform.functions";
 import { Code2, Shield } from "lucide-react";
 
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  beforeLoad: async () => {const state=await getPrivateCatalog();if(!state.isAdmin)throw new Error("Administrator access required");},
+  beforeLoad: async () => {await assertAdmin();},
   head: () => ({
     meta: [
       {property:"og:type",content:"website"},
@@ -33,7 +33,7 @@ function AdminLayout() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <p className="eyebrow">Admin</p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Platform control room</h1>
-      <nav className="mt-6 flex gap-1 border-b border-border pb-2">
+      <nav className="mt-6 flex gap-1 overflow-x-auto border-b border-border pb-2">
         <Link
           to="/admin"
           activeOptions={{ exact: true }}
@@ -49,6 +49,7 @@ function AdminLayout() {
         >
           <Code2 className="size-4" /> Dev
         </Link>
+        <Link to="/admin/errors" className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted"><Shield className="size-4" /> Diagnostics</Link>
       </nav>
       <div className="mt-8">
         <Outlet />

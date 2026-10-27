@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start';
+import { setResponseHeader } from '@tanstack/react-start/server';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
@@ -17,11 +18,15 @@ export const getPublicCatalog = createServerFn({method:'GET'}).handler(async () 
   const key=process.env['SUPABASE_PUBLISHABLE_KEY']; const url=process.env['SUPABASE_URL'];
   if(!key || !url) throw new Error('Supabase is unavailable');
   const client=createClient<Database>(url,key,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:(input,init)=>{const headers=new Headers(init?.headers);if(key.startsWith('sb_') && headers.get('Authorization')===`Bearer ${key}`) headers.delete('Authorization');headers.set('apikey',key);return fetch(input,{...init,headers});}}});
-  return readCatalog(client);
+  const {cachedPublicCatalog}=await import('./public-cache.server');
+  return cachedPublicCatalog(()=>readCatalog(client));
 });
 export const getPrivateCatalog = createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async ({context}) => {
+  setResponseHeader('Cache-Control','no-store');
   const [catalog,role] = await Promise.all([readCatalog(context.supabase),context.supabase.rpc('has_role',{_user_id:context.userId,_role:'admin'})]);
   if(role.error) throw new Error(role.error.message);
+  const {data:profile}=await context.supabase.from('profiles').select('country').eq('user_id',context.userId).maybeSingle();
+  catalog.users=catalog.users.map(u=>u.id===context.userId?{...u,country:profile?.country??null}:u);
   return {...catalog,currentUserId:context.userId,isAdmin:role.data === true};
 });
 const id = z.string().min(1).max(100);
@@ -31,6 +36,8 @@ export const mutationSchema=z.discriminatedUnion('action',[
 ]);
 export const mutateCatalog = createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(input => mutationSchema.parse(input)).handler(async ({data,context}) => {
   const c=context.supabase;
+  setResponseHeader('Cache-Control','no-store');
+  const {clearPublicCatalogCache}=await import('./public-cache.server');await clearPublicCatalogCache();
   if(data.action==='createMuseum'){
     const uuid=crypto.randomUUID(); const slug=(data.data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'museum')+'-'+uuid.slice(0,8);
     const {error}=await c.from('museums').insert({id:uuid,slug,owner_id:context.userId,title:data.data.title,description:data.data.description,cover:data.data.cover,category:data.data.category,is_public:data.data.isPublic,features:data.data.features as Json});if(error) throw new Error(error.message);return uuid;
@@ -50,7 +57,7 @@ export const mutateCatalog = createServerFn({method:'POST'}).middleware([require
     const {data:row,error:readError}=await c.from('objects').select('payload').eq('id',data.id).single();if(readError) throw new Error(readError.message);
     const payload={...(row.payload as Record<string,Json>),...data.data}; const {error}=await c.from('objects').update({payload:payload as Json,...(data.data.isVisible!==undefined?{is_visible:data.data.isVisible}:{})}).eq('id',data.id).select('id').single();if(error) throw new Error(error.message);return data.id;
   }
-  const patch:Database['public']['Tables']['profiles']['Update']={};const p=data.data;if(p.name!==undefined)patch.name=p.name;if(p.bio!==undefined)patch.bio=p.bio;if(p.avatar!==undefined)patch.avatar=p.avatar;if(p.location!==undefined)patch.location=p.location;
+  const patch:Database['public']['Tables']['profiles']['Update']={};const p=data.data;if(p.name!==undefined)patch.name=p.name;if(p.bio!==undefined)patch.bio=p.bio;if(p.avatar!==undefined)patch.avatar=p.avatar;if(p.location!==undefined)patch.location=p.location;if(p.country!==undefined)patch.country=p.country;
   const {error}=await c.from('profiles').update(patch).eq('user_id',context.userId).select('id').single();if(error) throw new Error(error.message);return context.userId;
 });
 export const getAdminTasks=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async ({context})=>{

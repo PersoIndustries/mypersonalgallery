@@ -57,6 +57,7 @@ export function SiteFooter() {
             >
               Settings
             </Link>
+            <Link to="/dashboard/plans" className="block text-muted-foreground hover:text-foreground">Museum plans</Link>
           </div>
         </div>
       </div>
