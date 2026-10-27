@@ -18,3 +18,4 @@
 - Cache only public image requests in a size- and age-bounded service worker; never cache signed storage URLs or account responses.
 - Billing interest is separate from authoritative subscriptions; only a future verified payment service may modify subscription entitlements.
 - Administrator aggregates use privileged reads only after a server-side user_roles check; sanitized authenticated error reporting is rate-limited in PostgreSQL.
+- Localize explicit default-interface strings through English/Spanish JSON dictionaries and a component-free language context; never pass user-authored catalogue values to the translator.
