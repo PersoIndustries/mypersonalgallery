@@ -12,3 +12,4 @@
 - Persist catalogue data in Supabase through validated TanStack server functions with user-scoped RLS; browser storage is only for appearance settings, never identity or permissions.
 - Keep private curator and admin routes under the integration-managed `_authenticated` layout; verify admin privileges using `public.user_roles` on the server.
 - Preserve legacy catalogue IDs and complete object records in JSON payloads; auth-linked profiles use the auth UUID as their profile ID, while seeded curator profiles have no login identity.
+- Keep the museum React context in a component-free module so hot reload preserves provider/consumer identity; initialize missing catalogue state with empty arrays during loader transitions.
