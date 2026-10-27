@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function SiteHeader() {
-  const { currentUser, logout, theme, toggleTheme } = useStore();
+  const { currentUser, logout, theme, toggleTheme, isAdmin } = useStore();
   const navigate = useNavigate();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -97,9 +97,9 @@ export function SiteHeader() {
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
                   <LayoutDashboard className="size-4" /> Dashboard
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/admin/dev" })}>
+                {isAdmin && <DropdownMenuItem onClick={() => navigate({ to: "/admin/dev" })}>
                   <LayoutDashboard className="size-4" /> Admin · Dev
-                </DropdownMenuItem>
+                </DropdownMenuItem>}
                 <DropdownMenuItem
                   onClick={() =>
                     navigate({
@@ -112,10 +112,7 @@ export function SiteHeader() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => {
-                    logout();
-                    router.navigate({ to: "/" });
-                  }}
+                  onClick={() => void logout()}
                 >
                   <LogOut className="size-4" /> Sign out
                 </DropdownMenuItem>

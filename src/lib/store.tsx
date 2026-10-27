@@ -4,7 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate,useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { getPrivateCatalog,getPublicCatalog,mutateCatalog,type Catalog } from './catalog.functions';
+import { getPrivateCatalog,getPublicCatalog,mutateCatalog,type Catalog,mutationSchema } from './catalog.functions';
+import type { z } from 'zod';
 import type { Museum,CollectionObject,User } from './types';
 import { museumSchema,museumPatchSchema,objectSchema,objectPatchSchema,profileSchema } from './catalog.schemas';
 interface StoreValue extends Catalog {
@@ -35,7 +36,7 @@ export function StoreProvider({children}:{children:ReactNode}){
   });return ()=>subscription.unsubscribe();
  },[refresh,router,queryClient]);
  useEffect(()=>{document.documentElement.classList.toggle('light',theme==='light');document.documentElement.style.colorScheme=theme;localStorage.setItem('myownmuseum.theme',theme);},[theme]);
- const run=async(data:Parameters<typeof mutate>[0]['data'])=>{await mutate({data});await refresh();};
+ const run=async(data:z.infer<typeof mutationSchema>)=>{await mutate({data});await refresh();};
  const publicMuseums=state.museums.filter(m=>m.isPublic);const publicIds=new Set(publicMuseums.map(m=>m.id));
  const value:StoreValue={...state,currentUserId,currentUser:state.users.find(u=>u.id===currentUserId)??null,isAdmin,ready,publicMuseums,publicObjects:state.objects.filter(o=>o.isVisible!==false&&publicIds.has(o.museumId)),theme,toggleTheme:()=>setTheme(t=>t==='dark'?'light':'dark'),
  login:async(email,password)=>{const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});if(error)throw new Error(error.message);await refresh();},
