@@ -1,4 +1,5 @@
 import { useI18n } from '@/lib/i18n';
+import {I18nProvider} from '@/lib/i18n';
 import { QueryClient, QueryClientProvider, useSuspenseQuery } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, type ErrorComponentProps, } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
@@ -85,7 +86,7 @@ function RootShell({ children }: {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <I18nProvider>{children}</I18nProvider>
         <Scripts />
       </body>
     </html>);
