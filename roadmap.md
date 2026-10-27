@@ -1,6 +1,11 @@
-# Supabase migration
-- [x] Create secure profiles, roles, museums, objects and dev tasks; import every demo row.
-- [x] Replace simulated authentication and browser persistence with Supabase.
-- [x] Create Carlos's administrator account, send invitation and protect administration.
-- [x] Verify public browsing, exact imported records and anonymous restrictions.
-- [ ] Verify authenticated editing and sign-in end-to-end: external unmanaged Supabase has no authorized browser test session.
+# Platform improvements
+- [ ] Bound public data and image caching; isolate private data.
+- [ ] Verify admin-only screens and endpoints.
+- [ ] Add real platform and monetization metrics; prepare private plan selection without payments.
+- [ ] Require registration country and offer profile password changes.
+- [ ] Assign six seeded museums to Carlos and label placeholders.
+- [ ] Follow system light/dark appearance.
+- [ ] Add sanitized error reporting and administrator diagnostics.
+- [ ] Persist requested and future admin, billing, mobile/APK and SEO tasks in existing dev_tasks.
+- [ ] Run rule tests and public/mobile browser checks.
+- [ ] Verify authenticated flows: external Supabase has no authorized browser test session.
