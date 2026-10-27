@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useStore } from "@/lib/store";
+import {CountrySelect} from '@/components/country-select';
+import {supabase} from '@/integrations/supabase/client';
 
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
   head: () => ({meta:[{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"},{title:"Curator profile settings — MyOwnMuseum"},{name:"description",content:"Curator profile settings."},{property:"og:title",content:"Curator profile settings — MyOwnMuseum"},{property:"og:description",content:"Curator profile settings."},{name:"robots",content:"noindex"}]}),
@@ -21,7 +23,10 @@ function DashboardSettings() {
     bio: currentUser?.bio ?? "",
     location: currentUser?.location ?? "",
     avatar: currentUser?.avatar ?? "",
+    country: currentUser?.country ?? "",
   }));
+  const [oldPassword,setOldPassword]=useState('');const [password,setPassword]=useState('');const [confirmPassword,setConfirmPassword]=useState('');const [savingPassword,setSavingPassword]=useState(false);
+  const changePassword=async(e:React.FormEvent)=>{e.preventDefault();if(password.length<8||password!==confirmPassword){toast.error('Use at least 8 characters and matching passwords');return;}setSavingPassword(true);try{const {data:{user}}=await supabase.auth.getUser();if(!user?.email)throw new Error('Sign in again to change your password');const verified=await supabase.auth.signInWithPassword({email:user.email,password:oldPassword});if(verified.error)throw new Error('Current password is incorrect');const {error}=await supabase.auth.updateUser({password});if(error)throw error;setOldPassword('');setPassword('');setConfirmPassword('');toast.success('Password changed');}catch(e){toast.error(e instanceof Error?e.message:'Unable to change password');}finally{setSavingPassword(false);}};
 
   if (!currentUser) return null;
 
@@ -51,6 +56,7 @@ function DashboardSettings() {
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2"><Label htmlFor="p-country">Country of origin</Label><CountrySelect id="p-country" value={form.country} onChange={country=>setForm({...form,country})}/></div>
           <div className="space-y-2">
             <Label htmlFor="p-name">Display name</Label>
             <Input
@@ -95,12 +101,14 @@ function DashboardSettings() {
                   bio: currentUser.bio,
                   location: currentUser.location,
                   avatar: currentUser.avatar,
+                  country: currentUser.country ?? '',
                 })
               }
             >
               Reset
             </Button>
             <Button
+              disabled={!form.country}
               onClick={() => void updateProfile(form).then(()=>toast.success("Profile saved")).catch(e=>toast.error(e.message))}
             >
               Save changes
@@ -108,6 +116,7 @@ function DashboardSettings() {
           </div>
         </CardContent>
       </Card>
+      <section className="border-t border-border pt-6"><h3 className="font-display text-2xl">Change password</h3><form className="mt-4 max-w-md space-y-4" onSubmit={e=>void changePassword(e)}><div className="space-y-2"><Label htmlFor="old-password">Current password</Label><Input id="old-password" type="password" required autoComplete="current-password" value={oldPassword} onChange={e=>setOldPassword(e.target.value)}/></div><div className="space-y-2"><Label htmlFor="new-password">New password</Label><Input id="new-password" type="password" required minLength={8} autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)}/></div><div className="space-y-2"><Label htmlFor="confirm-password">Confirm new password</Label><Input id="confirm-password" type="password" required minLength={8} autoComplete="new-password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)}/></div><Button type="submit" disabled={savingPassword}>{savingPassword?'Saving…':'Change password'}</Button></form></section>
     </div>
   );
 }
