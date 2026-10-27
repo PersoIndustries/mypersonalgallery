@@ -1,4 +1,7 @@
 {
+  "Checking password link…": "Comprobando el enlace…",
+  "This password link is invalid, expired or already used. Request a new one and open the latest email.": "Este enlace no es válido, ha caducado o ya se ha utilizado. Solicita uno nuevo y abre el correo más reciente.",
+  "Send new password link": "Enviar nuevo enlace",
   "Select visible tasks": "Seleccionar tareas visibles",
   "Selected tasks: {count}": "Tareas seleccionadas: {count}",
   "Clear selection": "Quitar selección",

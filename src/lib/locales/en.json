@@ -1,4 +1,7 @@
 {
+  "Checking password link…": "Checking password link…",
+  "This password link is invalid, expired or already used. Request a new one and open the latest email.": "This password link is invalid, expired or already used. Request a new one and open the latest email.",
+  "Send new password link": "Send new password link",
   "Select visible tasks": "Select visible tasks",
   "Selected tasks: {count}": "Selected tasks: {count}",
   "Clear selection": "Clear selection",

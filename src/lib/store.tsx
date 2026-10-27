@@ -11,6 +11,7 @@ import type { Museum,CollectionObject,User } from './types';
 import { museumSchema,museumPatchSchema,objectSchema,objectPatchSchema,profileSchema } from './catalog.schemas';
 import { countrySchema, diagnosticPath } from './platform-rules';
 import { reportAppError } from './platform.functions';
+import { capturePasswordLink, markPasswordRecovery, clearPasswordLink } from './password-link';
 export interface StoreValue extends Catalog {
  currentUserId:string|null; currentUser:User|null; isAdmin:boolean; ready:boolean; publicMuseums:Museum[];publicObjects:CollectionObject[];
  theme:'dark'|'light';toggleTheme:()=>void;login:(email:string,password:string)=>Promise<void>;signup:(name:string,username:string,email:string,password:string,country:string)=>Promise<boolean>;logout:()=>Promise<void>;
@@ -33,13 +34,14 @@ export function StoreProvider({children,initialCatalog=empty}:{children:ReactNod
   setReady(true);
  },[privateCatalog,queryClient]);
  useEffect(()=>{
+  capturePasswordLink(window.location.hash, window.location.search);
   const media=window.matchMedia('(prefers-color-scheme: dark)');
   const sync=()=>setTheme(media.matches?'dark':'light');sync();media.addEventListener('change',sync);
   void refresh().catch(e=>{toast.error(e.message);setReady(true);});
   const {data:{subscription}}=supabase.auth.onAuthStateChange(event=>{
-   if(event==='PASSWORD_RECOVERY')sessionStorage.setItem('museum.password-recovery','true');
+   if(event==='PASSWORD_RECOVERY')markPasswordRecovery();
    if(!['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))return;
-   if(event==='SIGNED_OUT'){setState(empty);setUserId(null);setAdmin(false);}
+   if(event==='SIGNED_OUT'){clearPasswordLink();setState(empty);setUserId(null);setAdmin(false);}
    setTimeout(()=>{void refresh().catch(e=>toast.error(e.message));void router.invalidate();if(event!=='SIGNED_OUT')void queryClient.invalidateQueries();},0);
   });return ()=>{subscription.unsubscribe();media.removeEventListener('change',sync);};
  },[refresh,router,queryClient]);

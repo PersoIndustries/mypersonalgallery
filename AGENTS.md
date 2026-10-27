@@ -20,3 +20,4 @@
 - Administrator aggregates use privileged reads only after a server-side user_roles check; sanitized authenticated error reporting is rate-limited in PostgreSQL.
 - Localize explicit default-interface strings through English/Spanish JSON dictionaries and a component-free language context; never pass user-authored catalogue values to the translator.
 - Format selected DEV tasks in a pure export module using current complete records; selection and clipboard previews remain transient and never change persisted task statuses.
+- Capture invitation/recovery intent before Supabase consumes callback fragments; enable reset forms only after verified session initialization, keep intent transient, and clear it on sign-out or successful reset.
