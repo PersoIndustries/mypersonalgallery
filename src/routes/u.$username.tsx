@@ -8,6 +8,8 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/u/$username")({
   head: ({ params }) => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: `@${params.username} — collector profile on MyOwnMuseum` },
       {
         name: "description",

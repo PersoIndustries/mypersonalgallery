@@ -6,6 +6,8 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Curator dashboard — MyOwnMuseum" },
       {
         name: "description",

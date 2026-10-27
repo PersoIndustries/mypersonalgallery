@@ -35,6 +35,8 @@ import {
 export const Route = createFileRoute("/_authenticated/dashboard/museum/$museumId")({
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Museum setup — MyOwnMuseum" },
       { name: "description", content: "Configure visibility and public sections of your museum." },
       { property: "og:title", content: "Museum setup — MyOwnMuseum" },
@@ -72,7 +74,7 @@ function MuseumSetup() {
   const visibleCount = objs.filter((o) => o.isVisible !== false).length;
   const flags = museumFeatures(museum);
   const setFlag = (k: FeatureKey, v: boolean) =>
-    updateMuseum(museum.id, { features: { ...flags, [k]: v } });
+    void updateMuseum(museum.id, { features: { ...flags, [k]: v } }).catch(e=>toast.error(e.message));
   const previewItems = visitorView ? objs.filter((o) => o.isVisible !== false) : objs;
 
   return (
@@ -101,10 +103,7 @@ function MuseumSetup() {
           {museum.isPublic ? "Public" : "Private"}
           <Switch
             checked={museum.isPublic}
-            onCheckedChange={(v) => {
-              updateMuseum(museum.id, { isPublic: v });
-              toast.success(v ? "Museum is now public" : "Museum is now private");
-            }}
+            onCheckedChange={(v) => void updateMuseum(museum.id, { isPublic: v }).then(()=>toast.success(v?"Museum is now public":"Museum is now private")).catch(e=>toast.error(e.message))}
           />
         </label>
         <Button asChild>
@@ -259,7 +258,7 @@ function MuseumSetup() {
                     {visible ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
                     <Switch
                       checked={visible}
-                      onCheckedChange={(v) => updateObject(o.id, { isVisible: v })}
+                      onCheckedChange={(v) => void updateObject(o.id, { isVisible: v }).catch(e=>toast.error(e.message))}
                       aria-label="Visible to visitors"
                     />
                   </label>
@@ -269,10 +268,7 @@ function MuseumSetup() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
-                      deleteObject(o.id);
-                      toast.success("Object removed");
-                    }}
+                    onClick={() => void deleteObject(o.id).then(()=>toast.success("Object removed")).catch(e=>toast.error(e.message))}
                   >
                     <Trash2 className="size-4 text-destructive" />
                   </Button>
@@ -294,8 +290,9 @@ function MuseumSetup() {
                 <Label htmlFor="s-title">Title</Label>
                 <Input
                   id="s-title"
-                  value={museum.title}
-                  onChange={(e) => updateMuseum(museum.id, { title: e.target.value })}
+                  defaultValue={museum.title}
+                  onChange={(e) => { e.currentTarget.dataset["draft"]=e.target.value; }}
+                  onBlur={(e) => void updateMuseum(museum.id, { title: e.target.value }).catch(e=>toast.error(e.message))}
                 />
               </div>
               <div className="space-y-2">
@@ -303,16 +300,16 @@ function MuseumSetup() {
                 <Textarea
                   id="s-desc"
                   rows={4}
-                  value={museum.description}
-                  onChange={(e) => updateMuseum(museum.id, { description: e.target.value })}
+                  defaultValue={museum.description}
+                  onBlur={(e) => void updateMuseum(museum.id, { description: e.target.value }).catch(e=>toast.error(e.message))}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="s-cover">Cover image URL</Label>
                 <Input
                   id="s-cover"
-                  value={museum.cover}
-                  onChange={(e) => updateMuseum(museum.id, { cover: e.target.value })}
+                  defaultValue={museum.cover}
+                  onBlur={(e) => void updateMuseum(museum.id, { cover: e.target.value }).catch(e=>toast.error(e.message))}
                 />
               </div>
             </CardContent>

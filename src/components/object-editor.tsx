@@ -98,7 +98,8 @@ export function ObjectEditor({
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...p, [k]: v }));
   const museumFlags = museumFeatures(museum);
 
-  const save = () => {
+  const save = async () => {
+    try {
     if (!f.title.trim()) {
       toast.error("Give the object a title");
       return;
@@ -134,13 +135,14 @@ export function ObjectEditor({
       hiddenFeatures: f.hiddenFeatures,
     };
     if (object) {
-      updateObject(object.id, data);
+      await updateObject(object.id, data);
       toast.success("Object updated");
     } else {
-      createObject(museumId, { ...data, documents: [] });
+      await createObject(museumId, { ...data, documents: [] });
       toast.success("Object added to the catalogue");
     }
     onOpenChange(false);
+    } catch(e) { toast.error(e instanceof Error?e.message:"Unable to save object"); }
   };
 
   const field = (id: keyof Form, label: string, placeholder?: string) => (

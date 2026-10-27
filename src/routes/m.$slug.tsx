@@ -11,6 +11,8 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/m/$slug")({
   head: ({ params }) => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: `${params.slug.replace(/-/g, " ")} — a museum on MyOwnMuseum` },
       {
         name: "description",

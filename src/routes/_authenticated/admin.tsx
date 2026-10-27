@@ -6,6 +6,8 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Admin — MyOwnMuseum" },
       { name: "description", content: "Platform administration for MyOwnMuseum." },
       { property: "og:title", content: "Admin — MyOwnMuseum" },

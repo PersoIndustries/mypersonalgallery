@@ -29,6 +29,7 @@ import { useStore } from "@/lib/store";
 import { CATEGORIES, type CollectionObject } from "@/lib/types";
 
 export const Route = createFileRoute("/_authenticated/dashboard/museums")({
+  head: () => ({meta:[{title:"Manage museums — MyOwnMuseum"},{name:"description",content:"Manage museums."},{property:"og:title",content:"Manage museums — MyOwnMuseum"},{property:"og:description",content:"Manage museums."},{name:"robots",content:"noindex"}]}),
   component: DashboardMuseums,
 });
 
@@ -79,19 +80,21 @@ function DashboardMuseums() {
     setMuseumDialog({ id });
   };
 
-  const saveMuseum = () => {
+  const saveMuseum = async () => {
+    try {
     if (!museumForm.title.trim()) {
       toast.error("Give your museum a title");
       return;
     }
     if (museumDialog?.id) {
-      updateMuseum(museumDialog.id, museumForm);
+      await updateMuseum(museumDialog.id, museumForm);
       toast.success("Museum updated");
     } else {
-      createMuseum(museumForm);
+      await createMuseum(museumForm);
       toast.success("Museum created");
     }
     setMuseumDialog(null);
+    } catch(e) { toast.error(e instanceof Error?e.message:"Unable to save museum"); }
   };
 
   return (
@@ -156,10 +159,7 @@ function DashboardMuseums() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => {
-                        deleteMuseum(m.id);
-                        toast.success("Museum removed");
-                      }}
+                      onClick={() => void deleteMuseum(m.id).then(()=>toast.success("Museum removed")).catch(e=>toast.error(e.message))}
                     >
                       <Trash2 className="size-4 text-destructive" />
                     </Button>
@@ -223,10 +223,7 @@ function DashboardMuseums() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => {
-                              deleteObject(o.id);
-                              toast.success("Object removed");
-                            }}
+                            onClick={() => void deleteObject(o.id).then(()=>toast.success("Object removed")).catch(e=>toast.error(e.message))}
                           >
                             <Trash2 className="size-4 text-destructive" />
                           </Button>

@@ -3,6 +3,7 @@ import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
+  head: () => ({meta:[{title:"Platform overview — MyOwnMuseum"},{name:"description",content:"Platform overview."},{property:"og:title",content:"Platform overview — MyOwnMuseum"},{property:"og:description",content:"Platform overview."},{name:"robots",content:"noindex"}]}),
   component: AdminOverview,
 });
 

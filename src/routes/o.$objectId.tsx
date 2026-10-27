@@ -20,6 +20,8 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/o/$objectId")({
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Object detail — MyOwnMuseum" },
       {
         name: "description",
