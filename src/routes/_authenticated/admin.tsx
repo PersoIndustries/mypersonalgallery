@@ -1,9 +1,9 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { Code2, Shield } from "lucide-react";
-import { useEffect } from "react";
+
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin — MyOwnMuseum" },
@@ -17,11 +17,9 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminLayout() {
-  const { currentUser, ready } = useStore();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (ready && !currentUser) navigate({ to: "/auth" });
-  }, [ready, currentUser, navigate]);
+  const { currentUser, ready, isAdmin } = useStore();
+
+  if (ready && !isAdmin) return <div className="py-24 text-center">Administrator access required.</div>;
 
   if (!currentUser) {
     return <div className="py-24 text-center text-sm text-muted-foreground">Loading…</div>;

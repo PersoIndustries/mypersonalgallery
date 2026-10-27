@@ -28,7 +28,7 @@ import {
 import { useStore } from "@/lib/store";
 import { CATEGORIES, type CollectionObject } from "@/lib/types";
 
-export const Route = createFileRoute("/dashboard/museums")({
+export const Route = createFileRoute("/_authenticated/dashboard/museums")({
   component: DashboardMuseums,
 });
 
