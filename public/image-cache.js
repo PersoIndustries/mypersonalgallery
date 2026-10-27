@@ -8,6 +8,8 @@ self.addEventListener('fetch',event=>{
  if(req.method!=='GET'||req.destination!=='image')return;
  // Only explicitly public media; never cache signed/private Supabase media.
  const url=new URL(req.url);
+ const publicSource=url.origin===self.location.origin&&url.pathname.startsWith('/assets/')||url.hostname==='picsum.photos'||url.hostname==='fastly.picsum.photos'||url.hostname==='lttpbuzrifooimermdtz.supabase.co'&&url.pathname.startsWith('/storage/v1/object/public/');
+ if(!publicSource)return;
  if(url.pathname.includes('/storage/v1/')&&!url.pathname.includes('/storage/v1/object/public/'))return;
  if(url.searchParams.has('token')||url.searchParams.has('signature'))return;
  event.respondWith((async()=>{

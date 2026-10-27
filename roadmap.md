@@ -1,13 +1,13 @@
 # Platform improvements
-- [ ] Add assistance/FAQ page to reduce support requests.
-- [ ] Add extensible English/Spanish default-interface localization; never translate user museum content.
-- [ ] Bound public data and image caching; isolate private data.
-- [ ] Verify admin-only screens and endpoints.
-- [ ] Add real platform and monetization metrics; prepare private plan selection without payments.
-- [ ] Require registration country and offer profile password changes.
-- [ ] Assign six seeded museums to Carlos and label placeholders.
-- [ ] Follow system light/dark appearance.
-- [ ] Add sanitized error reporting and administrator diagnostics.
-- [ ] Persist requested and future admin, billing, mobile/APK and SEO tasks in existing dev_tasks.
-- [ ] Run rule tests and public/mobile browser checks.
+- [x] Add assistance/FAQ page to reduce support requests.
+- [x] Add extensible English/Spanish default-interface localization; never translate user museum content.
+- [x] Bound public data and image caching; isolate private data.
+- [x] Verify server admin authorization rules and anonymous screen/Data API restrictions.
+- [x] Add real platform and monetization metrics; prepare private plan selection without payments.
+- [x] Require registration country and offer profile password changes.
+- [x] Assign six seeded museums to Carlos and label placeholders.
+- [x] Follow system light/dark appearance.
+- [x] Add sanitized error reporting and administrator diagnostics.
+- [x] Persist requested and future admin, billing, mobile/APK and SEO tasks in existing dev_tasks.
+- [x] Run rule tests and public/mobile browser checks.
 - [ ] Verify authenticated flows: external Supabase has no authorized browser test session.

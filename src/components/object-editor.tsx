@@ -42,7 +42,7 @@ const toForm = (o: CollectionObject | null, category: string): Form => ({
     history: o?.history ?? "",
     modelUrl: o?.modelUrl ?? "",
     price: o?.price ?? "",
-    links: (o?.links ?? []).map((l) => `${t(l.label)} | ${l.url}`).join("\n"),
+    links: (o?.links ?? []).map((l) => `${l.label} | ${l.url}`).join("\n"),
     isVisible: o?.isVisible !== false,
     hiddenFeatures: o?.hiddenFeatures ?? [],
 });
