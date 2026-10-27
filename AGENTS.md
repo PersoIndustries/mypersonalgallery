@@ -19,3 +19,4 @@
 - Billing interest is separate from authoritative subscriptions; only a future verified payment service may modify subscription entitlements.
 - Administrator aggregates use privileged reads only after a server-side user_roles check; sanitized authenticated error reporting is rate-limited in PostgreSQL.
 - Localize explicit default-interface strings through English/Spanish JSON dictionaries and a component-free language context; never pass user-authored catalogue values to the translator.
+- Format selected DEV tasks in a pure export module using current complete records; selection and clipboard previews remain transient and never change persisted task statuses.

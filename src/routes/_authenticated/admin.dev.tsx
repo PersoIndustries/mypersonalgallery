@@ -3,9 +3,13 @@ import { useServerFn } from '@tanstack/react-start';
 import { toast } from 'sonner';
 import { getAdminTasks, saveAdminTasks } from '@/lib/catalog.functions';
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { AREAS, PRIORITIES, SEED_TASKS, STATUSES, taskScore, type DevTask, type TaskArea, type TaskPriority, type TaskStatus, } from "@/lib/dev-tasks";
+import { AREAS, PRIORITIES, STATUSES, taskScore, type DevTask, type TaskArea, type TaskPriority, type TaskStatus, } from "@/lib/dev-tasks";
+import { formatDevTaskBrief, selectedDevTasks } from '@/lib/dev-task-export';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +28,6 @@ export const Route = createFileRoute("/_authenticated/admin/dev")({
     }),
     component: DevPage,
 });
-const KEY = "myownmuseum.devtasks.v1";
 type SortMode = "manual" | "score";
 const priorityTone: Record<TaskPriority, string> = {
     P0: "bg-destructive/15 text-destructive border-destructive/30",
@@ -43,6 +46,9 @@ function DevPage() {
     const [newTitle, setNewTitle] = useState("");
     const [saveState, setSaveState] = useState('');
     const [dirty, setDirty] = useState(false);
+    const [selected, setSelected] = useState<Set<string>>(new Set());
+    const [copyOpen, setCopyOpen] = useState(false);
+    const [copyContext, setCopyContext] = useState('');
     useEffect(() => { void fetchTasks().then(rows => { setTasks(rows); setLoaded(true); }).catch(e => toast.error(e.message)); }, [fetchTasks]);
     useEffect(() => { if (!loaded || !dirty)
         return; setSaveState('Unsaved changes'); const timer = setTimeout(() => { setSaveState('Saving…'); void persistTasks({ data: tasks }).then(() => setSaveState('Saved')).catch(e => { setSaveState('Save failed'); toast.error(e.message); }); }, 1000); return () => clearTimeout(timer); }, [tasks, loaded, dirty, persistTasks]);
@@ -51,6 +57,23 @@ function DevPage() {
         const list = tasks.filter((t) => statusFilter === "all" || t.status === statusFilter);
         return [...list].sort((a, b) => sort === "score" ? taskScore(b) - taskScore(a) || a.rank - b.rank : a.rank - b.rank);
     }, [tasks, sort, statusFilter]);
+    const orderedTasks = useMemo(() => [...tasks].sort((a, b) => sort === 'score' ? taskScore(b) - taskScore(a) || a.rank - b.rank : a.rank - b.rank), [tasks, sort]);
+    const chosen = selectedDevTasks(orderedTasks, selected);
+    const brief = formatDevTaskBrief(chosen, copyContext);
+    const allVisibleSelected = visible.length > 0 && visible.every(task => selected.has(task.id));
+    const toggleTask = (id: string, checked: boolean) => setSelected(previous => {
+        const next = new Set(previous);
+        if (checked) next.add(id); else next.delete(id);
+        return next;
+    });
+    const copyBrief = async () => {
+        try {
+            await navigator.clipboard.writeText(brief);
+            toast.success(t('Tasks copied'));
+        } catch {
+            toast.error(t('Clipboard unavailable. Select and copy the text.'));
+        }
+    };
     const move = (id: string, dir: -1 | 1) => {
         setDirty(true);
         const ordered = [...tasks].sort((a, b) => a.rank - b.rank);
@@ -136,9 +159,35 @@ function DevPage() {
       </div>
       <p className="text-xs text-muted-foreground">{t("Score = priority (P0 40 \u00B7 P1 30 \u00B7 P2 20 \u00B7 P3 10) + impact \u00D7 4 \u2212 effort \u00D7 2. Switch to manual order to arrange with the arrows.")}</p>
 
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-sm">
+          <Checkbox checked={allVisibleSelected ? true : visible.some(task => selected.has(task.id)) ? 'indeterminate' : false} disabled={!visible.length} onCheckedChange={checked => setSelected(previous => {
+            const next = new Set(previous);
+            visible.forEach(task => { if (checked === true) next.add(task.id); else next.delete(task.id); });
+            return next;
+          })} />
+          {t('Select visible tasks')}
+        </label>
+        <span className="text-sm text-muted-foreground">{t('Selected tasks: {count}', { count: chosen.length })}</span>
+        <Button size="sm" variant="outline" disabled={!chosen.length} onClick={() => setSelected(new Set())}>{t('Clear selection')}</Button>
+        <Button size="sm" disabled={!chosen.length} onClick={() => setCopyOpen(true)}><Copy className="size-4" />{t('Copy selected tasks')}</Button>
+      </div>
+      <Dialog open={copyOpen} onOpenChange={setCopyOpen}>
+        <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{t('Copy selected tasks')}</DialogTitle>
+            <DialogDescription>{t('Selected tasks: {count}', { count: chosen.length })}</DialogDescription>
+          </DialogHeader>
+          <label className="space-y-2 text-sm">{t('Additional context')}<Textarea value={copyContext} onChange={event => setCopyContext(event.target.value)} rows={3} /></label>
+          <label className="space-y-2 text-sm">{t('Task brief')}<Textarea readOnly value={brief} rows={12} className="font-mono text-xs" onFocus={event => event.currentTarget.select()} /></label>
+          <Button disabled={!chosen.length} onClick={() => void copyBrief()}><Copy className="size-4" />{t('Copy')}</Button>
+        </DialogContent>
+      </Dialog>
+
       <div className="space-y-2">
         {visible.map((task) => (<div key={task.id} className={`grid gap-3 rounded-lg border border-border bg-card p-4 lg:grid-cols-[auto_1fr_auto] ${task.status === "done" ? "opacity-60" : ""}`}>
             <div className="flex items-start gap-1 lg:flex-col">
+              <Checkbox checked={selected.has(task.id)} onCheckedChange={checked => toggleTask(task.id, checked === true)} aria-label={t('Select task: {title}', { title: task.title })} className="m-1.5" />
               <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(task.id, -1)} aria-label={t("Move up")}>
                 <ArrowUp className="size-4"/>
               </Button>
