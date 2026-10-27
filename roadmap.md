@@ -1,6 +1,6 @@
 # Platform improvements
-- [ ] Add multi-task selection and contextual copy in Dev.
-- [ ] Check daily historical metrics and record missing work in Dev.
+- [x] Add multi-task selection and contextual copy in Dev; export tests cover complete selected records.
+- [x] Check daily historical metrics: none exists; record implementation as DEV platform-33, payments remain disabled.
 - [x] Add assistance/FAQ page to reduce support requests.
 - [x] Add extensible English/Spanish default-interface localization; never translate user museum content.
 - [x] Bound public data and image caching; isolate private data.
