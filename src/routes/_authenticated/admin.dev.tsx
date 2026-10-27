@@ -137,46 +137,46 @@ function DevPage() {
       <p className="text-xs text-muted-foreground">{t("Score = priority (P0 40 \u00B7 P1 30 \u00B7 P2 20 \u00B7 P3 10) + impact \u00D7 4 \u2212 effort \u00D7 2. Switch to manual order to arrange with the arrows.")}</p>
 
       <div className="space-y-2">
-        {visible.map((t) => (<div key={t.id} className={`grid gap-3 rounded-lg border border-border bg-card p-4 lg:grid-cols-[auto_1fr_auto] ${t.status === "done" ? "opacity-60" : ""}`}>
+        {visible.map((task) => (<div key={task.id} className={`grid gap-3 rounded-lg border border-border bg-card p-4 lg:grid-cols-[auto_1fr_auto] ${task.status === "done" ? "opacity-60" : ""}`}>
             <div className="flex items-start gap-1 lg:flex-col">
-              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(t.id, -1)} aria-label={t("Move up")}>
+              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(task.id, -1)} aria-label={t("Move up")}>
                 <ArrowUp className="size-4"/>
               </Button>
-              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(t.id, 1)} aria-label={t("Move down")}>
+              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(task.id, 1)} aria-label={t("Move down")}>
                 <ArrowDown className="size-4"/>
               </Button>
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline" className={priorityTone[t.priority]}>{t.priority}</Badge>
-                <Badge variant="outline">{t.area}</Badge>
-                <span className="font-mono text-xs text-muted-foreground">{t("score ")}{taskScore(t)}</span>
+                <Badge variant="outline" className={priorityTone[task.priority]}>{task.priority}</Badge>
+                <Badge variant="outline">{task.area}</Badge>
+                <span className="font-mono text-xs text-muted-foreground">{t("score ")}{taskScore(task)}</span>
               </div>
-              <input value={t.title} onChange={(e) => update(t.id, { title: e.target.value })} className="mt-2 w-full bg-transparent font-medium outline-none"/>
-              <textarea value={t.description} onChange={(e) => update(t.id, { description: e.target.value })} placeholder={t("Description")} rows={1} className="mt-1 w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"/>
+              <input value={task.title} onChange={(e) => update(task.id, { title: e.targetask.value })} className="mt-2 w-full bg-transparent font-medium outline-none"/>
+              <textarea value={task.description} onChange={(e) => update(task.id, { description: e.targetask.value })} placeholder={t("Description")} rows={1} className="mt-1 w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"/>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Select value={t.priority} onValueChange={(v) => update(t.id, { priority: v as TaskPriority })}>
+              <Select value={task.priority} onValueChange={(v) => update(task.id, { priority: v as TaskPriority })}>
                 <SelectTrigger className="h-8 w-20"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {PRIORITIES.map((p) => <SelectItem key={p.key} value={p.key}>{p.label}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Select value={t.status} onValueChange={(v) => update(t.id, { status: v as TaskStatus })}>
+              <Select value={task.status} onValueChange={(v) => update(task.id, { status: v as TaskStatus })}>
                 <SelectTrigger className="h-8 w-32"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {STATUSES.map((s) => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Select value={t.area} onValueChange={(v) => update(t.id, { area: v as TaskArea })}>
+              <Select value={task.area} onValueChange={(v) => update(task.id, { area: v as TaskArea })}>
                 <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {AREAS.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Scale label={t("Impact")} value={t.impact} onChange={(impact) => update(t.id, { impact })}/>
-              <Scale label={t("Effort")} value={t.effort} onChange={(effort) => update(t.id, { effort })}/>
-              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground" aria-label={t("Delete")} onClick={() => { setDirty(true); setTasks((ts) => ts.filter((x) => x.id !== t.id)); }}>
+              <Scale label={t("Impact")} value={task.impact} onChange={(impact) => update(task.id, { impact })}/>
+              <Scale label={t("Effort")} value={task.effort} onChange={(effort) => update(task.id, { effort })}/>
+              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground" aria-label={t("Delete")} onClick={() => { setDirty(true); setTasks((ts) => ts.filter((x) => x.id !== task.id)); }}>
                 <Trash2 className="size-4"/>
               </Button>
             </div>
