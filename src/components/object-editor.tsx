@@ -118,14 +118,14 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
         }
     };
     const field = (id: keyof Form, label: string, placeholder?: string) => (<div className="space-y-2">
-      <Label htmlFor=></Label>
-      <Input id= value= placeholder= onChange=/>
+      <Label htmlFor={`oe-${id}`}>{label}</Label>
+      <Input id={`oe-${id}`} value={f[id] as string} placeholder={placeholder} onChange={(e) => set(id, e.target.value as never)}/>
     </div>);
-    return (<Dialog open= onOpenChange=>
+    return (<Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
-            
+            {object ? t("Edit object") : t("Add object")}
           </DialogTitle>
           <DialogDescription>{t("Fill in the record and decide what visitors can see.")}</DialogDescription>
         </DialogHeader>
@@ -136,34 +136,38 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
               <p className="text-sm font-medium">{t("Visible to visitors")}</p>
               <p className="text-xs text-muted-foreground">{t("Hidden objects stay in your internal catalogue only.")}</p>
             </div>
-            <Switch checked= onCheckedChange=/>
+            <Switch checked={f.isVisible} onCheckedChange={(v) => set("isVisible", v)}/>
           </div>
 
-          
+          {field("title", "Title", "SCR-536 Handie-Talkie")}
           <div className="grid gap-4 sm:grid-cols-2">
-            
-            
-            
-            
+            {field("manufacturer", "Manufacturer")}
+            {field("model", "Model")}
+            {field("year", "Year", "1942")}
+            {field("price", "Approx. price", "€1,200 – €1,500")}
             <div className="space-y-2">
               <Label>{t("Condition")}</Label>
-              <Select value= onValueChange=>
+              <Select value={f.condition} onValueChange={(v) => set("condition", v as Condition)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  
+                  {CONDITIONS.map((c) => (<SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>{t("Category")}</Label>
-              <Select value= onValueChange=>
+              <Select value={f.category} onValueChange={(v) => set("category", v)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  
+                  {CATEGORIES.map((c) => (<SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>))}
                 </SelectContent>
               </Select>
             </div>
@@ -171,39 +175,47 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
 
           <div className="space-y-2">
             <Label htmlFor="oe-desc">{t("Description")}</Label>
-            <Textarea id="oe-desc" rows= value= onChange=/>
+            <Textarea id="oe-desc" rows={3} value={f.description} onChange={(e) => set("description", e.target.value)}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="oe-images">{t("Image URLs (one per line)")}</Label>
-            <Textarea id="oe-images" rows= value= onChange=/>
+            <Textarea id="oe-images" rows={3} value={f.images} onChange={(e) => set("images", e.target.value)}/>
           </div>
-          
+          {field("tags", "Tags (comma separated)", "WWII, portable, AM")}
           <div className="space-y-2">
             <Label htmlFor="oe-specs">{t("Specifications (one \"Key: value\" per line)")}</Label>
-            <Textarea id="oe-specs" rows= value= placeholder= onChange=/>
+            <Textarea id="oe-specs" rows={4} value={f.specs} placeholder={t("Frequency: 3.5\u20136 MHz\nWeight: 2.3 kg")} onChange={(e) => set("specs", e.target.value)}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="oe-history">{t("Provenance")}</Label>
-            <Textarea id="oe-history" rows= value= onChange=/>
+            <Textarea id="oe-history" rows={3} value={f.history} onChange={(e) => set("history", e.target.value)}/>
           </div>
-          
+          {field("modelUrl", "3D model URL (.glb)", "https://…/model.glb")}
           <div className="space-y-2">
             <Label htmlFor="oe-links">{t("Links (one \"Label | URL\" per line)")}</Label>
-            <Textarea id="oe-links" rows= value= placeholder={t("Wikipedia | https://en.wikipedia.org/\u2026")} onChange=/>
+            <Textarea id="oe-links" rows={2} value={f.links} placeholder={t("Wikipedia | https://en.wikipedia.org/\u2026")} onChange={(e) => set("links", e.target.value)}/>
           </div>
 
           <div className="rounded-md border border-border/70 p-3">
             <p className="text-sm font-medium">{t("Public sections for this object")}</p>
             <p className="mb-3 text-xs text-muted-foreground">{t("Sections disabled at museum level are greyed out.")}</p>
             <div className="grid gap-2 sm:grid-cols-2">
-              
+              {FEATURES.filter((x) => !x.museumOnly).map((feat) => {
+            const enabled = museumFlags[feat.key];
+            return (<label key={feat.key} className={`flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm ${enabled ? "" : "opacity-40"}`}>
+                    {feat.label}
+                    <Switch disabled={!enabled} checked={enabled && !f.hiddenFeatures.includes(feat.key)} onCheckedChange={(v) => set("hiddenFeatures", v
+                    ? f.hiddenFeatures.filter((k) => k !== feat.key)
+                    : [...f.hiddenFeatures, feat.key])}/>
+                  </label>);
+        })}
             </div>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick=>{t("Cancel")}</Button>
-          <Button onClick=></Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
+          <Button onClick={save}>{object ? t("Save changes") : t("Add object")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>);

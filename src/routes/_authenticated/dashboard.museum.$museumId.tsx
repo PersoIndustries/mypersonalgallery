@@ -39,7 +39,9 @@ function MuseumSetup() {
     } | null>(null);
     const [visitorView, setVisitorView] = useState(false);
     if (!museum || museum.ownerId !== currentUser?.id) {
-        return (<EmptyState icon= title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action=/>);
+        return (<EmptyState icon={Boxes} title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action={<Button asChild variant="outline">
+            <Link to="/dashboard/museums">{t("Back to museums")}</Link>
+          </Button>}/>);
     }
     const objs = objectsOf(museum.id);
     const visibleCount = objs.filter((o) => o.isVisible !== false).length;
@@ -51,20 +53,20 @@ function MuseumSetup() {
         <ArrowLeft className="size-3.5"/>{t(" All museums")}</Link>
 
       <div className="flex flex-wrap items-center gap-4 rounded-xl border border-border/80 bg-card p-4">
-        <img src= alt= className="size-16 rounded object-cover"/>
+        <img src={museum.cover} alt={museum.title} className="size-16 rounded object-cover"/>
         <div className="min-w-0 flex-1">
-          <h2 className="truncate font-display text-2xl"></h2>
+          <h2 className="truncate font-display text-2xl">{museum.title}</h2>
           <p className="text-xs text-muted-foreground">
-            {t(" of ")}{t(" objects visible \u00B7 ")}
+            {visibleCount}{t(" of ")}{objs.length}{t(" objects visible \u00B7 ")}{museum.category}
           </p>
         </div>
         <label className="flex items-center gap-2 rounded-md border border-border/70 px-3 py-2 text-sm">
-          
-          
-          <Switch checked= onCheckedChange=/>
+          {museum.isPublic ? (<Globe className="size-4 text-primary"/>) : (<Lock className="size-4 text-muted-foreground"/>)}
+          {museum.isPublic ? t("Public") : t("Private")}
+          <Switch checked={museum.isPublic} onCheckedChange={(v) => void updateMuseum(museum.id, { isPublic: v }).then(() => toast.success(v ? "Museum is now public" : "Museum is now private")).catch(e => toast.error(e.message))}/>
         </label>
         <Button asChild>
-          <Link to="/m/$slug" params=>
+          <Link to="/m/$slug" params={{ slug: museum.slug }}>
             <ExternalLink className="size-4"/>{t(" View my museum")}</Link>
         </Button>
       </div>
@@ -72,7 +74,7 @@ function MuseumSetup() {
       <Tabs defaultValue="preview">
         <TabsList>
           <TabsTrigger value="preview">{t("Preview")}</TabsTrigger>
-          <TabsTrigger value="objects">{t("Objects (")}{t(")")}</TabsTrigger>
+          <TabsTrigger value="objects">{t("Objects (")}{objs.length}{t(")")}</TabsTrigger>
           <TabsTrigger value="setup">{t("Setup")}</TabsTrigger>
         </TabsList>
 
@@ -80,21 +82,82 @@ function MuseumSetup() {
         <TabsContent value="preview" className="mt-5 space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              
+              {visitorView
+            ? t("Showing exactly what visitors see.") : t("Showing everything, hidden items are marked.")}
             </p>
-            <label className="flex items-center gap-2 text-sm">{t("Visitor view")}<Switch checked= onCheckedChange=/>
+            <label className="flex items-center gap-2 text-sm">{t("Visitor view")}<Switch checked={visitorView} onCheckedChange={setVisitorView}/>
             </label>
           </div>
-          
+          {visitorView && !museum.isPublic ? (<EmptyState icon={Lock} title={t("This museum is private")} description={t("Visitors can't see it. Switch it to public to open the doors.")}/>) : (<div className="overflow-hidden rounded-xl border border-border/80">
+              <div className="relative">
+                <img src={museum.cover} alt="" className="absolute inset-0 size-full object-cover opacity-25"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/50"/>
+                <div className="relative p-8">
+                  <Badge variant="secondary">{museum.category}</Badge>
+                  <h3 className="mt-3 font-display text-3xl">{museum.title}</h3>
+                  {(flags.description || !visitorView) && (<p className={`mt-2 max-w-2xl text-sm text-muted-foreground ${flags.description ? "" : "line-through opacity-50"}`}>
+                      {museum.description}
+                    </p>)}
+                </div>
+              </div>
+              {previewItems.length === 0 ? (<p className="p-10 text-center text-sm text-muted-foreground">{t("No visible objects yet.")}</p>) : (<div className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {previewItems.map((o) => {
+                    const hidden = o.isVisible === false;
+                    return (<div key={o.id} className={`group overflow-hidden rounded-lg border border-border/80 bg-card ${hidden ? "opacity-50" : ""}`}>
+                        <div className="relative aspect-4/3 overflow-hidden bg-muted">
+                          <img src={o.images[0]} alt={o.title} loading="lazy" className="size-full object-cover"/>
+                          {hidden && (<Badge variant="secondary" className="absolute left-2 top-2 gap-1">
+                              <EyeOff className="size-3"/>{t(" Hidden")}</Badge>)}
+                          <Button size="icon" variant="secondary" className="absolute right-2 top-2 opacity-0 transition group-hover:opacity-100" onClick={() => setEditor({ object: o })} aria-label={`Edit ${o.title}`}>
+                            <Pencil className="size-4"/>
+                          </Button>
+                        </div>
+                        <div className="p-3">
+                          <p className="eyebrow">
+                            {o.year}{t(" \u00B7 ")}{o.manufacturer.split(" ")[0]}
+                          </p>
+                          <p className="mt-1 font-display text-lg leading-snug">{o.title}</p>
+                          {showFeature(museum, o, "description") && (<p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                              {o.description}
+                            </p>)}
+                          {showFeature(museum, o, "price") && o.price && (<p className="mt-2 text-xs text-primary">{t("\u2248 ")}{o.price}</p>)}
+                        </div>
+                      </div>);
+                })}
+                </div>)}
+            </div>)}
         </TabsContent>
 
         {/* OBJECTS */}
         <TabsContent value="objects" className="mt-5 space-y-3">
           <div className="flex justify-end">
-            <Button onClick=>
+            <Button onClick={() => setEditor({ object: null })}>
               <Plus className="size-4"/>{t(" Add object")}</Button>
           </div>
-          
+          {objs.length === 0 ? (<EmptyState icon={Boxes} title={t("This gallery is empty")} description={t("Add your first object to start the catalogue.")}/>) : (objs.map((o) => {
+            const visible = o.isVisible !== false;
+            return (<div key={o.id} className="flex items-center gap-3 rounded-lg border border-border/80 bg-card p-3">
+                  <img src={o.images[0]} alt={o.title} loading="lazy" className={`size-12 rounded object-cover ${visible ? "" : "opacity-40"}`}/>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{o.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {o.manufacturer || t("Unknown maker")}{t(" \u00B7 ")}{o.year || t("n.d.")}
+                      {o.hiddenFeatures?.length
+                    ? ` · ${o.hiddenFeatures.length} sections hidden`
+                    : ""}
+                    </p>
+                  </div>
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {visible ? <Eye className="size-4"/> : <EyeOff className="size-4"/>}
+                    <Switch checked={visible} onCheckedChange={(v) => void updateObject(o.id, { isVisible: v }).catch(e => toast.error(e.message))} aria-label={t("Visible to visitors")}/>
+                  </label>
+                  <Button variant="ghost" size="sm" onClick={() => setEditor({ object: o })}>
+                    <Pencil className="size-4"/>{t(" Edit")}</Button>
+                  <Button variant="ghost" size="icon" onClick={() => void deleteObject(o.id).then(() => toast.success(t("Object removed"))).catch(e => toast.error(e.message))}>
+                    <Trash2 className="size-4 text-destructive"/>
+                  </Button>
+                </div>);
+        }))}
         </TabsContent>
 
         {/* SETUP */}
@@ -107,15 +170,15 @@ function MuseumSetup() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="s-title">{t("Title")}</Label>
-                <Input id="s-title" defaultValue= onChange= onBlur=/>
+                <Input id="s-title" defaultValue={museum.title} onChange={(e) => { e.currentTarget.dataset["draft"] = e.target.value; }} onBlur={(e) => void updateMuseum(museum.id, { title: e.target.value }).catch(e => toast.error(e.message))}/>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="s-desc">{t("Description")}</Label>
-                <Textarea id="s-desc" rows= defaultValue= onBlur=/>
+                <Textarea id="s-desc" rows={4} defaultValue={museum.description} onBlur={(e) => void updateMuseum(museum.id, { description: e.target.value }).catch(e => toast.error(e.message))}/>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="s-cover">{t("Cover image URL")}</Label>
-                <Input id="s-cover" defaultValue= onBlur=/>
+                <Input id="s-cover" defaultValue={museum.cover} onBlur={(e) => void updateMuseum(museum.id, { cover: e.target.value }).catch(e => toast.error(e.message))}/>
               </div>
             </CardContent>
           </Card>
@@ -126,12 +189,18 @@ function MuseumSetup() {
               <CardDescription>{t("Choose what visitors see. Disabled sections stay internal. Each object can hide more from its own editor.")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
-              
+              {FEATURES.map((feat) => (<label key={feat.key} className="flex items-center justify-between gap-4 rounded-md px-2 py-2 hover:bg-muted/50">
+                  <span>
+                    <span className="block text-sm">{feat.label}</span>
+                    <span className="block text-xs text-muted-foreground">{feat.hint}</span>
+                  </span>
+                  <Switch checked={flags[feat.key]} onCheckedChange={(v) => setFlag(feat.key, v)}/>
+                </label>))}
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
 
-      <ObjectEditor museumId= object= open= onOpenChange=/>
+      <ObjectEditor museumId={museum.id} object={editor?.object ?? null} open={!!editor} onOpenChange={(o) => !o && setEditor(null)}/>
     </div>);
 }

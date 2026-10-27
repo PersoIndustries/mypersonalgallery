@@ -65,39 +65,47 @@ function Explore() {
         <p className="eyebrow">{t("Directory")}</p>
         <h1 className="mt-2 font-display text-4xl sm:text-5xl">{t("Explore the collections")}</h1>
         <p className="mt-3 max-w-xl text-muted-foreground">
-          {t(" museums, ")}{t(" catalogued objects and")}
-          {t(" collectors \u2014 search by name, manufacturer, year or tag.")}</p>
+          {museums.length}{t(" museums, ")}{objects.length}{t(" catalogued objects and")}{" "}
+          {users.length}{t(" collectors \u2014 search by name, manufacturer, year or tag.")}</p>
       </div>
 
-      <form onSubmit= className="relative mt-8 flex gap-3">
+      <form onSubmit={submit} className="relative mt-8 flex gap-3">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"/>
-          <Input value= onChange= placeholder={t("Try \u201CCollins\u201D, \u201CWWII\u201D, \u201Caircraft\u201D, \u201Cdiver\u201D\u2026")} className="h-12 pl-10"/>
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Try \u201CCollins\u201D, \u201CWWII\u201D, \u201Caircraft\u201D, \u201Cdiver\u201D\u2026")} className="h-12 pl-10"/>
         </div>
         <Button type="submit" size="lg">{t("Search")}</Button>
       </form>
 
       <div className="scrollbar-thin mt-5 flex gap-2 overflow-x-auto pb-2">
-        
+        {["All", ...CATEGORIES].map((c) => (<Button key={c} size="sm" variant={category === c ? t("default") : t("outline")} onClick={() => setCategory(c)} className="shrink-0">
+            {c}
+          </Button>))}
       </div>
 
-      <Tabs value= onValueChange= className="mt-10">
+      <Tabs value={tab ?? "museums"} onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, tab: v as Tab }) })} className="mt-10">
         <TabsList>
-          <TabsTrigger value="museums">{t("Museums (")}{t(")")}</TabsTrigger>
-          <TabsTrigger value="objects">{t("Objects (")}{t(")")}</TabsTrigger>
-          <TabsTrigger value="collectors">{t("Collectors (")}{t(")")}</TabsTrigger>
+          <TabsTrigger value="museums">{t("Museums (")}{filteredMuseums.length}{t(")")}</TabsTrigger>
+          <TabsTrigger value="objects">{t("Objects (")}{filteredObjects.length}{t(")")}</TabsTrigger>
+          <TabsTrigger value="collectors">{t("Collectors (")}{filteredUsers.length}{t(")")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="museums" className="mt-8">
-          
+          {!ready ? (<CardSkeletonGrid />) : filteredMuseums.length === 0 ? (<EmptyState icon={SearchX} title={t("No museums match that search")} description={t("Try a broader term or clear the category filter.")} action={<Button variant="outline" onClick={() => setCategory("All")}>{t("Clear filters")}</Button>}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredMuseums.map((m) => (<MuseumCard key={m.id} museum={m} owner={users.find((u) => u.id === m.ownerId)} count={objects.filter((o) => o.museumId === m.id).length}/>))}
+            </div>)}
         </TabsContent>
 
         <TabsContent value="objects" className="mt-8">
-          
+          {!ready ? (<CardSkeletonGrid />) : filteredObjects.length === 0 ? (<EmptyState icon={SearchX} title={t("No objects found")} description={t("Nothing in the catalogue matches that description yet.")}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {filteredObjects.map((o) => (<ObjectCard key={o.id} object={o}/>))}
+            </div>)}
         </TabsContent>
 
         <TabsContent value="collectors" className="mt-8">
-          
+          {filteredUsers.length === 0 ? (<EmptyState icon={SearchX} title={t("No collectors found")} description={t("Try searching by name, callsign or city.")}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredUsers.map((u) => (<CollectorCard key={u.id} user={u} museums={museums.filter((m) => m.ownerId === u.id).length}/>))}
+            </div>)}
         </TabsContent>
       </Tabs>
     </div>);

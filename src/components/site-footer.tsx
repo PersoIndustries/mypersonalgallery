@@ -19,8 +19,8 @@ export function SiteFooter() {
           <div className="space-y-3">
             <p className="eyebrow">{t("Discover")}</p>
             <Link to="/explore" className="block text-muted-foreground hover:text-foreground">{t("Museums")}</Link>
-            <Link to="/explore" search= className="block text-muted-foreground hover:text-foreground">{t("Collectors")}</Link>
-            <Link to="/explore" search= className="block text-muted-foreground hover:text-foreground">{t("Objects")}</Link>
+            <Link to="/explore" search={{ tab: "collectors" }} className="block text-muted-foreground hover:text-foreground">{t("Collectors")}</Link>
+            <Link to="/explore" search={{ tab: "objects" }} className="block text-muted-foreground hover:text-foreground">{t("Objects")}</Link>
           </div>
           <div className="space-y-3">
             <p className="eyebrow">{t("Curate")}</p>
@@ -31,6 +31,6 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{t(" MyOwnMuseum \u2014 built for collectors.")}</div>
+      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" MyOwnMuseum \u2014 built for collectors.")}</div>
     </footer>);
 }

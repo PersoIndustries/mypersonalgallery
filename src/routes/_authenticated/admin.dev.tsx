@@ -93,44 +93,94 @@ function DevPage() {
         open: tasks.filter((t) => t.priority === p.key && t.status !== "done").length,
     }));
     return (<div className="space-y-6">
-      <p role="status" className="text-sm text-muted-foreground"></p>
+      <p role="status" className="text-sm text-muted-foreground">{saveState}</p>
       <div className="grid gap-3 sm:grid-cols-5">
         <div className="rounded-lg border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">{t("Progress")}</p>
           <p className="mt-1 font-display text-3xl">
-            {t("/")}
+            {done}{t("/")}{tasks.length}
           </p>
           <div className="mt-2 h-1.5 rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary" style=/>
+            <div className="h-full rounded-full bg-primary" style={{ width: `${tasks.length ? (done / tasks.length) * 100 : 0}%` }}/>
           </div>
         </div>
-        
+        {counts.map((c) => (<div key={c.key} className="rounded-lg border border-border bg-card p-4">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">{c.label}</p>
+            <p className="mt-1 font-display text-3xl">{c.open}</p>
+            <p className="text-xs text-muted-foreground">{c.hint}{t(" \u00B7 open")}</p>
+          </div>))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Select value= onValueChange=>
+        <Select value={sort} onValueChange={(v) => setSort(v as SortMode)}>
           <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="score">{t("Sort: priority score")}</SelectItem>
             <SelectItem value="manual">{t("Sort: manual order")}</SelectItem>
           </SelectContent>
         </Select>
-        <Select value= onValueChange=>
+        <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as "all" | TaskStatus)}>
           <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t("All statuses")}</SelectItem>
-            
+            {STATUSES.map((s) => (<SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>))}
           </SelectContent>
         </Select>
-        <form className="flex w-full gap-2 sm:ml-auto sm:w-auto" onSubmit=>
-          <Input value= onChange= placeholder={t("New task\u2026")} className="min-w-0 flex-1 sm:w-64"/>
+        <form className="flex w-full gap-2 sm:ml-auto sm:w-auto" onSubmit={(e) => {
+            e.preventDefault();
+            add();
+        }}>
+          <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder={t("New task\u2026")} className="min-w-0 flex-1 sm:w-64"/>
           <Button type="submit" size="sm"><Plus className="size-4"/>{t(" Add")}</Button>
         </form>
       </div>
       <p className="text-xs text-muted-foreground">{t("Score = priority (P0 40 \u00B7 P1 30 \u00B7 P2 20 \u00B7 P3 10) + impact \u00D7 4 \u2212 effort \u00D7 2. Switch to manual order to arrange with the arrows.")}</p>
 
       <div className="space-y-2">
-        
+        {visible.map((t) => (<div key={t.id} className={`grid gap-3 rounded-lg border border-border bg-card p-4 lg:grid-cols-[auto_1fr_auto] ${t.status === "done" ? "opacity-60" : ""}`}>
+            <div className="flex items-start gap-1 lg:flex-col">
+              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(t.id, -1)} aria-label={t("Move up")}>
+                <ArrowUp className="size-4"/>
+              </Button>
+              <Button size="icon" variant="ghost" className="size-7" disabled={sort !== "manual"} onClick={() => move(t.id, 1)} aria-label={t("Move down")}>
+                <ArrowDown className="size-4"/>
+              </Button>
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className={priorityTone[t.priority]}>{t.priority}</Badge>
+                <Badge variant="outline">{t.area}</Badge>
+                <span className="font-mono text-xs text-muted-foreground">{t("score ")}{taskScore(t)}</span>
+              </div>
+              <input value={t.title} onChange={(e) => update(t.id, { title: e.target.value })} className="mt-2 w-full bg-transparent font-medium outline-none"/>
+              <textarea value={t.description} onChange={(e) => update(t.id, { description: e.target.value })} placeholder={t("Description")} rows={1} className="mt-1 w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"/>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Select value={t.priority} onValueChange={(v) => update(t.id, { priority: v as TaskPriority })}>
+                <SelectTrigger className="h-8 w-20"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {PRIORITIES.map((p) => <SelectItem key={p.key} value={p.key}>{p.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={t.status} onValueChange={(v) => update(t.id, { status: v as TaskStatus })}>
+                <SelectTrigger className="h-8 w-32"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {STATUSES.map((s) => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={t.area} onValueChange={(v) => update(t.id, { area: v as TaskArea })}>
+                <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {AREAS.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Scale label={t("Impact")} value={t.impact} onChange={(impact) => update(t.id, { impact })}/>
+              <Scale label={t("Effort")} value={t.effort} onChange={(effort) => update(t.id, { effort })}/>
+              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground" aria-label={t("Delete")} onClick={() => { setDirty(true); setTasks((ts) => ts.filter((x) => x.id !== t.id)); }}>
+                <Trash2 className="size-4"/>
+              </Button>
+            </div>
+          </div>))}
       </div>
     </div>);
 }
@@ -140,10 +190,10 @@ function Scale({ label, value, onChange }: {
     onChange: (n: number) => void;
 }) {
     const { t } = useI18n();
-    return (<Select value= onValueChange=>
-      <SelectTrigger className="h-8 w-28"><SelectValue> </SelectValue></SelectTrigger>
+    return (<Select value={String(value)} onValueChange={(v) => onChange(Number(v))}>
+      <SelectTrigger className="h-8 w-28"><SelectValue>{label} {value}</SelectValue></SelectTrigger>
       <SelectContent>
-        
+        {[1, 2, 3, 4, 5].map((n) => <SelectItem key={n} value={String(n)}>{label} {n}</SelectItem>)}
       </SelectContent>
     </Select>);
 }

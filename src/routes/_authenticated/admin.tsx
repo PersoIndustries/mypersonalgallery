@@ -30,9 +30,9 @@ function AdminLayout() {
       <p className="eyebrow">{t("Admin")}</p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{t("Platform control room")}</h1>
       <nav className="mt-6 flex gap-1 overflow-x-auto border-b border-border pb-2">
-        <Link to="/admin" activeOptions= activeProps= className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+        <Link to="/admin" activeOptions={{ exact: true }} activeProps={{ className: "bg-primary/12 text-primary" }} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
           <Shield className="size-4"/>{t(" Overview")}</Link>
-        <Link to="/admin/dev" activeProps= className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+        <Link to="/admin/dev" activeProps={{ className: "bg-primary/12 text-primary" }} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
           <Code2 className="size-4"/>{t(" Dev")}</Link>
         <Link to="/admin/errors" className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted"><Shield className="size-4"/>{t(" Diagnostics")}</Link>
       </nav>

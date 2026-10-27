@@ -26,4 +26,4 @@ catch (e) {
 }
 finally {
     setBusy(false);
-} }; return <div className="mx-auto max-w-md px-4 py-16"><h1 className="font-display text-4xl">{t("Set your password")}</h1></div>; }
+} }; return <div className="mx-auto max-w-md px-4 py-16"><h1 className="font-display text-4xl">{t("Set your password")}</h1>{valid ? <form onSubmit={e => void save(e)} className="mt-8 space-y-5"><Label htmlFor="new-password">{t("New password")}</Label><Input id="new-password" type="password" autoComplete="new-password" required minLength={8} value={password} onChange={e => setPassword(e.target.value)}/><Label htmlFor="confirm-password">{t("Confirm password")}</Label><Input id="confirm-password" type="password" autoComplete="new-password" required minLength={8} value={confirm} onChange={e => setConfirm(e.target.value)}/><Button disabled={busy} type="submit">{t("Save password")}</Button></form> : <p className="mt-6 text-muted-foreground">{t("Open the invitation or password reset link from your email.")}</p>}</div>; }

@@ -64,41 +64,47 @@ function DashboardSettings() {
       <Card>
         <CardHeader className="flex-row items-center gap-4 space-y-0">
           <Avatar className="size-16">
-            <AvatarImage src= alt=/>
-            <AvatarFallback></AvatarFallback>
+            <AvatarImage src={form.avatar} alt={form.name}/>
+            <AvatarFallback>{form.name.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle className="font-display text-xl"></CardTitle>
-            <p className="text-xs text-muted-foreground">{t("@")}</p>
+            <CardTitle className="font-display text-xl">{form.name || t("Unnamed curator")}</CardTitle>
+            <p className="text-xs text-muted-foreground">{t("@")}{currentUser.username}</p>
           </div>
           <Button asChild variant="ghost" size="sm" className="ml-auto">
-            <Link to="/u/$username" params=>{t("View public profile")}</Link>
+            <Link to="/u/$username" params={{ username: currentUser.username }}>{t("View public profile")}</Link>
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2"><Label htmlFor="p-country">{t("Country of origin")}</Label><CountrySelect id="p-country" value= onChange=/></div>
+          <div className="space-y-2"><Label htmlFor="p-country">{t("Country of origin")}</Label><CountrySelect id="p-country" value={form.country} onChange={country => setForm({ ...form, country })}/></div>
           <div className="space-y-2">
             <Label htmlFor="p-name">{t("Display name")}</Label>
-            <Input id="p-name" value= onChange=/>
+            <Input id="p-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="p-avatar">{t("Avatar image URL")}</Label>
-            <Input id="p-avatar" value= onChange=/>
+            <Input id="p-avatar" value={form.avatar} onChange={(e) => setForm({ ...form, avatar: e.target.value })}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="p-location">{t("Location")}</Label>
-            <Input id="p-location" value= onChange= placeholder={t("Antwerp, Belgium")}/>
+            <Input id="p-location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder={t("Antwerp, Belgium")}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="p-bio">{t("Bio")}</Label>
-            <Textarea id="p-bio" rows= value= onChange= placeholder={t("What do you collect, and why?")}/>
+            <Textarea id="p-bio" rows={4} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder={t("What do you collect, and why?")}/>
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick=>{t("Reset")}</Button>
-            <Button disabled= onClick=>{t("Save changes")}</Button>
+            <Button variant="ghost" onClick={() => setForm({
+            name: currentUser.name,
+            bio: currentUser.bio,
+            location: currentUser.location,
+            avatar: currentUser.avatar,
+            country: currentUser.country ?? '',
+        })}>{t("Reset")}</Button>
+            <Button disabled={!form.country} onClick={() => void updateProfile(form).then(() => toast.success(t("Profile saved"))).catch(e => toast.error(e.message))}>{t("Save changes")}</Button>
           </div>
         </CardContent>
       </Card>
-      <section className="border-t border-border pt-6"><h3 className="font-display text-2xl">{t("Change password")}</h3><form className="mt-4 max-w-md space-y-4" onSubmit=><div className="space-y-2"><Label htmlFor="old-password">{t("Current password")}</Label><Input id="old-password" type="password" required autoComplete="current-password" value= onChange=/></div><div className="space-y-2"><Label htmlFor="new-password">{t("New password")}</Label><Input id="new-password" type="password" required minLength= autoComplete="new-password" value= onChange=/></div><div className="space-y-2"><Label htmlFor="confirm-password">{t("Confirm new password")}</Label><Input id="confirm-password" type="password" required minLength= autoComplete="new-password" value= onChange=/></div><Button type="submit" disabled=></Button></form></section>
+      <section className="border-t border-border pt-6"><h3 className="font-display text-2xl">{t("Change password")}</h3><form className="mt-4 max-w-md space-y-4" onSubmit={e => void changePassword(e)}><div className="space-y-2"><Label htmlFor="old-password">{t("Current password")}</Label><Input id="old-password" type="password" required autoComplete="current-password" value={oldPassword} onChange={e => setOldPassword(e.target.value)}/></div><div className="space-y-2"><Label htmlFor="new-password">{t("New password")}</Label><Input id="new-password" type="password" required minLength={8} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)}/></div><div className="space-y-2"><Label htmlFor="confirm-password">{t("Confirm new password")}</Label><Input id="confirm-password" type="password" required minLength={8} autoComplete="new-password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/></div><Button type="submit" disabled={savingPassword}>{savingPassword ? t("Saving\u2026") : t("Change password")}</Button></form></section>
     </div>);
 }

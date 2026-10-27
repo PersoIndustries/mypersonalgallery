@@ -36,7 +36,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <h1 className="text-xl font-semibold tracking-tight">{t("This page didn't load")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("Something went wrong on our end. You can try refreshing or head back home.")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button onClick= className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">{t("Try again")}</button>
+          <button onClick={() => {
+            router.invalidate();
+            reset();
+        }} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">{t("Try again")}</button>
           <a href="/" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent">{t("Go home")}</a>
         </div>
       </div>
@@ -77,23 +80,21 @@ export const Route = createRootRouteWithContext<{
 function RootShell({ children }: {
     children: ReactNode;
 }) {
-    const { t } = useI18n();
     return (<html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        
+        {children}
         <Scripts />
       </body>
     </html>);
 }
 function RootComponent() {
-    const { t } = useI18n();
     const { queryClient } = Route.useRouteContext();
     const { data: catalog } = useSuspenseQuery({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }, queryClient);
-    return (<QueryClientProvider client=>
-      <StoreProvider initialCatalog=>
+    return (<QueryClientProvider client={queryClient}>
+      <StoreProvider initialCatalog={catalog}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">

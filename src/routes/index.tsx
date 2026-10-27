@@ -37,13 +37,13 @@ function Home() {
           <div className="fade-up">
             <Badge variant="outline" className="border-primary/30 text-primary">
               <Sparkles className="size-3"/>{t(" For collectors and curators")}</Badge>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">{t("Your collection")}<br />{t("deserves a")}
+            <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">{t("Your collection")}<br />{t("deserves a")}{" "}
               <span className="italic text-gradient-gold">{t("museum")}</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">{t("Catalogue every object with photographs, technical specifications, manuals and provenance \u2014 then publish it as a museum anyone can walk through.")}</p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link to="/auth" search=>{t("Start your museum ")}<ArrowRight className="size-4"/>
+                <Link to="/auth" search={{ mode: "signup" }}>{t("Start your museum ")}<ArrowRight className="size-4"/>
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
@@ -51,11 +51,32 @@ function Home() {
               </Button>
             </div>
             <dl className="mt-12 flex gap-10">
-              
+              {[
+            { label: "Museums", value: museums.length },
+            { label: "Objects catalogued", value: objects.length },
+            { label: "Collectors", value: users.length },
+        ].map((s) => (<div key={s.label}>
+                  <dt className="eyebrow">{s.label}</dt>
+                  <dd className="mt-1 font-display text-3xl text-primary">{s.value}</dd>
+                </div>))}
             </dl>
           </div>
 
-          
+          {heroObject && (<div className="relative fade-up">
+              <div className="absolute -inset-6 rounded-[2rem] bg-primary/5 blur-2xl"/>
+              <Link to="/o/$objectId" params={{ objectId: heroObject.id }} className="group relative block overflow-hidden rounded-2xl border border-border/80 bg-card plinth">
+                <div className="aspect-4/3 overflow-hidden">
+                  <img src={heroObject.images[0]} alt={heroObject.title} className="size-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"/>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/80 to-transparent p-6 pt-16">
+                  <p className="eyebrow">{t("Object of the day \u00B7 ")}{heroObject.year}</p>
+                  <h2 className="mt-2 font-display text-2xl">{heroObject.title}</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {heroObject.manufacturer}
+                  </p>
+                </div>
+              </Link>
+            </div>)}
         </div>
       </section>
 
@@ -71,7 +92,9 @@ function Home() {
             </Link>
           </Button>
         </div>
-        
+        {!ready ? (<CardSkeletonGrid />) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredMuseums.map((m) => (<MuseumCard key={m.id} museum={m} owner={users.find((u) => u.id === m.ownerId)} count={objects.filter((o) => o.museumId === m.id).length}/>))}
+          </div>)}
       </section>
 
       {/* Featured objects */}
@@ -81,7 +104,7 @@ function Home() {
           <h2 className="mt-2 font-display text-3xl sm:text-4xl">{t("Remarkable objects")}</h2>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          
+          {featuredObjects.map((o) => (<ObjectCard key={o.id} object={o}/>))}
         </div>
       </section>
 
@@ -91,7 +114,29 @@ function Home() {
           <p className="eyebrow">{t("How it works")}</p>
           <h2 className="mt-2 max-w-xl font-display text-3xl sm:text-4xl">{t("Built for the way collectors actually document things")}</h2>
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
-            
+            {[
+            {
+                icon: Landmark,
+                title: "Create a museum",
+                body: "One museum per collection — WWII field radios, dive watches, press cameras. Give it a cover, a category and a story.",
+            },
+            {
+                icon: Boxes,
+                title: "Catalogue objects",
+                body: "Photograph galleries, key-value specifications, condition grading, provenance notes, manuals and schematics.",
+            },
+            {
+                icon: ScanLine,
+                title: "Share it publicly",
+                body: "Every museum gets a public page and every object a permanent link you can send to fellow collectors.",
+            },
+        ].map((f) => (<div key={f.title}>
+                <span className="flex size-11 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-primary/25">
+                  <f.icon className="size-5"/>
+                </span>
+                <h3 className="mt-4 font-display text-xl">{f.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+              </div>))}
           </div>
         </div>
       </section>
@@ -100,7 +145,17 @@ function Home() {
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6">
         <div className="flex flex-wrap items-center gap-3">
           <span className="eyebrow mr-2">{t("Popular categories")}</span>
-          
+          {[
+            { label: "Radios", icon: Radio },
+            { label: "Aircraft Avionics", icon: ScanLine },
+            { label: "Military Gear", icon: Landmark },
+            { label: "Watches", icon: Sparkles },
+            { label: "Cameras", icon: Camera },
+        ].map((c) => (<Button key={c.label} asChild variant="outline" size="sm">
+              <Link to="/explore" search={{ q: c.label }}>
+                <c.icon className="size-3.5"/> {c.label}
+              </Link>
+            </Button>))}
         </div>
       </section>
     </div>);

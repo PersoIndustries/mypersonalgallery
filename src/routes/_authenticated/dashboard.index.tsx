@@ -26,7 +26,19 @@ function DashboardOverview() {
     ];
     return (<div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        
+        {stats.map((s) => (<Card key={s.label}>
+            <CardContent className="flex items-center gap-4 pt-6">
+              <span className="flex size-10 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
+                <s.icon className="size-5"/>
+              </span>
+              <div>
+                <p className="font-display text-3xl leading-none">{s.value}</p>
+                <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
+                  {s.label}
+                </p>
+              </div>
+            </CardContent>
+          </Card>))}
       </div>
 
       <Card>
@@ -37,7 +49,21 @@ function DashboardOverview() {
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
-          
+          {myMuseums.length === 0 ? (<p className="text-sm text-muted-foreground">{t("You haven't opened a museum yet. Create your first one to start cataloguing.")}</p>) : (myMuseums.map((m) => (<div key={m.id} className="flex items-center gap-4 rounded-md border border-border/70 p-3">
+                <img src={m.cover} alt={m.title} loading="lazy" className="size-14 rounded object-cover"/>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{m.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {objectsOf(m.id).length}{t(" objects \u00B7 ")}{m.category}
+                  </p>
+                </div>
+                <Badge variant={m.isPublic ? t("default") : t("secondary")}>
+                  {m.isPublic ? t("Public") : t("Private")}
+                </Badge>
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/m/$slug" params={{ slug: m.slug }}>{t("View")}</Link>
+                </Button>
+              </div>)))}
         </CardContent>
       </Card>
     </div>);
