@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.handle_new_curator() FROM anon,authenticated; GRANT EXECUTE ON FUNCTION public.handle_new_curator() TO service_role; REVOKE EXECUTE ON FUNCTION public.has_role(uuid,public.app_role) FROM anon;
