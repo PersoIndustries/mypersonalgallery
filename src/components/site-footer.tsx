@@ -58,12 +58,6 @@ export function SiteFooter() {
               Settings
             </Link>
           </div>
-          <div className="space-y-3">
-            <p className="eyebrow">Prototype</p>
-            <p className="text-muted-foreground">
-              Demo data only. Nothing you create here leaves your browser.
-            </p>
-          </div>
         </div>
       </div>
       <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">
