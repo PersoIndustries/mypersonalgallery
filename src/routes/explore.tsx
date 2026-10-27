@@ -25,6 +25,8 @@ export const Route = createFileRoute("/explore")({
   }),
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Explore museums and collectors — MyOwnMuseum" },
       {
         name: "description",

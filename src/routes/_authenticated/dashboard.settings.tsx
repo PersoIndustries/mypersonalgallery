@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
+  head: () => ({meta:[{title:"Curator profile settings — MyOwnMuseum"},{name:"description",content:"Curator profile settings."},{property:"og:title",content:"Curator profile settings — MyOwnMuseum"},{property:"og:description",content:"Curator profile settings."},{name:"robots",content:"noindex"}]}),
   component: DashboardSettings,
 });
 
@@ -100,10 +101,7 @@ function DashboardSettings() {
               Reset
             </Button>
             <Button
-              onClick={() => {
-                updateProfile(form);
-                toast.success("Profile saved");
-              }}
+              onClick={() => void updateProfile(form).then(()=>toast.success("Profile saved")).catch(e=>toast.error(e.message))}
             >
               Save changes
             </Button>

@@ -1,3 +1,6 @@
+import { useServerFn } from '@tanstack/react-start';
+import { toast } from 'sonner';
+import { getAdminTasks, saveAdminTasks } from '@/lib/catalog.functions';
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -26,6 +29,8 @@ import {
 export const Route = createFileRoute("/_authenticated/admin/dev")({
   head: () => ({
     meta: [
+      {property:"og:type",content:"website"},
+      {name:"twitter:card",content:"summary_large_image"},
       { title: "Dev backlog — MyOwnMuseum Admin" },
       { name: "description", content: "Prioritized product backlog to finish MyOwnMuseum." },
       { property: "og:title", content: "Dev backlog — MyOwnMuseum Admin" },
@@ -47,24 +52,16 @@ const priorityTone: Record<TaskPriority, string> = {
 };
 
 function DevPage() {
-  const [tasks, setTasks] = useState<DevTask[]>(SEED_TASKS);
+  const [tasks, setTasks] = useState<DevTask[]>([]);
+  const fetchTasks=useServerFn(getAdminTasks);
+  const persistTasks=useServerFn(saveAdminTasks);
   const [loaded, setLoaded] = useState(false);
   const [sort, setSort] = useState<SortMode>("score");
   const [statusFilter, setStatusFilter] = useState<"all" | TaskStatus>("all");
   const [newTitle, setNewTitle] = useState("");
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setTasks(JSON.parse(raw));
-    } catch {
-      /* ignore */
-    }
-    setLoaded(true);
-  }, []);
-  useEffect(() => {
-    if (loaded) localStorage.setItem(KEY, JSON.stringify(tasks));
-  }, [tasks, loaded]);
+  useEffect(() => { void fetchTasks().then(rows=>{setTasks(rows);setLoaded(true);}).catch(e=>toast.error(e.message)); }, [fetchTasks]);
+  useEffect(() => { if(!loaded)return;const timer=setTimeout(()=>{void persistTasks({data:tasks}).catch(e=>toast.error(e.message));},600);return ()=>clearTimeout(timer); }, [tasks,loaded,persistTasks]);
 
   const update = (id: string, patch: Partial<DevTask>) =>
     setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
@@ -81,7 +78,8 @@ function DevPage() {
     const i = ordered.findIndex((t) => t.id === id);
     const j = i + dir;
     if (j < 0 || j >= ordered.length) return;
-    const [a, b] = [ordered[i]!, ordered[j]!];
+    const a=ordered[i], b=ordered[j];
+    if(!a || !b)return;
     ordered[i] = b;
     ordered[j] = a;
     setTasks(ordered.map((t, idx) => ({ ...t, rank: idx })));
