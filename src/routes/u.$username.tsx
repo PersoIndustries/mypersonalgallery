@@ -1,3 +1,4 @@
+import {getPublicCatalog} from '@/lib/catalog.functions';
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CalendarDays, Landmark, MapPin } from "lucide-react";
 import { EmptyState, MuseumCard } from "@/components/cards";
@@ -6,22 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/u/$username")({
-  head: ({ params }) => ({
-    meta: [
-      {property:"og:type",content:"website"},
-      {name:"twitter:card",content:"summary_large_image"},
-      { title: `@${params.username} — collector profile on MyOwnMuseum` },
-      {
-        name: "description",
-        content: `Browse the digital museums curated by @${params.username}: vintage radios, watches, cameras and more.`,
-      },
-      { property: "og:title", content: `@${params.username} on MyOwnMuseum` },
-      {
-        property: "og:description",
-        content: `See every public museum curated by @${params.username}.`,
-      },
-    ],
-  }),
+  loader: async ({params}) => {const c=await getPublicCatalog();return c.users.find(u=>u.username===params.username) ?? null;},
+  head: ({loaderData}) => {const title=(loaderData?.name ?? 'Collection')+' — MyOwnMuseum';const description=loaderData?.bio || 'A curator profile on MyOwnMuseum.';const image=loaderData?.avatar;return {meta:[{title},{name:'description',content:description},{property:'og:title',content:title},{property:'og:description',content:description},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'},...(image?.startsWith('https://')?[{property:'og:image',content:image},{name:'twitter:image',content:image}]:[])]};},
   component: Profile,
 });
 

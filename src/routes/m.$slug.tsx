@@ -1,3 +1,4 @@
+import {getPublicCatalog} from '@/lib/catalog.functions';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Boxes, Landmark, Lock, Search, Settings2 } from "lucide-react";
 import { useState } from "react";
@@ -9,23 +10,8 @@ import { Input } from "@/components/ui/input";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/m/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      {property:"og:type",content:"website"},
-      {name:"twitter:card",content:"summary_large_image"},
-      { title: `${params.slug.replace(/-/g, " ")} — a museum on MyOwnMuseum` },
-      {
-        name: "description",
-        content:
-          "A curated digital museum: browse the catalogue with photographs, technical specifications and provenance for every object.",
-      },
-      { property: "og:title", content: "A curated museum on MyOwnMuseum" },
-      {
-        property: "og:description",
-        content: "Photographs, specifications and provenance for every object in the collection.",
-      },
-    ],
-  }),
+  loader: async ({params}) => {const c=await getPublicCatalog();return c.museums.find(m=>m.slug===params.slug) ?? null;},
+  head: ({loaderData}) => {const title=(loaderData?.title ?? 'Collection')+' — MyOwnMuseum';const description=loaderData?.description || 'A curated digital museum on MyOwnMuseum.';const image=loaderData?.cover;return {meta:[{title},{name:'description',content:description},{property:'og:title',content:title},{property:'og:description',content:description},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'},...(image?.startsWith('https://')?[{property:'og:image',content:image},{name:'twitter:image',content:image}]:[])]};},
   component: MuseumPage,
 });
 

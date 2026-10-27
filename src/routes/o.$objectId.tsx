@@ -1,3 +1,4 @@
+import {getPublicCatalog} from '@/lib/catalog.functions';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Boxes,
@@ -18,23 +19,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/o/$objectId")({
-  head: () => ({
-    meta: [
-      {property:"og:type",content:"website"},
-      {name:"twitter:card",content:"summary_large_image"},
-      { title: "Object detail — MyOwnMuseum" },
-      {
-        name: "description",
-        content:
-          "Full object record: high-resolution gallery, technical specifications, provenance history and archived documents.",
-      },
-      { property: "og:title", content: "Object detail — MyOwnMuseum" },
-      {
-        property: "og:description",
-        content: "Gallery, specifications, provenance and documents for this collection piece.",
-      },
-    ],
-  }),
+  loader: async ({params}) => {const c=await getPublicCatalog();return c.objects.find(o=>o.id===params.objectId) ?? null;},
+  head: ({loaderData}) => {const title=(loaderData?.title ?? 'Collection')+' — MyOwnMuseum';const description=loaderData?.description || 'A collection object on MyOwnMuseum.';const image=loaderData?.images?.[0];return {meta:[{title},{name:'description',content:description},{property:'og:title',content:title},{property:'og:description',content:description},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'},...(image?.startsWith('https://')?[{property:'og:image',content:image},{name:'twitter:image',content:image}]:[])]};},
   component: ObjectPage,
 });
 
