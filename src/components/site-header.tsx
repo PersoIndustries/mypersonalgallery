@@ -14,12 +14,12 @@ export function SiteHeader() {
     const router = useRouter();
     const [query, setQuery] = useState("");
     return (<header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-1 px-3 sm:gap-3 sm:px-6">
         <Link to="/" className="group flex shrink-0 items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25 transition-colors group-hover:bg-primary/20">
             <Landmark className="size-4.5"/>
           </span>
-          <span className="font-display text-xl leading-none tracking-tight">{t("MyOwn")}<span className="text-primary">{t("Museum")}</span>
+          <span className="font-display text-lg leading-none sm:text-xl">{t("MyOwn")}<span className="text-primary">{t("Museum")}</span>
           </span>
         </Link>
 
@@ -77,7 +77,7 @@ export function SiteHeader() {
                   <LogOut className="size-4"/>{t(" Sign out")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>) : (<>
-              <Button asChild variant="ghost" size="sm">
+              <Button asChild variant="ghost" size="sm" className="px-2">
                 <Link to="/auth">{t("Sign in")}</Link>
               </Button>
               <Button asChild size="sm" className="hidden sm:inline-flex">

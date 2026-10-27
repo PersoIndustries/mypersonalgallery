@@ -152,8 +152,8 @@ function DevPage() {
                 <Badge variant="outline">{task.area}</Badge>
                 <span className="font-mono text-xs text-muted-foreground">{t("score ")}{taskScore(task)}</span>
               </div>
-              <input value={task.title} onChange={(e) => update(task.id, { title: e.targetask.value })} className="mt-2 w-full bg-transparent font-medium outline-none"/>
-              <textarea value={task.description} onChange={(e) => update(task.id, { description: e.targetask.value })} placeholder={t("Description")} rows={1} className="mt-1 w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"/>
+              <input value={task.title} onChange={(e) => update(task.id, { title: e.target.value })} className="mt-2 w-full bg-transparent font-medium outline-none"/>
+              <textarea value={task.description} onChange={(e) => update(task.id, { description: e.target.value })} placeholder={t("Description")} rows={1} className="mt-1 w-full resize-none bg-transparent text-sm text-muted-foreground outline-none"/>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Select value={task.priority} onValueChange={(v) => update(task.id, { priority: v as TaskPriority })}>
