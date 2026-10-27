@@ -84,7 +84,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: ({context}) => context.queryClient.ensureQueryData({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()}),
+  loader: ({context}) => context.queryClient.ensureQueryData({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog(),staleTime:120000,gcTime:600000}),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -131,7 +131,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const {data:catalog}=useSuspenseQuery({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()},queryClient);
+  const {data:catalog}=useSuspenseQuery({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog(),staleTime:120000,gcTime:600000},queryClient);
 
   return (
     <QueryClientProvider client={queryClient}>

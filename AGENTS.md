@@ -14,3 +14,7 @@
 - Preserve legacy catalogue IDs and complete object records in JSON payloads; auth-linked profiles use the auth UUID as their profile ID, while seeded curator profiles have no login identity.
 - Keep the museum React context in a component-free module so hot reload preserves provider/consumer identity; initialize missing catalogue state with empty arrays during loader transitions.
 - Use the official HTTPS npm registry for dependency downloads and lockfile URLs so installs do not depend on an internal cache hostname.
+- Public catalogue reads use bounded edge caching and TanStack Query caching; private responses are never shared, and public mutations invalidate cached data.
+- Cache only public image requests in a size- and age-bounded service worker; never cache signed storage URLs or account responses.
+- Billing interest is separate from authoritative subscriptions; only a future verified payment service may modify subscription entitlements.
+- Administrator aggregates use privileged reads only after a server-side user_roles check; sanitized authenticated error reporting is rate-limited in PostgreSQL.

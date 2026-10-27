@@ -2,7 +2,7 @@ import { useServerFn } from '@tanstack/react-start';
 import { toast } from 'sonner';
 import { getAdminTasks, saveAdminTasks } from '@/lib/catalog.functions';
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   AREAS,
@@ -58,13 +58,12 @@ function DevPage() {
   const [loaded, setLoaded] = useState(false);
   const [sort, setSort] = useState<SortMode>("score");
   const [statusFilter, setStatusFilter] = useState<"all" | TaskStatus>("all");
-  const [newTitle, setNewTitle] = useState("");
+  const [newTitle, setNewTitle] = useState("");const [saveState,setSaveState]=useState('');const [dirty,setDirty]=useState(false);
 
   useEffect(() => { void fetchTasks().then(rows=>{setTasks(rows);setLoaded(true);}).catch(e=>toast.error(e.message)); }, [fetchTasks]);
-  useEffect(() => { if(!loaded)return;const timer=setTimeout(()=>{void persistTasks({data:tasks}).catch(e=>toast.error(e.message));},600);return ()=>clearTimeout(timer); }, [tasks,loaded,persistTasks]);
+  useEffect(() => { if(!loaded||!dirty)return;setSaveState('Unsaved changes');const timer=setTimeout(()=>{setSaveState('Saving…');void persistTasks({data:tasks}).then(()=>setSaveState('Saved')).catch(e=>{setSaveState('Save failed');toast.error(e.message);});},1000);return ()=>clearTimeout(timer); }, [tasks,loaded,dirty,persistTasks]);
 
-  const update = (id: string, patch: Partial<DevTask>) =>
-    setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  const update = (id: string, patch: Partial<DevTask>) => {setDirty(true);setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));};
 
   const visible = useMemo(() => {
     const list = tasks.filter((t) => statusFilter === "all" || t.status === statusFilter);
@@ -74,6 +73,7 @@ function DevPage() {
   }, [tasks, sort, statusFilter]);
 
   const move = (id: string, dir: -1 | 1) => {
+    setDirty(true);
     const ordered = [...tasks].sort((a, b) => a.rank - b.rank);
     const i = ordered.findIndex((t) => t.id === id);
     const j = i + dir;
@@ -86,12 +86,13 @@ function DevPage() {
   };
 
   const add = () => {
+    setDirty(true);
     if (!newTitle.trim()) return;
     const maxRank = Math.max(-1, ...tasks.map((t) => t.rank));
     setTasks((ts) => [
       ...ts,
       {
-        id: `t${Date.now()}`,
+        id: crypto.randomUUID(),
         title: newTitle.trim(),
         description: "",
         area: "UX",
@@ -114,6 +115,7 @@ function DevPage() {
 
   return (
     <div className="space-y-6">
+      <p role="status" className="text-sm text-muted-foreground">{saveState}</p>
       <div className="grid gap-3 sm:grid-cols-5">
         <div className="rounded-lg border border-border bg-card p-4">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">Progress</p>
@@ -154,22 +156,15 @@ function DevPage() {
           </SelectContent>
         </Select>
         <form
-          className="ml-auto flex gap-2"
+          className="flex w-full gap-2 sm:ml-auto sm:w-auto"
           onSubmit={(e) => {
             e.preventDefault();
             add();
           }}
         >
-          <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="New task…" className="w-64" />
+          <Input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="New task…" className="min-w-0 flex-1 sm:w-64" />
           <Button type="submit" size="sm"><Plus className="size-4" /> Add</Button>
         </form>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => confirm("Reset backlog to the default tasks?") && setTasks(SEED_TASKS)}
-        >
-          <RotateCcw className="size-4" /> Reset
-        </Button>
       </div>
       <p className="text-xs text-muted-foreground">
         Score = priority (P0 40 · P1 30 · P2 20 · P3 10) + impact × 4 − effort × 2. Switch to manual order to arrange with the arrows.
@@ -229,7 +224,7 @@ function DevPage() {
               </Select>
               <Scale label="Impact" value={t.impact} onChange={(impact) => update(t.id, { impact })} />
               <Scale label="Effort" value={t.effort} onChange={(effort) => update(t.id, { effort })} />
-              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground" aria-label="Delete" onClick={() => setTasks((ts) => ts.filter((x) => x.id !== t.id))}>
+              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground" aria-label="Delete" onClick={() => {setDirty(true);setTasks((ts) => ts.filter((x) => x.id !== t.id));}}>
                 <Trash2 className="size-4" />
               </Button>
             </div>

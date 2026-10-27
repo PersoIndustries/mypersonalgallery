@@ -321,6 +321,7 @@ export type Database = {
           error_category: string
           error_fingerprint: string
           error_path: string
+          reporter: string
         }
         Returns: boolean
       }

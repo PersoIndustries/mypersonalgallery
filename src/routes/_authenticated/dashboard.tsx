@@ -29,6 +29,7 @@ const links = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/dashboard/museums", label: "Museums", icon: Landmark },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
+  { to: "/dashboard/plans", label: "Plans", icon: Landmark },
 ] as const;
 
 function DashboardLayout() {

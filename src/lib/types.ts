@@ -7,6 +7,7 @@ export interface User {
   avatar: string;
   bio: string;
   location: string;
+  country?: string | null;
   joined: string;
 }
 
