@@ -32,7 +32,7 @@ import {
   type FeatureKey,
 } from "@/lib/types";
 
-export const Route = createFileRoute("/dashboard/museum/$museumId")({
+export const Route = createFileRoute("/_authenticated/dashboard/museum/$museumId")({
   head: () => ({
     meta: [
       { title: "Museum setup — MyOwnMuseum" },

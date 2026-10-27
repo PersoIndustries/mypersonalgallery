@@ -1,9 +1,9 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { LayoutDashboard, Landmark, Settings } from "lucide-react";
-import { useEffect } from "react";
+
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Curator dashboard — MyOwnMuseum" },
@@ -31,11 +31,7 @@ const links = [
 
 function DashboardLayout() {
   const { currentUser, ready } = useStore();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (ready && !currentUser) navigate({ to: "/auth" });
-  }, [ready, currentUser, navigate]);
 
   if (!currentUser) {
     return (

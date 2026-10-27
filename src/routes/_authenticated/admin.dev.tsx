@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const Route = createFileRoute("/admin/dev")({
+export const Route = createFileRoute("/_authenticated/admin/dev")({
   head: () => ({
     meta: [
       { title: "Dev backlog — MyOwnMuseum Admin" },
