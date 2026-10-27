@@ -13,5 +13,5 @@ function Diagnostics() { const { t } = useI18n(); const { data } = useSuspenseQu
     await client.invalidateQueries({ queryKey: ['admin-errors'] });
 }
 catch {
-    toast.error(t("Unable to update incident"));
+    toast.error('Unable to update incident');
 } }}>{row.resolved ? t("Reopen") : t("Resolve")}</Button></article>)}</div>}</div>; }

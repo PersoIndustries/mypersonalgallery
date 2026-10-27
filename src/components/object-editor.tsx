@@ -184,7 +184,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
           {field("tags", "Tags (comma separated)", "WWII, portable, AM")}
           <div className="space-y-2">
             <Label htmlFor="oe-specs">{t("Specifications (one \"Key: value\" per line)")}</Label>
-            <Textarea id="oe-specs" rows={4} value={f.specs} placeholder={t("Frequency: 3.5\u20136 MHz\nWeight: 2.3 kg")} onChange={(e) => set("specs", e.target.value)}/>
+            <Textarea id="oe-specs" rows={4} value={f.specs} placeholder={"Frequency: 3.5–6 MHz\nWeight: 2.3 kg"} onChange={(e) => set("specs", e.target.value)}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="oe-history">{t("Provenance")}</Label>

@@ -36,7 +36,7 @@ export function Lightbox({ images, index, onClose, onIndexChange, title, }: {
     }, [open, onClose, step]);
     if (!open)
         return null;
-    return (<div className="fixed inset-0 z-50 flex flex-col bg-background/96 backdrop-blur-md animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label={title ? `${title} gallery` : t("Image gallery")}>
+    return (<div className="fixed inset-0 z-50 flex flex-col bg-background/96 backdrop-blur-md animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label={title ? `${title} gallery` : "Image gallery"}>
       <div className="flex items-center justify-between px-5 py-4">
         <div className="text-sm text-muted-foreground">
           {title && <span className="mr-3 text-foreground">{title}</span>}

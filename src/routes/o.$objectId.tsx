@@ -25,7 +25,7 @@ function ObjectPage() {
     if (!object) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
         <EmptyState icon={Boxes} title={t("Object not found")} description={t("This record is no longer in the catalogue.")} action={<Button asChild variant="outline">
-              <Link to="/explore">{t("Explore the catalogue")}</Link>
+              <Link to="/explore">Explore the catalogue</Link>
             </Button>}/>
       </div>);
     }

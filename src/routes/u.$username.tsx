@@ -19,7 +19,7 @@ function Profile() {
     if (!user) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
         <EmptyState icon={Landmark} title={t("No collector here")} description={`We couldn't find anyone using @${username}.`} action={<Button asChild variant="outline">
-              <Link to="/explore">{t("Browse collectors")}</Link>
+              <Link to="/explore">Browse collectors</Link>
             </Button>}/>
       </div>);
     }

@@ -40,7 +40,7 @@ function MuseumSetup() {
     const [visitorView, setVisitorView] = useState(false);
     if (!museum || museum.ownerId !== currentUser?.id) {
         return (<EmptyState icon={Boxes} title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action={<Button asChild variant="outline">
-            <Link to="/dashboard/museums">{t("Back to museums")}</Link>
+            <Link to="/dashboard/museums">Back to museums</Link>
           </Button>}/>);
     }
     const objs = objectsOf(museum.id);
@@ -153,7 +153,7 @@ function MuseumSetup() {
                   </label>
                   <Button variant="ghost" size="sm" onClick={() => setEditor({ object: o })}>
                     <Pencil className="size-4"/>{t(" Edit")}</Button>
-                  <Button variant="ghost" size="icon" onClick={() => void deleteObject(o.id).then(() => toast.success(t("Object removed"))).catch(e => toast.error(e.message))}>
+                  <Button variant="ghost" size="icon" onClick={() => void deleteObject(o.id).then(() => toast.success("Object removed")).catch(e => toast.error(e.message))}>
                     <Trash2 className="size-4 text-destructive"/>
                   </Button>
                 </div>);

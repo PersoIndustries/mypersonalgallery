@@ -23,7 +23,7 @@ function MuseumPage() {
     if (!museum) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
         <EmptyState icon={Landmark} title={t("Museum not found")} description={t("This museum may have been closed or renamed.")} action={<Button asChild variant="outline">
-              <Link to="/explore">{t("Explore museums")}</Link>
+              <Link to="/explore">Explore museums</Link>
             </Button>}/>
       </div>);
     }
@@ -83,8 +83,9 @@ function MuseumPage() {
         </div>
 
         {shown.length === 0 ? (<div className="mt-8">
-            <EmptyState icon={Boxes} title={items.length === 0 ? t("No objects yet") : t("Nothing matches that search")} description={items.length === 0
-                ? t("The curator hasn't catalogued anything in this museum.") : t("Try a different manufacturer, year or tag.")}/>
+            <EmptyState icon={Boxes} title={items.length === 0 ? "No objects yet" : "Nothing matches that search"} description={items.length === 0
+                ? "The curator hasn't catalogued anything in this museum."
+                : "Try a different manufacturer, year or tag."}/>
           </div>) : (<div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {shown.map((o) => (<ObjectCard key={o.id} object={o}/>))}
           </div>)}

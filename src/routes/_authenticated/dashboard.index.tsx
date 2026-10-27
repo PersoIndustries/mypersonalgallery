@@ -57,7 +57,7 @@ function DashboardOverview() {
                     {objectsOf(m.id).length}{t(" objects \u00B7 ")}{m.category}
                   </p>
                 </div>
-                <Badge variant={m.isPublic ? t("default") : t("secondary")}>
+                <Badge variant={m.isPublic ? "default" : "secondary"}>
                   {m.isPublic ? t("Public") : t("Private")}
                 </Badge>
                 <Button asChild variant="ghost" size="sm">

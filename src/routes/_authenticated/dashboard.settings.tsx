@@ -101,7 +101,7 @@ function DashboardSettings() {
             avatar: currentUser.avatar,
             country: currentUser.country ?? '',
         })}>{t("Reset")}</Button>
-            <Button disabled={!form.country} onClick={() => void updateProfile(form).then(() => toast.success(t("Profile saved"))).catch(e => toast.error(e.message))}>{t("Save changes")}</Button>
+            <Button disabled={!form.country} onClick={() => void updateProfile(form).then(() => toast.success("Profile saved")).catch(e => toast.error(e.message))}>{t("Save changes")}</Button>
           </div>
         </CardContent>
       </Card>

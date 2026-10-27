@@ -108,7 +108,7 @@ function DashboardMuseums() {
                       {objs.length}{t(" objects \u00B7 ")}{m.category}
                     </p>
                   </div>
-                  <Badge variant={m.isPublic ? t("default") : t("secondary")}>
+                  <Badge variant={m.isPublic ? "default" : "secondary"}>
                     {m.isPublic ? t("Public") : t("Private")}
                   </Badge>
                   <div className="flex items-center gap-1">
@@ -121,7 +121,7 @@ function DashboardMuseums() {
                     <Button variant="ghost" size="icon" onClick={() => openEditMuseum(m.id)}>
                       <Pencil className="size-4"/>
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => void deleteMuseum(m.id).then(() => toast.success(t("Museum removed"))).catch(e => toast.error(e.message))}>
+                    <Button variant="ghost" size="icon" onClick={() => void deleteMuseum(m.id).then(() => toast.success("Museum removed")).catch(e => toast.error(e.message))}>
                       <Trash2 className="size-4 text-destructive"/>
                     </Button>
                   </div>
@@ -150,7 +150,7 @@ function DashboardMuseums() {
                           <Button asChild variant="ghost" size="sm">
                             <Link to="/o/$objectId" params={{ objectId: o.id }}>{t("Open")}</Link>
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => void deleteObject(o.id).then(() => toast.success(t("Object removed"))).catch(e => toast.error(e.message))}>
+                          <Button variant="ghost" size="icon" onClick={() => void deleteObject(o.id).then(() => toast.success("Object removed")).catch(e => toast.error(e.message))}>
                             <Trash2 className="size-4 text-destructive"/>
                           </Button>
                         </div>)))}

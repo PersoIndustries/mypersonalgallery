@@ -78,7 +78,7 @@ function Explore() {
       </form>
 
       <div className="scrollbar-thin mt-5 flex gap-2 overflow-x-auto pb-2">
-        {["All", ...CATEGORIES].map((c) => (<Button key={c} size="sm" variant={category === c ? t("default") : t("outline")} onClick={() => setCategory(c)} className="shrink-0">
+        {["All", ...CATEGORIES].map((c) => (<Button key={c} size="sm" variant={category === c ? "default" : "outline"} onClick={() => setCategory(c)} className="shrink-0">
             {c}
           </Button>))}
       </div>
@@ -91,7 +91,9 @@ function Explore() {
         </TabsList>
 
         <TabsContent value="museums" className="mt-8">
-          {!ready ? (<CardSkeletonGrid />) : filteredMuseums.length === 0 ? (<EmptyState icon={SearchX} title={t("No museums match that search")} description={t("Try a broader term or clear the category filter.")} action={<Button variant="outline" onClick={() => setCategory("All")}>{t("Clear filters")}</Button>}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {!ready ? (<CardSkeletonGrid />) : filteredMuseums.length === 0 ? (<EmptyState icon={SearchX} title={t("No museums match that search")} description={t("Try a broader term or clear the category filter.")} action={<Button variant="outline" onClick={() => setCategory("All")}>
+                  Clear filters
+                </Button>}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredMuseums.map((m) => (<MuseumCard key={m.id} museum={m} owner={users.find((u) => u.id === m.ownerId)} count={objects.filter((o) => o.museumId === m.id).length}/>))}
             </div>)}
         </TabsContent>
