@@ -131,7 +131,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const {data:catalog}=useSuspenseQuery({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()});
+  const {data:catalog}=useSuspenseQuery({queryKey:["public-catalog"],queryFn:()=>getPublicCatalog()},queryClient);
 
   return (
     <QueryClientProvider client={queryClient}>

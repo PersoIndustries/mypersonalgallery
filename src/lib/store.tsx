@@ -30,6 +30,7 @@ export function StoreProvider({children,initialCatalog}:{children:ReactNode;init
   const saved=localStorage.getItem('myownmuseum.theme');if(saved==='light'||saved==='dark')setTheme(saved);
   void refresh().catch(e=>{toast.error(e.message);setReady(true);});
   const {data:{subscription}}=supabase.auth.onAuthStateChange(event=>{
+   if(event==='PASSWORD_RECOVERY')sessionStorage.setItem('museum.password-recovery','true');
    if(!['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))return;
    if(event==='SIGNED_OUT'){setState(empty);setUserId(null);setAdmin(false);}
    setTimeout(()=>{void refresh().catch(e=>toast.error(e.message));void router.invalidate();if(event!=='SIGNED_OUT')void queryClient.invalidateQueries();},0);
@@ -40,7 +41,7 @@ export function StoreProvider({children,initialCatalog}:{children:ReactNode;init
  const publicMuseums=state.museums.filter(m=>m.isPublic);const publicIds=new Set(publicMuseums.map(m=>m.id));
  const value:StoreValue={...state,currentUserId,currentUser:state.users.find(u=>u.id===currentUserId)??null,isAdmin,ready,publicMuseums,publicObjects:state.objects.filter(o=>o.isVisible!==false&&publicIds.has(o.museumId)),theme,toggleTheme:()=>setTheme(t=>t==='dark'?'light':'dark'),
  login:async(email,password)=>{const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});if(error)throw new Error(error.message);await refresh();},
- signup:async(name,username,email,password)=>{const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{data:{name:name.trim(),username:username.trim().toLowerCase()},emailRedirectTo:window.location.origin}});if(error)throw new Error(error.message);if(data.session)await refresh();return Boolean(data.session);},
+ signup:async(name,username,email,password)=>{if(!name.trim() || !/^[a-zA-Z0-9_-]{3,40}$/.test(username.trim()) || password.length<8)throw new Error('Enter a name, valid username and password of at least 8 characters');const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{data:{name:name.trim(),username:username.trim().toLowerCase()},emailRedirectTo:window.location.origin}});if(error)throw new Error(error.message);if(data.session)await refresh();return Boolean(data.session);},
  logout:async()=>{await queryClient.cancelQueries();queryClient.clear();setState(empty);setUserId(null);setAdmin(false);const {error}=await supabase.auth.signOut();if(error)throw new Error(error.message);await navigate({to:'/auth',replace:true});},
  updateProfile:patch=>run({action:'updateProfile',data:profileSchema.parse(patch)}),museumsOf:id=>state.museums.filter(m=>m.ownerId===id),objectsOf:id=>state.objects.filter(o=>o.museumId===id),getMuseum:id=>state.museums.find(m=>m.id===id||m.slug===id),getObject:id=>state.objects.find(o=>o.id===id),
  createMuseum:data=>run({action:'createMuseum',data:museumSchema.parse(data)}),updateMuseum:(id,data)=>run({action:'updateMuseum',id,data:museumPatchSchema.parse(data)}),deleteMuseum:id=>run({action:'deleteMuseum',id}),
