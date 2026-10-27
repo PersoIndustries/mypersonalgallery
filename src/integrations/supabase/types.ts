@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_errors: {
+        Row: {
+          category: string
+          created_at: string
+          fingerprint: string
+          id: string
+          path: string
+          resolved: boolean
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          fingerprint: string
+          id?: string
+          path: string
+          resolved?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          fingerprint?: string
+          id?: string
+          path?: string
+          resolved?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_errors_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       dev_tasks: {
         Row: {
           created_at: string
@@ -120,10 +161,40 @@ export type Database = {
           },
         ]
       }
+      plan_interests: {
+        Row: {
+          created_at: string
+          plan: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          plan: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          plan?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_interests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar: string
           bio: string
+          country: string | null
           created_at: string
           id: string
           joined: string
@@ -137,6 +208,7 @@ export type Database = {
         Insert: {
           avatar?: string
           bio?: string
+          country?: string | null
           created_at?: string
           id?: string
           joined?: string
@@ -150,6 +222,7 @@ export type Database = {
         Update: {
           avatar?: string
           bio?: string
+          country?: string | null
           created_at?: string
           id?: string
           joined?: string
@@ -161,6 +234,50 @@ export type Database = {
           username?: string
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          currency: string
+          monthly_amount_minor: number
+          plan: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          monthly_amount_minor?: number
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          monthly_amount_minor?: number
+          plan?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -191,10 +308,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_platform_metrics: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
+        }
+        Returns: boolean
+      }
+      report_app_error: {
+        Args: {
+          error_category: string
+          error_fingerprint: string
+          error_path: string
         }
         Returns: boolean
       }
