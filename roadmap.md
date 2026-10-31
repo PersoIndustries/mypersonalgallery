@@ -1,7 +1,7 @@
 # Platform improvements
-- [ ] Create a temporary developer administrator with password sign-in; waiting for the user's owned email address and secure password entry.
-- [ ] Prepare private invoice history, refund requests and administrator subscription/refund management without enabling Stripe.
-- [ ] Add trustworthy daily UTC snapshots with unavailable payment/login metrics clearly distinguished from zero.
+- [x] Create a temporary developer administrator with real password sign-in; verified account and admin pages. Remove before launch (platform-40).
+- [x] Prepare private invoice history, atomic refund requests/review and administrator subscription history without enabling Stripe. Real checkout, cancellation, invoices and refunds await provider/products (platform-37).
+- [x] Add daily UTC account snapshots at 00:17 with unavailable payment/login metrics clearly distinguished from zero; reliable login/payment sources await platform-39.
 - [ ] Prepare weekly operational summary for Carlos; automatic sending requires a verified owned email domain and an external scheduler.
 - [x] Add callback completion for token-hash/PKCE links without duplicate exchange, Site URL fallback routing, and regression tests. Real emailed-link verification remains blocked below.
 - [ ] Improve authentication email presentation and confirm allowed return addresses: external Supabase hosted auth settings are not accessible through available tools; requires owner configuration.
@@ -20,4 +20,4 @@
 - [x] Add sanitized error reporting and administrator diagnostics.
 - [x] Persist requested and future admin, billing, mobile/APK and SEO tasks in existing dev_tasks.
 - [x] Run rule tests and public/mobile browser checks.
-- [ ] Verify authenticated flows: external Supabase has no authorized browser test session.
+- [x] Verify password sign-in and authenticated admin billing, private billing and DEV views using the newly authorized developer account. Actual emailed-password recovery and real payment flows remain unverified and depend on their prerequisites above.
