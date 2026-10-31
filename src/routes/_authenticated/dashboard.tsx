@@ -42,7 +42,7 @@ function DashboardLayout() {
       </h1>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[200px_1fr]">
-        <nav className="flex gap-1 overflow-x-auto lg:flex-col">
+        <nav data-tour="nav" className="flex gap-1 overflow-x-auto lg:flex-col">
           {links.map((l) => (<Link key={l.to} to={l.to} activeOptions={{ exact: l.to === "/dashboard" }} activeProps={{ className: "bg-primary/12 text-primary" }} className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
               <l.icon className="size-4"/>
               {t(l.label)}

@@ -114,7 +114,7 @@ function Welcome() {
         {step === 5 && <div className="space-y-4 text-center">
           <h3 className="font-display text-2xl">{t('Your museum is open!')}</h3>
           <p className="text-sm text-muted-foreground">{t('Keep cataloguing objects or take a quick tour of your tools.')}</p>
-          <div className="flex justify-center gap-2"><Button asChild><Link to="/dashboard" search={{ tour: true } as never}>{t('Take the tour')}</Link></Button><Button asChild variant="outline"><Link to="/dashboard/museums">{t('Manage museums')}</Link></Button></div>
+          <div className="flex justify-center gap-2"><Button asChild><Link to="/dashboard" search={{ tour: true }}>{t('Take the tour')}</Link></Button><Button asChild variant="outline"><Link to="/dashboard/museums">{t('Manage museums')}</Link></Button></div>
         </div>}
       </section>
       {step < 5 && <Button variant="ghost" onClick={() => void skip()}>{t('Skip for now')}</Button>}
