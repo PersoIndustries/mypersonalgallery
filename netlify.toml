@@ -1,0 +1,14 @@
+# Netlify deployment (GitHub → Netlify). Lovable's own Publish ignores this file.
+[build]
+  command = "bun install --frozen-lockfile && bun run build"
+  publish = "dist"
+
+[build.environment]
+  # Build the server for Netlify Functions instead of Cloudflare Workers.
+  NITRO_PRESET = "netlify"
+  NODE_VERSION = "22"
+  BUN_VERSION = "1.2.23"
+
+# Required environment variables (set them in Netlify → Site configuration → Environment variables):
+#   VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, VITE_SUPABASE_PROJECT_ID
+#   SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SERVICE_ROLE_KEY (secret, admin features)

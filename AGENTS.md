@@ -25,3 +25,4 @@
 - Preparatory billing records separate sandbox/live events; only verified future provider ingestion writes invoices, money or entitlements. Refund requests and admin reviews use service-only atomic functions with a server-verified actor, and approval never means refunded.
 - Daily account snapshots are SQL-only, idempotent UTC jobs starting at the recorded observation date; unavailable login/payment sources stay null. Weekly reports use a completed UTC week with explicit coverage, a fixed operational recipient and no email queues; email sending awaits domain setup and an external authenticated scheduler.
 - Onboarding progress lives in profiles.preferences.onboarding via validated server functions; checklist steps derive from real catalogue data and only share/plans/tour flags are stored.
+- Netlify deploys from GitHub via netlify.toml, which sets NITRO_PRESET=netlify; Lovable sandbox builds ignore that variable and keep targeting Cloudflare, so both hosts coexist.
