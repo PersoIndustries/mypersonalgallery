@@ -10,8 +10,8 @@ export interface CollectorNotification {
 
 export function notificationText(notification: CollectorNotification, t: Translator) {
   const data = notification.data && typeof notification.data === 'object' ? notification.data as Record<string, unknown> : {};
-  const title = typeof data.title === 'string' ? data.title : '';
-  const plan = typeof data.plan === 'string' ? data.plan : '';
+  const title = typeof data['title'] === 'string' ? data['title'] : '';
+  const plan = typeof data['plan'] === 'string' ? data['plan'] : '';
   switch (notification.kind) {
     case 'welcome': return t('Welcome to MyOwnMuseum');
     case 'museum_created': return t('Your museum was created: {title}', { title });
