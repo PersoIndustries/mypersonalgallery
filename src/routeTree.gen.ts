@@ -21,9 +21,11 @@ import { Route as MSlugRouteImport } from './routes/m.$slug'
 import { Route as OObjectIdRouteImport } from './routes/o.$objectId'
 import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
 import { Route as AuthenticatedAdminDevRouteImport } from './routes/_authenticated/admin.dev'
 import { Route as AuthenticatedAdminErrorsRouteImport } from './routes/_authenticated/admin.errors'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
 import { Route as AuthenticatedDashboardMuseumsRouteImport } from './routes/_authenticated/dashboard.museums'
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
 import { Route as AuthenticatedDashboardPlansRouteImport } from './routes/_authenticated/dashboard.plans'
@@ -89,6 +91,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminBillingRoute =
+  AuthenticatedAdminBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminDevRoute = AuthenticatedAdminDevRouteImport.update({
   id: '/dev',
   path: '/dev',
@@ -104,6 +112,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardBillingRoute =
+  AuthenticatedDashboardBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardMuseumsRoute =
@@ -148,8 +162,10 @@ export interface FileRoutesByFullPath {
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
@@ -167,8 +183,10 @@ export interface FileRoutesByTo {
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
@@ -190,8 +208,10 @@ export interface FileRoutesById {
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
   '/u/$username': typeof UUsernameRoute
+  '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/_authenticated/admin/dev': typeof AuthenticatedAdminDevRoute
   '/_authenticated/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
@@ -213,8 +233,10 @@ export interface FileRouteTypes {
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
+    | '/admin/billing'
     | '/admin/dev'
     | '/admin/errors'
+    | '/dashboard/billing'
     | '/dashboard/museums'
     | '/dashboard/notifications'
     | '/dashboard/plans'
@@ -232,8 +254,10 @@ export interface FileRouteTypes {
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
+    | '/admin/billing'
     | '/admin/dev'
     | '/admin/errors'
+    | '/dashboard/billing'
     | '/dashboard/museums'
     | '/dashboard/notifications'
     | '/dashboard/plans'
@@ -254,8 +278,10 @@ export interface FileRouteTypes {
     | '/m/$slug'
     | '/o/$objectId'
     | '/u/$username'
+    | '/_authenticated/admin/billing'
     | '/_authenticated/admin/dev'
     | '/_authenticated/admin/errors'
+    | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/museums'
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/plans'
@@ -363,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/billing': {
+      id: '/_authenticated/admin/billing'
+      path: '/billing'
+      fullPath: '/admin/billing'
+      preLoaderRoute: typeof AuthenticatedAdminBillingRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/dev': {
       id: '/_authenticated/admin/dev'
       path: '/dev'
@@ -382,6 +415,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/billing': {
+      id: '/_authenticated/dashboard/billing'
+      path: '/billing'
+      fullPath: '/dashboard/billing'
+      preLoaderRoute: typeof AuthenticatedDashboardBillingRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/museums': {
@@ -423,12 +463,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
   AuthenticatedAdminDevRoute: typeof AuthenticatedAdminDevRoute
   AuthenticatedAdminErrorsRoute: typeof AuthenticatedAdminErrorsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminBillingRoute: AuthenticatedAdminBillingRoute,
   AuthenticatedAdminDevRoute: AuthenticatedAdminDevRoute,
   AuthenticatedAdminErrorsRoute: AuthenticatedAdminErrorsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -438,6 +480,7 @@ const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardMuseumsRoute: typeof AuthenticatedDashboardMuseumsRoute
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardPlansRoute: typeof AuthenticatedDashboardPlansRoute
@@ -448,6 +491,7 @@ interface AuthenticatedDashboardRouteChildren {
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
     AuthenticatedDashboardMuseumsRoute: AuthenticatedDashboardMuseumsRoute,
     AuthenticatedDashboardNotificationsRoute:
       AuthenticatedDashboardNotificationsRoute,
