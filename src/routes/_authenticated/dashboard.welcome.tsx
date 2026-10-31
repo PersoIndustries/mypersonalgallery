@@ -48,6 +48,7 @@ function Welcome() {
   const skip = async () => { await update({ skipped: true, welcomed: true }); await navigate({ to: '/dashboard' }); };
   const share = async () => {
     try {
+      if (!museum) return;
       if (navigator.share) await navigator.share({ title: museum.title, url: publicUrl });
       else { await navigator.clipboard.writeText(publicUrl); toast.success(t('Link copied')); }
       await update({ shared: true });
@@ -58,7 +59,7 @@ function Welcome() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h2 className="font-display text-3xl">{t('Welcome, {name}!', { name: currentUser.name.split(' ')[0] })}</h2>
+        <h2 className="font-display text-3xl">{t('Welcome, {name}!', { name: currentUser.name.split(' ')[0] ?? currentUser.name })}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{t('Open your museum in a few minutes. You can skip this and come back from your overview.')}</p>
       </div>
       <ol className="flex flex-wrap gap-2 text-xs" aria-label={t('Steps')}>

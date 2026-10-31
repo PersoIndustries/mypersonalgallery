@@ -15,7 +15,7 @@ export function ProductTour({ open, onClose }: { open: boolean; onClose: () => v
   useEffect(() => { if (open) setIndex(0); }, [open]);
   useEffect(() => {
     if (!open) return;
-    const el = document.querySelector<HTMLElement>(`[data-tour="${steps[index].target}"]`);
+    const el = document.querySelector<HTMLElement>(`[data-tour="${(steps[index] ?? steps[0]).target}"]`);
     if (!el) return;
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.classList.add('ring-2', 'ring-primary', 'ring-offset-2', 'ring-offset-background', 'rounded-md');
@@ -28,7 +28,7 @@ export function ProductTour({ open, onClose }: { open: boolean; onClose: () => v
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
   if (!open) return null;
-  const step = steps[index];
+  const step = steps[index] ?? steps[0];
   const last = index === steps.length - 1;
   return (
     <div role="dialog" aria-modal="false" aria-labelledby="tour-title" className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-sm rounded-lg border border-border bg-popover p-5 text-popover-foreground shadow-lg sm:left-auto sm:right-6">
