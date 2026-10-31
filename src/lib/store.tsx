@@ -11,7 +11,7 @@ import type { Museum,CollectionObject,User } from './types';
 import { museumSchema,museumPatchSchema,objectSchema,objectPatchSchema,profileSchema } from './catalog.schemas';
 import { countrySchema, diagnosticPath } from './platform-rules';
 import { reportAppError } from './platform.functions';
-import { capturePasswordLink, markPasswordRecovery, clearPasswordLink } from './password-link';
+import { capturePasswordLink, markPasswordRecovery, clearPasswordLink, shouldRoutePasswordLink } from './password-link';
 export interface StoreValue extends Catalog {
  currentUserId:string|null; currentUser:User|null; isAdmin:boolean; ready:boolean; publicMuseums:Museum[];publicObjects:CollectionObject[];
  theme:'dark'|'light';toggleTheme:()=>void;login:(email:string,password:string)=>Promise<void>;signup:(name:string,username:string,email:string,password:string,country:string)=>Promise<boolean>;logout:()=>Promise<void>;
@@ -35,6 +35,11 @@ export function StoreProvider({children,initialCatalog=empty}:{children:ReactNod
  },[privateCatalog,queryClient]);
  useEffect(()=>{
   capturePasswordLink(window.location.hash, window.location.search);
+  // Hosted Auth may fall back to Site URL when a redirect is not allow-listed.
+  // Preserve the credentials locally so the public password page can finish the callback.
+  if(shouldRoutePasswordLink(window.location.pathname,window.location.hash,window.location.search)){
+   window.location.replace('/reset-password'+window.location.search+window.location.hash);return;
+  }
   const media=window.matchMedia('(prefers-color-scheme: dark)');
   const sync=()=>setTheme(media.matches?'dark':'light');sync();media.addEventListener('change',sync);
   void refresh().catch(e=>{toast.error(e.message);setReady(true);});

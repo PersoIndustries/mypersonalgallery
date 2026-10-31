@@ -60,3 +60,8 @@ export async function completePasswordLink(auth: CallbackAuth, hash: string, sea
 export function passwordResetRedirect(origin: string) {
   return new URL('/reset-password', origin).href;
 }
+
+export function shouldRoutePasswordLink(pathname: string, hash: string, search: string) {
+  const link = parsePasswordLink(hash, search);
+  return pathname !== '/reset-password' && link.intent !== null && !link.rejected;
+}

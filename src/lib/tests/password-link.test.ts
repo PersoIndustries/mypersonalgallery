@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parsePasswordLink, capturePasswordLink, passwordLinkState, clearPasswordLink, canSetPassword, completePasswordLink } from '../password-link';
+import { parsePasswordLink, capturePasswordLink, passwordLinkState, clearPasswordLink, canSetPassword, completePasswordLink, shouldRoutePasswordLink } from '../password-link';
 test('invitation and recovery intent survives fragment consumption but requires verified user', () => {
   for (const type of ['invite', 'recovery']) {
     clearPasswordLink();
@@ -45,4 +45,10 @@ test('failed callback cannot use an existing signed-in user', async () => {
   clearPasswordLink(); const auth = { ...fakeAuth(), initialize: async () => ({ error: new Error('expired') }) };
   assert.equal(await completePasswordLink(auth, '#type=recovery', '', () => ''), false);
   clearPasswordLink();
+});
+test('password callbacks landing on Site URL are routed to reset, not signup callbacks', () => {
+  assert.equal(shouldRoutePasswordLink('/', '#type=recovery', ''), true);
+  assert.equal(shouldRoutePasswordLink('/', '#type=invite', ''), true);
+  assert.equal(shouldRoutePasswordLink('/', '#type=signup', ''), false);
+  assert.equal(shouldRoutePasswordLink('/reset-password', '#type=recovery', ''), false);
 });
