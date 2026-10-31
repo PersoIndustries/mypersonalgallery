@@ -21,4 +21,7 @@
 - [x] Add sanitized error reporting and administrator diagnostics.
 - [x] Persist requested and future admin, billing, mobile/APK and SEO tasks in existing dev_tasks.
 - [x] Run rule tests and public/mobile browser checks.
-- [x] Verify password sign-in and authenticated admin billing, private billing and DEV views using the newly authorized developer account. Actual emailed-password recovery and real payment flows remain unverified and depend on their prerequisites above.
+- [x] Verify password sign-in and authenticated admin billing, private billing and DEV views using the newly authorized developer account. Actual emailed-password recovery and real payment flows remain unverified and depend on their prerequisites above.- [x] New-user flow: shorter sign-up, welcome wizard, Getting started checklist, guided tour, public invite, admin funnel.
+- [x] Offer plans to new users after publishing their first museum (interest only, payments off) plus a growth prompt.
+- [ ] Allow-list /dashboard/welcome in Supabase URL Configuration — blocked: owner dashboard access.
+- [ ] Verify onboarding with a signed-in new account — blocked: no test sign-in available in this session.

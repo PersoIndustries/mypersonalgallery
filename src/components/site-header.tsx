@@ -43,7 +43,7 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-1 sm:ml-2">
           {currentUser && <NotificationBell userId={currentUser.id} />}
-          <Button asChild variant="ghost" size="icon" aria-label={t('Help')}><Link to="/help"><CircleHelp className="size-4"/></Link></Button>
+          <Button asChild variant="ghost" size="icon" aria-label={t('Help')} data-tour="help"><Link to="/help"><CircleHelp className="size-4"/></Link></Button>
           <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" aria-label={t('Language')} title={locale==='es'?'Español':'English'}><Languages className="size-4"/></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onClick={()=>setLocale('en')}>English {locale==='en'?'✓':''}</DropdownMenuItem><DropdownMenuItem onClick={()=>setLocale('es')}>Español {locale==='es'?'✓':''}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
           <Button variant="ghost" size="icon" aria-label={t("Toggle theme")} onClick={toggleTheme} className="text-muted-foreground">
             {theme === "dark" ? <Sun className="size-4.5"/> : <Moon className="size-4.5"/>}

@@ -30,6 +30,7 @@ import { Route as AuthenticatedDashboardMuseumsRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
 import { Route as AuthenticatedDashboardPlansRouteImport } from './routes/_authenticated/dashboard.plans'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardWelcomeRouteImport } from './routes/_authenticated/dashboard.welcome'
 import { Route as AuthenticatedDashboardMuseumMuseumIdRouteImport } from './routes/_authenticated/dashboard.museum.$museumId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -144,6 +145,12 @@ const AuthenticatedDashboardSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardWelcomeRoute =
+  AuthenticatedDashboardWelcomeRouteImport.update({
+    id: '/welcome',
+    path: '/welcome',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardMuseumMuseumIdRoute =
   AuthenticatedDashboardMuseumMuseumIdRouteImport.update({
     id: '/museum/$museumId',
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -191,6 +199,7 @@ export interface FileRoutesByTo {
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -216,6 +225,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/plans'
     | '/dashboard/settings'
+    | '/dashboard/welcome'
     | '/admin/'
     | '/dashboard/'
     | '/dashboard/museum/$museumId'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/plans'
     | '/dashboard/settings'
+    | '/dashboard/welcome'
     | '/admin'
     | '/dashboard'
     | '/dashboard/museum/$museumId'
@@ -286,6 +298,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/plans'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/welcome'
     | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/museum/$museumId'
@@ -452,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/welcome': {
+      id: '/_authenticated/dashboard/welcome'
+      path: '/welcome'
+      fullPath: '/dashboard/welcome'
+      preLoaderRoute: typeof AuthenticatedDashboardWelcomeRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/museum/$museumId': {
       id: '/_authenticated/dashboard/museum/$museumId'
       path: '/museum/$museumId'
@@ -485,6 +505,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardPlansRoute: typeof AuthenticatedDashboardPlansRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardWelcomeRoute: typeof AuthenticatedDashboardWelcomeRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardMuseumMuseumIdRoute: typeof AuthenticatedDashboardMuseumMuseumIdRoute
 }
@@ -497,6 +518,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
       AuthenticatedDashboardNotificationsRoute,
     AuthenticatedDashboardPlansRoute: AuthenticatedDashboardPlansRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardWelcomeRoute: AuthenticatedDashboardWelcomeRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
     AuthenticatedDashboardMuseumMuseumIdRoute:
       AuthenticatedDashboardMuseumMuseumIdRoute,

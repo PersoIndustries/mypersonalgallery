@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/o/$objectId")({
     loader: async ({ params }) => { const c = await getPublicCatalog(); return c.objects.find(o => o.id === params.objectId) ?? null; },
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/o/$objectId")({
 function ObjectPage() {
     const { t } = useI18n();
     const { objectId } = Route.useParams();
-    const { getObject, museums, users } = useStore();
+    const { getObject, museums, users, currentUser } = useStore();
     const object = getObject(objectId);
     const [active, setActive] = useState(0);
     const [lightbox, setLightbox] = useState<number | null>(null);
@@ -165,6 +166,7 @@ function ObjectPage() {
       </div>
 
       <Lightbox images={object.images} index={lightbox} onClose={() => setLightbox(null)} onIndexChange={setLightbox} title={object.title}/>
+      {!currentUser && <div className="mt-12"><CreateMuseumCta/></div>}
     </div>);
 }
 function Stat({ icon: Icon, label, value, }: {
