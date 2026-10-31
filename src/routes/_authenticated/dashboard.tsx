@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, Landmark, Settings } from "lucide-react";
+import { LayoutDashboard, Landmark, Settings, Bell } from "lucide-react";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/_authenticated/dashboard")({
     head: () => ({
@@ -26,6 +26,7 @@ const links = [
     { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { to: "/dashboard/museums", label: "Museums", icon: Landmark },
     { to: "/dashboard/settings", label: "Settings", icon: Settings },
+    { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
     { to: "/dashboard/plans", label: "Plans", icon: Landmark },
 ] as const;
 function DashboardLayout() {

@@ -17,5 +17,5 @@ test('public catalogue exactly preserves every original record',async()=>{
 });
 test('anonymous callers cannot access administrator roles or tasks',async()=>{
  assert.ok(url);assert.ok(key);const c=createClient(url,key,{auth:{persistSession:false}});
- for(const table of ['user_roles','dev_tasks','app_errors','subscriptions','plan_interests']){const r=await c.from(table).select('*');assert.ok(r.error || r.data?.length===0);}
+ for(const table of ['user_roles','dev_tasks','app_errors','subscriptions','plan_interests','notifications']){const r=await c.from(table).select('*');assert.ok(r.error || r.data?.length===0);}
 });

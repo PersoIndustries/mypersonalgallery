@@ -1,4 +1,5 @@
 import { useI18n } from '@/lib/i18n';
+import { NotificationBell } from './notification-bell';
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { Landmark, Moon, Search, Sun, LayoutDashboard, LogOut, User2, Languages, CircleHelp } from "lucide-react";
 import { useState } from "react";
@@ -41,6 +42,7 @@ export function SiteHeader() {
         </form>
 
         <div className="ml-auto flex items-center gap-1 sm:ml-2">
+          {currentUser && <NotificationBell userId={currentUser.id} />}
           <Button asChild variant="ghost" size="icon" aria-label={t('Help')}><Link to="/help"><CircleHelp className="size-4"/></Link></Button>
           <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" aria-label={t('Language')} title={locale==='es'?'Español':'English'}><Languages className="size-4"/></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onClick={()=>setLocale('en')}>English {locale==='en'?'✓':''}</DropdownMenuItem><DropdownMenuItem onClick={()=>setLocale('es')}>Español {locale==='es'?'✓':''}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
           <Button variant="ghost" size="icon" aria-label={t("Toggle theme")} onClick={toggleTheme} className="text-muted-foreground">
