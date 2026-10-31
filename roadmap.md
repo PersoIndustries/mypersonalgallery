@@ -2,7 +2,8 @@
 - [x] Create a temporary developer administrator with real password sign-in; verified account and admin pages. Remove before launch (platform-40).
 - [x] Prepare private invoice history, atomic refund requests/review and administrator subscription history without enabling Stripe. Real checkout, cancellation, invoices and refunds await provider/products (platform-37).
 - [x] Add daily UTC account snapshots at 00:17 with unavailable payment/login metrics clearly distinguished from zero; reliable login/payment sources await platform-39.
-- [ ] Prepare weekly operational summary for Carlos; automatic sending requires a verified owned email domain and an external scheduler.
+- [x] Prepare bilingual weekly operational preview/download for Carlos using the last completed UTC week and explicit source coverage.
+- [ ] Enable weekly email delivery to Carlos: blocked on a verified owned email domain and an external authenticated scheduler (platform-38).
 - [x] Add callback completion for token-hash/PKCE links without duplicate exchange, Site URL fallback routing, and regression tests. Real emailed-link verification remains blocked below.
 - [ ] Improve authentication email presentation and confirm allowed return addresses: external Supabase hosted auth settings are not accessible through available tools; requires owner configuration.
 - [x] Add private collector notifications with unread/read filters, badge, pagination, and account/museum/plan-interest event triggers. Live signed-in UI verification remains blocked below.
