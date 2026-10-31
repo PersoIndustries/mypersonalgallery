@@ -570,6 +570,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_onboarding_funnel: { Args: never; Returns: Json }
       admin_platform_metrics: { Args: never; Returns: Json }
       capture_daily_platform_summary: { Args: never; Returns: undefined }
       has_role: {
