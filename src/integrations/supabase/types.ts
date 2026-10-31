@@ -589,11 +589,11 @@ export type Database = {
         Returns: boolean
       }
       request_invoice_refund: {
-        Args: { explanation: string; invoice: string }
+        Args: { actor: string; explanation: string; invoice: string }
         Returns: string
       }
       review_invoice_refund: {
-        Args: { decision: string; note: string; request: string }
+        Args: { actor: string; decision: string; note: string; request: string }
         Returns: undefined
       }
     }
