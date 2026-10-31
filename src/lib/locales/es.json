@@ -557,5 +557,9 @@
   "Resend email": "Reenviar correo",
   "Use a different email": "Usar otro correo",
   "Email sent again": "Correo reenviado",
-  "Radios": "Radios"
+  "Radios": "Radios",
+  "Is there a guided tour or step-by-step setup?": "¿Hay un recorrido guiado o una configuración paso a paso?",
+  "Yes. After confirming your email you land on a welcome page that helps you name your museum, add a first object, publish and share it. Your overview shows a Getting started checklist and a Take the tour button to replay the guided tour at any time.": "Sí. Al confirmar tu correo llegas a una página de bienvenida que te ayuda a nombrar tu museo, añadir un primer objeto, publicarlo y compartirlo. Tu resumen muestra la lista Primeros pasos y el botón Ver el recorrido para repetir la visita guiada cuando quieras.",
+  "When will I see the paid plans?": "¿Cuándo veré los planes de pago?",
+  "After publishing your first museum, the welcome steps show the Free, Pro and Studio plans. You can always open them from Dashboard → Plans or the footer link. While payments are not active, choosing Pro or Studio only records your interest.": "Después de publicar tu primer museo, los pasos de bienvenida muestran los planes Gratis, Pro y Studio. También puedes abrirlos desde Panel → Planes o el enlace del pie de página. Mientras los pagos no estén activos, elegir Pro o Studio solo registra tu interés."
 }

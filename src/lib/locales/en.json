@@ -553,5 +553,9 @@
   "Resend email": "Resend email",
   "Use a different email": "Use a different email",
   "Email sent again": "Email sent again",
-  "Radios": "Radios"
+  "Radios": "Radios",
+  "Is there a guided tour or step-by-step setup?": "Is there a guided tour or step-by-step setup?",
+  "Yes. After confirming your email you land on a welcome page that helps you name your museum, add a first object, publish and share it. Your overview shows a Getting started checklist and a Take the tour button to replay the guided tour at any time.": "Yes. After confirming your email you land on a welcome page that helps you name your museum, add a first object, publish and share it. Your overview shows a Getting started checklist and a Take the tour button to replay the guided tour at any time.",
+  "When will I see the paid plans?": "When will I see the paid plans?",
+  "After publishing your first museum, the welcome steps show the Free, Pro and Studio plans. You can always open them from Dashboard → Plans or the footer link. While payments are not active, choosing Pro or Studio only records your interest.": "After publishing your first museum, the welcome steps show the Free, Pro and Studio plans. You can always open them from Dashboard → Plans or the footer link. While payments are not active, choosing Pro or Studio only records your interest."
 }
