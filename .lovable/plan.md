@@ -33,7 +33,13 @@ Principios: pedir lo mínimo al principio, que la persona vea su museo lo antes 
 6. **Captación desde museos públicos**: aviso discreto "Crea tu propio museo gratis" en las páginas de museos y objetos públicos, para quien no ha iniciado sesión.
 7. **Embudo en el panel admin**: registros, confirmados, primer museo, primer objeto, publicado. Así se ve dónde se pierden usuarios.
 8. **Notificación de bienvenida** enlazada al tutorial (hay que ajustar la que ya existe).
-9. Todos los textos en español e inglés. Se añaden preguntas al FAQ y tareas DEV para lo que quede pendiente, por ejemplo correos de seguimiento al día 1 y día 3, que necesitan un dominio de correo.
+9. **Mostrar los planes al nuevo usuario** (hoy solo aparecen en Panel → Planes y en el pie de página):
+   - Después de publicar el primer museo, el asistente muestra los planes Gratis / Pro / Studio con lo que incluye cada uno. Se puede seguir con el plan gratis con un solo clic.
+   - Cuando el usuario llega a un límite del plan gratis (por ejemplo, número de museos u objetos), aparece un aviso para mejorar de plan.
+   - Paso opcional en la lista de progreso: "Conoce los planes".
+   - Los planes solo se ven después de iniciar sesión, nunca en el menú principal. Mientras Stripe no esté conectado, elegir un plan solo guarda el interés y no cobra nada.
+   - En el embudo del admin se añaden: planes vistos e interés por plan.
+10. Todos los textos en español e inglés. Se añaden preguntas al FAQ y tareas DEV para lo que quede pendiente, por ejemplo correos de seguimiento al día 1 y día 3, que necesitan un dominio de correo.
 
 ## Detalles técnicos
 - El progreso del onboarding y del tutorial (pasos vistos, saltado, terminado) se guarda en `profiles.preferences.onboarding` mediante el server function de perfil validado. No se guarda en el navegador.
