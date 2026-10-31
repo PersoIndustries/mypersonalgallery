@@ -28,6 +28,7 @@ const links = [
     { to: "/dashboard/settings", label: "Settings", icon: Settings },
     { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
     { to: "/dashboard/plans", label: "Plans", icon: Landmark },
+    { to: "/dashboard/billing", label: "Billing", icon: LayoutDashboard },
 ] as const;
 function DashboardLayout() {
     const { t } = useI18n();

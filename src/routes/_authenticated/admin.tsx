@@ -35,6 +35,7 @@ function AdminLayout() {
         <Link to="/admin/dev" activeProps={{ className: "bg-primary/12 text-primary" }} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
           <Code2 className="size-4"/>{t(" Dev")}</Link>
         <Link to="/admin/errors" className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted"><Shield className="size-4"/>{t(" Diagnostics")}</Link>
+        <Link to="/admin/billing" activeProps={{ className: "bg-primary/12 text-primary" }} className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted"><Shield className="size-4"/>{t('Billing')}</Link>
       </nav>
       <div className="mt-8">
         <Outlet />
