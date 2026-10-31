@@ -1,7 +1,7 @@
 # Platform improvements
-- [ ] Investigate fresh recovery/invitation links and support supported callback formats.
-- [ ] Improve authentication email presentation; verify external Supabase settings or document the access blocker.
-- [ ] Add private collector notifications with persistent unread/read states and event triggers.
+- [x] Add callback completion for token-hash/PKCE links without duplicate exchange, Site URL fallback routing, and regression tests. Real emailed-link verification remains blocked below.
+- [ ] Improve authentication email presentation and confirm allowed return addresses: external Supabase hosted auth settings are not accessible through available tools; requires owner configuration.
+- [x] Add private collector notifications with unread/read filters, badge, pagination, and account/museum/plan-interest event triggers. Live signed-in UI verification remains blocked below.
 - [x] Fix invitation/recovery callback timing and provide an expired-link recovery form; public expired-link state and rule tests verified. Valid-email password submission remains covered by the authenticated-flow blocker below.
 - [x] Add multi-task selection and contextual copy in Dev; export tests cover complete selected records.
 - [x] Check daily historical metrics: none exists; record implementation as DEV platform-33, payments remain disabled.
