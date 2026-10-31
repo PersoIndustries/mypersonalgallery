@@ -1,4 +1,5 @@
 # Platform improvements
+- [ ] Create a temporary developer administrator with password sign-in; waiting for the user's owned email address and secure password entry.
 - [ ] Prepare private invoice history, refund requests and administrator subscription/refund management without enabling Stripe.
 - [ ] Add trustworthy daily UTC snapshots with unavailable payment/login metrics clearly distinguished from zero.
 - [ ] Prepare weekly operational summary for Carlos; automatic sending requires a verified owned email domain and an external scheduler.
