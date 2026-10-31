@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
-import { capturePasswordLink, passwordLinkState, canSetPassword, clearPasswordLink } from '@/lib/password-link';
+import { completePasswordLink, clearPasswordLink, passwordResetRedirect } from '@/lib/password-link';
 import { passwordStrength, type PasswordStrength } from '@/lib/password-strength';
 
 export const Route = createFileRoute('/reset-password')({ head: () => ({ meta: [{ title: 'Set password — MyOwnMuseum' }, { name: 'description', content: 'Choose a secure password for your curator account.' }, { property: 'og:title', content: 'Set password — MyOwnMuseum' }, { property: 'og:description', content: 'Reset your curator account password.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: ResetPassword });
+
+let callbackCheck: Promise<boolean> | undefined;
 
 const STRENGTH_WIDTH: Record<PasswordStrength, string> = { none: '0%', weak: '33%', medium: '66%', strong: '100%' };
 
@@ -44,18 +46,23 @@ function ResetPassword() {
 
   useEffect(() => {
     let active = true;
-    capturePasswordLink(window.location.hash, window.location.search);
-    // getUser waits for callback/session initialization and verifies the user remotely.
-    void supabase.auth.getUser().then(({ data, error }) => {
-      if (active) setState(canSetPassword(passwordLinkState(), !error && Boolean(data.user)) ? 'valid' : 'invalid');
+    // Single flight also protects token-hash callbacks against StrictMode remounts.
+    callbackCheck ??= completePasswordLink(supabase.auth, window.location.hash, window.location.search, () => window.location.search);
+    const check = callbackCheck;
+    void check.then(valid => {
+      if (!active) return;
+      setState(valid ? 'valid' : 'invalid');
+      const url = new URL(window.location.href);
+      for (const key of ['code', 'token_hash', 'type', 'error', 'error_code', 'error_description']) url.searchParams.delete(key);
+      window.history.replaceState(window.history.state, '', url.pathname + url.search);
     }).catch(() => { if (active) setState('invalid'); });
-    return () => { active = false; };
+    return () => { active = false; setTimeout(() => { if (callbackCheck === check) callbackCheck = undefined; }, 0); };
   }, []);
 
   const resend = async (e: React.FormEvent) => {
     e.preventDefault(); if (cooldown.left > 0) return; setBusy(true); setNotice('');
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` });
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: passwordResetRedirect(window.location.origin) });
       if (error) throw error;
       cooldown.start();
       setNotice('If an account exists, a password reset email is on its way.');
@@ -115,6 +122,7 @@ function ResetPassword() {
       ) : (
         <>
           <p role="alert" className="mt-6 text-muted-foreground">{t('This password link is invalid, expired or already used. Request a new one and open the latest email.')}</p>
+          <p className="mt-3 text-sm text-muted-foreground">{t('Open the latest email in your browser. Email security scanners can consume single-use links; avoid opening older messages.')}</p>
           <form onSubmit={e => void resend(e)} className="mt-6 space-y-4">
             <Label htmlFor="recovery-email">{t('Email')}</Label>
             <Input id="recovery-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} />

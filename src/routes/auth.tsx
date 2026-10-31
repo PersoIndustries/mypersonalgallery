@@ -11,6 +11,7 @@ import { useStore } from '@/lib/store';
 import { CountrySelect } from '@/components/country-select';
 import { supabase } from '@/integrations/supabase/client';
 import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
+import { passwordResetRedirect } from '@/lib/password-link';
 export const Route = createFileRoute('/auth')({ validateSearch: (s: Record<string, unknown>): {
         mode?: 'signup' | undefined;
     } => ({ mode: s['mode'] === 'signup' ? 'signup' : undefined }), head: () => ({ meta: [{ title: 'Curator access — MyOwnMuseum' }, { name: 'description', content: 'Sign in or create your curator account.' }, { property: 'og:title', content: 'Curator access — MyOwnMuseum' }, { property: 'og:description', content: 'Sign in to manage your digital museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }), component: AuthPage });
@@ -49,7 +50,7 @@ function AuthPage() {
         toast.error(t("Enter your email first"));
         return;
     } if (cooldown.left > 0) return; setBusy(true); try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + '/reset-password' });
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: passwordResetRedirect(window.location.origin) });
         if (error)
             throw error;
         cooldown.start();

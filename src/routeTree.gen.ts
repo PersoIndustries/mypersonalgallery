@@ -25,6 +25,7 @@ import { Route as AuthenticatedAdminDevRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAdminErrorsRouteImport } from './routes/_authenticated/admin.errors'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardMuseumsRouteImport } from './routes/_authenticated/dashboard.museums'
+import { Route as AuthenticatedDashboardNotificationsRouteImport } from './routes/_authenticated/dashboard.notifications'
 import { Route as AuthenticatedDashboardPlansRouteImport } from './routes/_authenticated/dashboard.plans'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardMuseumMuseumIdRouteImport } from './routes/_authenticated/dashboard.museum.$museumId'
@@ -111,6 +112,12 @@ const AuthenticatedDashboardMuseumsRoute =
     path: '/museums',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardNotificationsRoute =
+  AuthenticatedDashboardNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardPlansRoute =
   AuthenticatedDashboardPlansRouteImport.update({
     id: '/plans',
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -162,6 +170,7 @@ export interface FileRoutesByTo {
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -184,6 +193,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/dev': typeof AuthenticatedAdminDevRoute
   '/_authenticated/admin/errors': typeof AuthenticatedAdminErrorsRoute
   '/_authenticated/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
+  '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
   '/_authenticated/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/admin/dev'
     | '/admin/errors'
     | '/dashboard/museums'
+    | '/dashboard/notifications'
     | '/dashboard/plans'
     | '/dashboard/settings'
     | '/admin/'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/admin/dev'
     | '/admin/errors'
     | '/dashboard/museums'
+    | '/dashboard/notifications'
     | '/dashboard/plans'
     | '/dashboard/settings'
     | '/admin'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/dev'
     | '/_authenticated/admin/errors'
     | '/_authenticated/dashboard/museums'
+    | '/_authenticated/dashboard/notifications'
     | '/_authenticated/dashboard/plans'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/admin/'
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardMuseumsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/notifications': {
+      id: '/_authenticated/dashboard/notifications'
+      path: '/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof AuthenticatedDashboardNotificationsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/plans': {
       id: '/_authenticated/dashboard/plans'
       path: '/plans'
@@ -419,6 +439,7 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardMuseumsRoute: typeof AuthenticatedDashboardMuseumsRoute
+  AuthenticatedDashboardNotificationsRoute: typeof AuthenticatedDashboardNotificationsRoute
   AuthenticatedDashboardPlansRoute: typeof AuthenticatedDashboardPlansRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -428,6 +449,8 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardMuseumsRoute: AuthenticatedDashboardMuseumsRoute,
+    AuthenticatedDashboardNotificationsRoute:
+      AuthenticatedDashboardNotificationsRoute,
     AuthenticatedDashboardPlansRoute: AuthenticatedDashboardPlansRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
