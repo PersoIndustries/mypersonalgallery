@@ -1,7 +1,9 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router';
-import { Landmark } from 'lucide-react';
-import { useState } from 'react';
+import { Landmark, MailCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { countryFromLocale, suggestUsername } from '@/lib/onboarding';
+import { countryCodes } from '@/lib/platform-rules';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

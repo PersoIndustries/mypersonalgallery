@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/m/$slug")({
     loader: async ({ params }) => { const c = await getPublicCatalog(); return c.museums.find(m => m.slug === params.slug) ?? null; },
