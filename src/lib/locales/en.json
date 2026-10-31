@@ -1,4 +1,11 @@
 {
+  "Show password": "Show password",
+  "Hide password": "Hide password",
+  "Password strength": "Password strength",
+  "Weak": "Weak",
+  "Medium": "Medium",
+  "Strong": "Strong",
+  "Passwords match": "Passwords match",
   "Checking password link…": "Checking password link…",
   "This password link is invalid, expired or already used. Request a new one and open the latest email.": "This password link is invalid, expired or already used. Request a new one and open the latest email.",
   "Send new password link": "Send new password link",
