@@ -55,6 +55,169 @@ export type Database = {
           },
         ]
       }
+      billing_events: {
+        Row: {
+          amount_minor: number | null
+          created_at: string
+          currency: string | null
+          environment: string
+          id: string
+          kind: string
+          occurred_at: string
+          provider_event_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_minor?: number | null
+          created_at?: string
+          currency?: string | null
+          environment: string
+          id?: string
+          kind: string
+          occurred_at: string
+          provider_event_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_minor?: number | null
+          created_at?: string
+          currency?: string | null
+          environment?: string
+          id?: string
+          kind?: string
+          occurred_at?: string
+          provider_event_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      billing_invoices: {
+        Row: {
+          amount_paid_minor: number
+          amount_refunded_minor: number
+          created_at: string
+          currency: string
+          environment: string
+          hosted_invoice_url: string | null
+          id: string
+          invoice_pdf_url: string | null
+          number: string | null
+          paid_at: string | null
+          provider: string
+          provider_invoice_id: string
+          provider_payment_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid_minor?: number
+          amount_refunded_minor?: number
+          created_at?: string
+          currency: string
+          environment: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf_url?: string | null
+          number?: string | null
+          paid_at?: string | null
+          provider?: string
+          provider_invoice_id: string
+          provider_payment_id?: string | null
+          status: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_paid_minor?: number
+          amount_refunded_minor?: number
+          created_at?: string
+          currency?: string
+          environment?: string
+          hosted_invoice_url?: string | null
+          id?: string
+          invoice_pdf_url?: string | null
+          number?: string | null
+          paid_at?: string | null
+          provider?: string
+          provider_invoice_id?: string
+          provider_payment_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_invoices_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      daily_platform_summaries: {
+        Row: {
+          accounts_total: number
+          active_subscriptions: number | null
+          canceled_subscriptions: number | null
+          created_at: string
+          day: string
+          login_source_ready: boolean
+          new_accounts: number
+          new_subscriptions: number | null
+          payment_source_ready: boolean
+          refunds_by_currency: Json | null
+          revenue_by_currency: Json | null
+          successful_logins: number | null
+          unique_logins: number | null
+          updated_at: string
+        }
+        Insert: {
+          accounts_total: number
+          active_subscriptions?: number | null
+          canceled_subscriptions?: number | null
+          created_at?: string
+          day: string
+          login_source_ready?: boolean
+          new_accounts: number
+          new_subscriptions?: number | null
+          payment_source_ready?: boolean
+          refunds_by_currency?: Json | null
+          revenue_by_currency?: Json | null
+          successful_logins?: number | null
+          unique_logins?: number | null
+          updated_at?: string
+        }
+        Update: {
+          accounts_total?: number
+          active_subscriptions?: number | null
+          canceled_subscriptions?: number | null
+          created_at?: string
+          day?: string
+          login_source_ready?: boolean
+          new_accounts?: number
+          new_subscriptions?: number | null
+          payment_source_ready?: boolean
+          refunds_by_currency?: Json | null
+          revenue_by_currency?: Json | null
+          successful_logins?: number | null
+          unique_logins?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       dev_tasks: {
         Row: {
           created_at: string
@@ -273,6 +436,67 @@ export type Database = {
         }
         Relationships: []
       }
+      refund_requests: {
+        Row: {
+          created_at: string
+          id: string
+          invoice_id: string
+          reason: string
+          review_note: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invoice_id: string
+          reason: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invoice_id?: string
+          reason?: string
+          review_note?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refund_requests_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "billing_invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refund_requests_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "refund_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -347,6 +571,7 @@ export type Database = {
     }
     Functions: {
       admin_platform_metrics: { Args: never; Returns: Json }
+      capture_daily_platform_summary: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -362,6 +587,14 @@ export type Database = {
           reporter: string
         }
         Returns: boolean
+      }
+      request_invoice_refund: {
+        Args: { explanation: string; invoice: string }
+        Returns: string
+      }
+      review_invoice_refund: {
+        Args: { decision: string; note: string; request: string }
+        Returns: undefined
       }
     }
     Enums: {
