@@ -7,7 +7,7 @@
   # Build the server for Netlify Functions instead of Cloudflare Workers.
   NITRO_PRESET = "netlify"
   NODE_VERSION = "22"
-  BUN_VERSION = "1.2.23"
+  BUN_VERSION = "1.4.4"
 
 # Required environment variables (set them in Netlify → Site configuration → Environment variables):
 #   VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, VITE_SUPABASE_PROJECT_ID
