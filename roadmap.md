@@ -1,4 +1,7 @@
 # Platform improvements
+- [ ] Prepare private invoice history, refund requests and administrator subscription/refund management without enabling Stripe.
+- [ ] Add trustworthy daily UTC snapshots with unavailable payment/login metrics clearly distinguished from zero.
+- [ ] Prepare weekly operational summary for Carlos; automatic sending requires a verified owned email domain and an external scheduler.
 - [x] Add callback completion for token-hash/PKCE links without duplicate exchange, Site URL fallback routing, and regression tests. Real emailed-link verification remains blocked below.
 - [ ] Improve authentication email presentation and confirm allowed return addresses: external Supabase hosted auth settings are not accessible through available tools; requires owner configuration.
 - [x] Add private collector notifications with unread/read filters, badge, pagination, and account/museum/plan-interest event triggers. Live signed-in UI verification remains blocked below.
