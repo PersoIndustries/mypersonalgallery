@@ -24,7 +24,7 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
       try {
         if (!TYPES.includes(file.type)) { toast.error(t('{name}: unsupported format', { name: file.name })); continue; }
         if (file.size > MAX) { toast.error(t('{name}: larger than 10 MB', { name: file.name })); continue; }
-        const ext = file.type.split('/')[1].replace('jpeg', 'jpg');
+        const ext = (file.type.split('/')[1] ?? 'jpg').replace('jpeg', 'jpg');
         const path = `${data.user.id}/${crypto.randomUUID()}.${ext}`;
         const { error } = await supabase.storage.from('object-images').upload(path, file, { contentType: file.type });
         if (error) throw error;
