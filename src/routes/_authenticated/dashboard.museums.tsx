@@ -29,7 +29,7 @@ interface MuseumForm {
 const emptyMuseum: MuseumForm = {
     title: "",
     description: "",
-    cover: "https://picsum.photos/seed/newmuseum/1200/800",
+    cover: "/placeholder-object.svg",
     category: CATEGORIES[0],
     isPublic: true,
 };

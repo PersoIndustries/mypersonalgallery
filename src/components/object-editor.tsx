@@ -9,6 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { useStore } from "@/lib/store";
+import { ImageUploader } from "@/components/image-uploader";
+import { PLACEHOLDER_IMAGE } from "@/lib/placeholder";
 import { CATEGORIES, CONDITIONS, FEATURES, museumFeatures, type CollectionObject, type Condition, type FeatureKey, } from "@/lib/types";
 interface Form {
     title: string;
@@ -36,7 +38,7 @@ const toForm = (o: CollectionObject | null, category: string): Form => ({
     model: o?.model ?? "",
     category: o?.category ?? category,
     condition: o?.condition ?? "Excellent",
-    images: (o?.images ?? ["https://picsum.photos/seed/newobject/1200/900"]).join("\n"),
+    images: (o?.images ?? []).filter((i) => !i.includes("picsum.photos/seed/newobject")).join("\n"),
     tags: (o?.tags ?? []).join(", "),
     specs: (o?.specs ?? []).map((s) => `${s.key}: ${s.value}`).join("\n"),
     history: o?.history ?? "",
@@ -93,7 +95,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
                         : { key: l.slice(0, i).trim(), value: l.slice(i + 1).trim() };
                 }),
                 history: f.history,
-                images: images.length ? images : ["https://picsum.photos/seed/newobject/1200/900"],
+                images: images.length ? images : [PLACEHOLDER_IMAGE],
                 modelUrl: f.modelUrl.trim() || null,
                 price: f.price.trim(),
                 links: lines(f.links).map((l) => {
@@ -178,8 +180,12 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
             <Textarea id="oe-desc" rows={3} value={f.description} onChange={(e) => set("description", e.target.value)}/>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="oe-images">{t("Image URLs (one per line)")}</Label>
-            <Textarea id="oe-images" rows={3} value={f.images} onChange={(e) => set("images", e.target.value)}/>
+            <Label>{t("Images")}</Label>
+            <ImageUploader images={lines(f.images)} onChange={(imgs) => set("images", imgs.join("\n"))}/>
+            <details className="text-xs text-muted-foreground">
+              <summary className="cursor-pointer">{t("Image URLs (one per line)")}</summary>
+              <Textarea id="oe-images" className="mt-2" rows={3} value={f.images} onChange={(e) => set("images", e.target.value)}/>
+            </details>
           </div>
           {field("tags", "Tags (comma separated)", "WWII, portable, AM")}
           <div className="space-y-2">

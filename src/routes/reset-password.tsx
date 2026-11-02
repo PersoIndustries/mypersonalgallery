@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
-import { completePasswordLink, clearPasswordLink, passwordResetRedirect } from '@/lib/password-link';
+import { completePasswordLink, clearPasswordLink, passwordLinkError, passwordResetRedirect } from '@/lib/password-link';
 import { passwordStrength, type PasswordStrength } from '@/lib/password-strength';
 
 export const Route = createFileRoute('/reset-password')({ head: () => ({ meta: [{ title: 'Set password — MyOwnMuseum' }, { name: 'description', content: 'Choose a secure password for your curator account.' }, { property: 'og:title', content: 'Set password — MyOwnMuseum' }, { property: 'og:description', content: 'Reset your curator account password.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: ResetPassword });
@@ -36,6 +36,7 @@ function PasswordField({ id, label, value, onChange }: { id: string; label: stri
 function ResetPassword() {
   const { t } = useI18n();
   const [state, setState] = useState<'checking' | 'valid' | 'invalid'>('checking');
+  const [diag, setDiag] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [email, setEmail] = useState('');
@@ -52,10 +53,11 @@ function ResetPassword() {
     void check.then(valid => {
       if (!active) return;
       setState(valid ? 'valid' : 'invalid');
+      if (!valid) setDiag(passwordLinkError());
       const url = new URL(window.location.href);
       for (const key of ['code', 'token_hash', 'type', 'error', 'error_code', 'error_description']) url.searchParams.delete(key);
       window.history.replaceState(window.history.state, '', url.pathname + url.search);
-    }).catch(() => { if (active) setState('invalid'); });
+    }).catch((e) => { if (active) { setState('invalid'); setDiag(String(e instanceof Error ? e.message : e).slice(0, 300)); } });
     return () => { active = false; setTimeout(() => { if (callbackCheck === check) callbackCheck = undefined; }, 0); };
   }, []);
 
@@ -123,6 +125,7 @@ function ResetPassword() {
         <>
           <p role="alert" className="mt-6 text-muted-foreground">{t('This password link is invalid, expired or already used. Request a new one and open the latest email.')}</p>
           <p className="mt-3 text-sm text-muted-foreground">{t('Open the latest email in your browser. Email security scanners can consume single-use links; avoid opening older messages.')}</p>
+          {diag && <p className="mt-3 rounded-md border border-border bg-muted/40 p-2 font-mono text-xs text-muted-foreground">{t('Error code')}: {diag}</p>}
           <form onSubmit={e => void resend(e)} className="mt-6 space-y-4">
             <Label htmlFor="recovery-email">{t('Email')}</Label>
             <Input id="recovery-email" type="email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)} />

@@ -48,3 +48,12 @@ export const FREE_PLAN_GUIDE = { museums: 3, objects: 50 } as const;
 export function shouldSuggestUpgrade(museums: number, objects: number): boolean {
   return museums >= FREE_PLAN_GUIDE.museums || objects >= FREE_PLAN_GUIDE.objects;
 }
+
+/** Returns an English i18n key describing what is wrong with a username, or null. */
+export function usernameIssue(value: string): string | null {
+  if (/\s/.test(value)) return 'Usernames cannot contain spaces';
+  if (/[^a-zA-Z0-9_-]/.test(value)) return 'Use only letters, numbers, hyphens (-) and underscores (_)';
+  if (value.length < 3) return 'Use at least 3 characters';
+  if (value.length > 40) return 'Use 40 characters or fewer';
+  return null;
+}
