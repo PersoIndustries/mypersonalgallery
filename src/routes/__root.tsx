@@ -3,6 +3,7 @@ import {I18nProvider} from '@/lib/i18n';
 import { QueryClient, QueryClientProvider, useSuspenseQuery } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, type ErrorComponentProps, } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { installImageFallback } from "@/lib/placeholder";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { getPublicCatalog } from "@/lib/catalog.functions";
@@ -93,6 +94,7 @@ function RootShell({ children }: {
 }
 function RootComponent() {
     const { queryClient } = Route.useRouteContext();
+    useEffect(() => installImageFallback(document), []);
     const { data: catalog } = useSuspenseQuery({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }, queryClient);
     return (<QueryClientProvider client={queryClient}>
       <StoreProvider initialCatalog={catalog}>
