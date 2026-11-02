@@ -20,7 +20,7 @@ export function SiteHeader() {
           <span className="flex size-9 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25 transition-colors group-hover:bg-primary/20">
             <Landmark className="size-4.5"/>
           </span>
-          <span className="font-display text-lg leading-none sm:text-xl">{t("MyOwn")}<span className="text-primary">{t("Museum")}</span>
+          <span className="font-display text-lg leading-none sm:text-xl">MyOwn<span className="text-primary">Museum</span>
           </span>
         </Link>
 
