@@ -1,0 +1,3 @@
+create policy "Curators upload own object images" on storage.objects for insert to authenticated with check (bucket_id = 'object-images' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Curators read own object images" on storage.objects for select to authenticated using (bucket_id = 'object-images' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Curators delete own object images" on storage.objects for delete to authenticated using (bucket_id = 'object-images' and (storage.foldername(name))[1] = auth.uid()::text);
