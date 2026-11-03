@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Pencil, Plus, Trash2, Boxes, Settings2 } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ObjectEditor } from "@/components/object-editor";
@@ -35,6 +35,7 @@ const emptyMuseum: MuseumForm = {
 };
 function DashboardMuseums() {
     const { t } = useI18n();
+    const navigate = useNavigate();
     const { currentUser, museumsOf, objectsOf, createMuseum, updateMuseum, deleteMuseum, deleteObject } = useStore();
     const [museumDialog, setMuseumDialog] = useState<{
         id: string | null;
@@ -100,7 +101,7 @@ function DashboardMuseums() {
                 const objs = objectsOf(m.id);
                 const open = expanded === m.id;
                 return (<Card key={m.id}>
-                <CardHeader className="flex-row items-center gap-4 space-y-0">
+                <CardHeader role="link" tabIndex={0} aria-label={m.title} onClick={() => navigate({ to: "/dashboard/museum/$museumId", params: { museumId: m.id } })} onKeyDown={(e) => { if (e.key === "Enter") navigate({ to: "/dashboard/museum/$museumId", params: { museumId: m.id } }); }} className="cursor-pointer flex-row items-center gap-4 space-y-0 transition-colors hover:bg-muted/40">
                   <img src={m.cover} alt={m.title} loading="lazy" className="size-16 rounded object-cover"/>
                   <div className="min-w-0 flex-1">
                     <CardTitle className="truncate font-display text-xl">{m.title}</CardTitle>
@@ -111,13 +112,7 @@ function DashboardMuseums() {
                   <Badge variant={m.isPublic ? "default" : "secondary"}>
                     {m.isPublic ? t("Public") : t("Private")}
                   </Badge>
-                  <div className="flex items-center gap-1">
-                    <Button asChild size="sm">
-                      <Link to="/dashboard/museum/$museumId" params={{ museumId: m.id }}>
-                        <Settings2 className="size-4"/>{t(" Set up")}</Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setExpanded(open ? null : m.id)}>
-                      <Boxes className="size-4"/>{t(" Objects")}</Button>
+                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                     <Button variant="ghost" size="icon" onClick={() => openEditMuseum(m.id)}>
                       <Pencil className="size-4"/>
                     </Button>
