@@ -578,5 +578,13 @@
   "Use at least 3 characters": "Usa al menos 3 caracteres",
   "Use 40 characters or fewer": "Usa 40 caracteres o menos",
   "At least 8 characters": "Al menos 8 caracteres",
-  "Error code": "Código de error"
+  "Error code": "Código de error",
+  "{count} objects": "{count} objetos",
+  "{count} visible to visitors": "{count} visibles para visitantes",
+  "View public page": "Ver página pública",
+  "Visible": "Visible",
+  "Your museum is public": "Tu museo es público",
+  "Your museum is private": "Tu museo es privado",
+  "Anyone with the link can visit it.": "Cualquiera con el enlace puede visitarlo.",
+  "Only you can see it until you publish it.": "Solo tú puedes verlo hasta que lo publiques."
 }
