@@ -181,11 +181,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
           </div>
           <div className="space-y-2">
             <Label>{t("Images")}</Label>
-            <ImageUploader images={lines(f.images)} onChange={(imgs) => set("images", imgs.join("\n"))}/>
-            <details className="text-xs text-muted-foreground">
-              <summary className="cursor-pointer">{t("Image URLs (one per line)")}</summary>
-              <Textarea id="oe-images" className="mt-2" rows={3} value={f.images} onChange={(e) => set("images", e.target.value)}/>
-            </details>
+            <ImageUploader images={lines(f.images).filter((i) => i !== PLACEHOLDER_IMAGE)} onChange={(fn) => setF((p) => ({ ...p, images: fn(lines(p.images).filter((i) => i !== PLACEHOLDER_IMAGE)).join("\n") }))}/>
           </div>
           {field("tags", "Tags (comma separated)", "WWII, portable, AM")}
           <div className="space-y-2">
