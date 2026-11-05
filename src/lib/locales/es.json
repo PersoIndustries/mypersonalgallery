@@ -590,5 +590,10 @@
   "Add image link": "Añadir enlace de imagen",
   "Or paste an image link (https://…)": "O pega un enlace de imagen (https://…)",
   "Enter a valid image link (https://…)": "Introduce un enlace de imagen válido (https://…)",
-  "Take photo": "Hacer foto"
+  "Take photo": "Hacer foto",
+  "Move earlier": "Mover antes",
+  "Move later": "Mover después",
+  "Copy error": "Copiar error",
+  "Error copied": "Error copiado",
+  "Could not copy": "No se pudo copiar"
 }

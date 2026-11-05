@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Camera, ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
+import { Camera, ChevronLeft, ChevronRight, ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -55,6 +55,10 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
     const path = src.startsWith('/api/public/images/') ? src.slice('/api/public/images/'.length) : null;
     if (path) void supabase.storage.from('object-images').remove([path]);
   };
+  const move = (from: number, to: number) => onChange(prev => {
+    if (to < 0 || to >= prev.length) return prev;
+    const next = [...prev]; const [item] = next.splice(from, 1); if (item !== undefined) next.splice(to, 0, item); return next;
+  });
   const makeCover = (src: string) => onChange(prev => [src, ...prev.filter(i => i !== src)]);
 
   return (
@@ -82,6 +86,11 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
             <div key={src} className="group relative aspect-square overflow-hidden rounded-md border border-border">
               <img src={src} alt="" onError={e => { e.currentTarget.src = PLACEHOLDER_IMAGE; }} className="size-full object-cover" />
               {i === 0 && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">{t('Cover')}</span>}
+              <span className="absolute bottom-1 right-1 rounded bg-background/85 px-1.5 text-[10px] font-medium">{i + 1}</span>
+              <div className="absolute bottom-1 left-1 flex gap-1">
+                <button type="button" disabled={i === 0} onClick={() => move(i, i - 1)} aria-label={t('Move earlier')} className="rounded-full bg-background/85 p-1 text-foreground hover:bg-background disabled:opacity-30"><ChevronLeft className="size-3.5" /></button>
+                <button type="button" disabled={i === images.length - 1} onClick={() => move(i, i + 1)} aria-label={t('Move later')} className="rounded-full bg-background/85 p-1 text-foreground hover:bg-background disabled:opacity-30"><ChevronRight className="size-3.5" /></button>
+              </div>
               <div className="absolute right-1 top-1 flex gap-1">
                 {i !== 0 && <button type="button" onClick={() => makeCover(src)} aria-label={t('Use as cover')} className="rounded-full bg-background/85 p-1 text-foreground hover:bg-background"><Star className="size-3.5" /></button>}
                 <button type="button" onClick={() => remove(src)} aria-label={t('Remove image')} className="rounded-full bg-background/85 p-1 text-destructive hover:bg-background"><X className="size-3.5" /></button>
