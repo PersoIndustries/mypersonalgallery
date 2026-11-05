@@ -586,5 +586,9 @@
   "Your museum is public": "Tu museo es público",
   "Your museum is private": "Tu museo es privado",
   "Anyone with the link can visit it.": "Cualquiera con el enlace puede visitarlo.",
-  "Only you can see it until you publish it.": "Solo tú puedes verlo hasta que lo publiques."
+  "Only you can see it until you publish it.": "Solo tú puedes verlo hasta que lo publiques.",
+  "Add image link": "Añadir enlace de imagen",
+  "Or paste an image link (https://…)": "O pega un enlace de imagen (https://…)",
+  "Enter a valid image link (https://…)": "Introduce un enlace de imagen válido (https://…)",
+  "Take photo": "Hacer foto"
 }

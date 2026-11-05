@@ -25,3 +25,4 @@
 - [x] Offer plans to new users after publishing their first museum (interest only, payments off) plus a growth prompt.
 - [ ] Allow-list /dashboard/welcome in Supabase URL Configuration — blocked: owner dashboard access.
 - [ ] Verify onboarding with a signed-in new account — blocked: no test sign-in available in this session.
+- [x] Botón cámara al añadir fotos (solo móvil/iPad)

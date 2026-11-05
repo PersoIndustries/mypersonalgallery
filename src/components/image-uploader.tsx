@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
-import { ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Camera, ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 import { PLACEHOLDER_IMAGE } from '@/lib/placeholder';
 import { uploadObjectImage, IMAGE_TYPES, IMAGE_MAX_BYTES } from '@/lib/images.functions';
+import { resizeImage } from '@/lib/resize-image';
 import { supabase } from '@/integrations/supabase/client';
 
 type Update = (fn: (prev: string[]) => string[]) => void;
@@ -16,11 +17,19 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
   const [drag, setDrag] = useState(false);
   const [uploading, setUploading] = useState(0);
   const [url, setUrl] = useState('');
+  const camera = useRef<HTMLInputElement>(null);
+  const [canCapture, setCanCapture] = useState(false);
+  useEffect(() => {
+    // Phones and tablets (incl. iPadOS, which reports as Mac with touch)
+    const touch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 1;
+    setCanCapture(touch && /Android|iPhone|iPad|iPod|Mobile|Macintosh/i.test(navigator.userAgent));
+  }, []);
 
   const upload = async (files: FileList | File[]) => {
     const list = Array.from(files);
-    for (const file of list) {
-      if (!IMAGE_TYPES.includes(file.type)) { toast.error(t('{name}: unsupported format', { name: file.name })); continue; }
+    for (const original of list) {
+      if (!IMAGE_TYPES.includes(original.type)) { toast.error(t('{name}: unsupported format', { name: original.name })); continue; }
+      const file = await resizeImage(original);
       if (file.size > IMAGE_MAX_BYTES) { toast.error(t('{name}: larger than 10 MB', { name: file.name })); continue; }
       setUploading(n => n + 1);
       try {
@@ -59,6 +68,14 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
         <span className="text-xs text-muted-foreground">{t('JPG, PNG, WEBP, GIF · max 10 MB each')}</span>
       </button>
       <input ref={input} type="file" accept={IMAGE_TYPES.join(',')} multiple hidden onChange={e => { if (e.target.files?.length) void upload(e.target.files); e.target.value = ''; }} />
+      {canCapture && (
+        <>
+          <Button type="button" variant="outline" className="w-full" disabled={uploading > 0} onClick={() => camera.current?.click()}>
+            <Camera className="size-4" /> {t('Take photo')}
+          </Button>
+          <input ref={camera} type="file" accept="image/*" capture="environment" hidden onChange={e => { if (e.target.files?.length) void upload(e.target.files); e.target.value = ''; }} />
+        </>
+      )}
       {images.length > 0 && (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {images.map((src, i) => (
