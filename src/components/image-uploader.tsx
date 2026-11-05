@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 import { PLACEHOLDER_IMAGE } from '@/lib/placeholder';
 import { uploadObjectImage, IMAGE_TYPES, IMAGE_MAX_BYTES } from '@/lib/images.functions';
+import { resizeImage } from '@/lib/resize-image';
 import { supabase } from '@/integrations/supabase/client';
 
 type Update = (fn: (prev: string[]) => string[]) => void;
@@ -19,8 +20,9 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
 
   const upload = async (files: FileList | File[]) => {
     const list = Array.from(files);
-    for (const file of list) {
-      if (!IMAGE_TYPES.includes(file.type)) { toast.error(t('{name}: unsupported format', { name: file.name })); continue; }
+    for (const original of list) {
+      if (!IMAGE_TYPES.includes(original.type)) { toast.error(t('{name}: unsupported format', { name: original.name })); continue; }
+      const file = await resizeImage(original);
       if (file.size > IMAGE_MAX_BYTES) { toast.error(t('{name}: larger than 10 MB', { name: file.name })); continue; }
       setUploading(n => n + 1);
       try {
