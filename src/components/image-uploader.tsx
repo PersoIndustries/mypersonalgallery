@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Camera, ImagePlus, Loader2, Plus, Star, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,13 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
   const [drag, setDrag] = useState(false);
   const [uploading, setUploading] = useState(0);
   const [url, setUrl] = useState('');
+  const camera = useRef<HTMLInputElement>(null);
+  const [canCapture, setCanCapture] = useState(false);
+  useEffect(() => {
+    // Phones and tablets (incl. iPadOS, which reports as Mac with touch)
+    const touch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 1;
+    setCanCapture(touch && /Android|iPhone|iPad|iPod|Mobile|Macintosh/i.test(navigator.userAgent));
+  }, []);
 
   const upload = async (files: FileList | File[]) => {
     const list = Array.from(files);
@@ -61,6 +68,14 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
         <span className="text-xs text-muted-foreground">{t('JPG, PNG, WEBP, GIF · max 10 MB each')}</span>
       </button>
       <input ref={input} type="file" accept={IMAGE_TYPES.join(',')} multiple hidden onChange={e => { if (e.target.files?.length) void upload(e.target.files); e.target.value = ''; }} />
+      {canCapture && (
+        <>
+          <Button type="button" variant="outline" className="w-full" disabled={uploading > 0} onClick={() => camera.current?.click()}>
+            <Camera className="size-4" /> {t('Take photo')}
+          </Button>
+          <input ref={camera} type="file" accept="image/*" capture="environment" hidden onChange={e => { if (e.target.files?.length) void upload(e.target.files); e.target.value = ''; }} />
+        </>
+      )}
       {images.length > 0 && (
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {images.map((src, i) => (
