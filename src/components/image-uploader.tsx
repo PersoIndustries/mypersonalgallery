@@ -57,7 +57,7 @@ export function ImageUploader({ images, onChange }: { images: string[]; onChange
   };
   const move = (from: number, to: number) => onChange(prev => {
     if (to < 0 || to >= prev.length) return prev;
-    const next = [...prev]; const [item] = next.splice(from, 1); next.splice(to, 0, item); return next;
+    const next = [...prev]; const [item] = next.splice(from, 1); if (item !== undefined) next.splice(to, 0, item); return next;
   });
   const makeCover = (src: string) => onChange(prev => [src, ...prev.filter(i => i !== src)]);
 
