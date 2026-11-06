@@ -118,7 +118,7 @@ function RootShell({ children }: {
 function RootComponent() {
     const { queryClient } = Route.useRouteContext();
     useEffect(() => installImageFallback(document), []);
-    const { data: catalog } = useSuspenseQuery({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }, queryClient);
+    const { data: catalog } = useSuspenseQuery(publicCatalogQuery, queryClient);
     return (<QueryClientProvider client={queryClient}>
       <StoreProvider initialCatalog={catalog}>
         <div className="flex min-h-screen flex-col">
