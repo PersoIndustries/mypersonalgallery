@@ -8,7 +8,7 @@ export function patchById<T extends { id: string }>(items: T[], id: string, patc
 export function rollbackById<T extends { id: string }>(
   items: T[],
   id: string,
-  attempted: Partial<T>,
+  attempted: OptionalPatch<T>,
   previous: T,
 ): T[] {
   return items.map(item => {
