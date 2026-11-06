@@ -1,4 +1,6 @@
-export function patchById<T extends { id: string }>(items: T[], id: string, patch: Partial<T>): T[] {
+export type OptionalPatch<T> = { [K in keyof T]?: T[K] | undefined };
+
+export function patchById<T extends { id: string }>(items: T[], id: string, patch: OptionalPatch<T>): T[] {
   return items.map(item => item.id === id ? { ...item, ...patch } : item);
 }
 
