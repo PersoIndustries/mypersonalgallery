@@ -228,7 +228,7 @@ function MuseumSetup() {
                     <span className="block text-sm">{t(feat.label)}</span>
                     <span className="block text-xs text-muted-foreground">{t(feat.hint)}</span>
                   </span>
-                  <Switch checked={flags[feat.key]} onCheckedChange={(v) => setFlag(feat.key, v)}/>
+                  <Switch checked={flags[feat.key]} disabled={pendingSwitch !== null} onCheckedChange={(v) => setFlag(feat.key, v)}/>
                 </label>))}
             </CardContent>
           </Card>

@@ -206,8 +206,8 @@ function DashboardMuseums() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setMuseumDialog(null)}>{t("Cancel")}</Button>
-            <Button onClick={saveMuseum}>{t("Save museum")}</Button>
+            <Button variant="ghost" disabled={saving} onClick={() => setMuseumDialog(null)}>{t("Cancel")}</Button>
+            <Button disabled={saving} onClick={() => void saveMuseum()}>{saving && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : t("Save museum")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

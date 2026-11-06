@@ -226,8 +226,8 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
-          <Button onClick={save}>{object ? t("Save changes") : t("Add object")}</Button>
+          <Button variant="ghost" disabled={saving} onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
+          <Button disabled={saving} onClick={() => void save()}>{saving && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : object ? t("Save changes") : t("Add object")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>);

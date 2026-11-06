@@ -73,7 +73,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 export const Route = createRootRouteWithContext<{
     queryClient: QueryClient;
 }>()({
-    loader: ({ context }) => context.queryClient.ensureQueryData({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }),
+    loader: ({ context }) => context.queryClient.ensureQueryData(publicCatalogQuery),
     head: () => ({
         meta: [
             { charSet: "utf-8" },
