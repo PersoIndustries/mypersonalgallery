@@ -48,7 +48,22 @@ function MuseumSetup() {
     const objs = objectsOf(museum.id);
     const visibleCount = objs.filter((o) => o.isVisible !== false).length;
     const flags = museumFeatures(museum);
-    const setFlag = (k: FeatureKey, v: boolean) => void updateMuseum(museum.id, { features: { ...flags, [k]: v } }).catch(e => toast.error(e.message));
+    const saveSwitch = async (key: string, action: () => Promise<void>) => {
+        if (switchLock.current) return;
+        switchLock.current = true;
+        setPendingSwitch(key);
+        try {
+            await action();
+        }
+        catch (e) {
+            toast.error(e instanceof Error ? e.message : t("Unable to save changes"));
+        }
+        finally {
+            switchLock.current = false;
+            setPendingSwitch(null);
+        }
+    };
+    const setFlag = (k: FeatureKey, v: boolean) => void saveSwitch(`feature:${k}`, () => updateMuseum(museum.id, { features: { ...flags, [k]: v } }));
     const previewItems = visitorView ? objs.filter((o) => o.isVisible !== false) : objs;
     return (<div className="space-y-6">
       <Link to="/dashboard/museums" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { installImageFallback } from "@/lib/placeholder";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { getPublicCatalog } from "@/lib/catalog.functions";
+import { publicCatalogQuery } from "@/lib/public-catalog-query";
 import { StoreProvider } from "@/lib/store";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";

@@ -73,6 +73,9 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...p, [k]: v }));
     const museumFlags = museumFeatures(museum);
     const save = async () => {
+        if (saveLock.current) return;
+        saveLock.current = true;
+        setSaving(true);
         try {
             if (!f.title.trim()) {
                 toast.error(t("Give the object a title"));

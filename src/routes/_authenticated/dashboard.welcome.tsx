@@ -45,7 +45,7 @@ function Welcome() {
   const objects = museum ? objectsOf(museum.id) : [];
   const step = !category && !museum ? 0 : !museum ? 1 : objects.length === 0 ? 2 : !museum.isPublic || !state?.shared ? 3 : state?.plansSeen ? 5 : 4;
   const publicUrl = museum ? `${typeof window === 'undefined' ? '' : window.location.origin}/m/${museum.slug}` : '';
-  const act = async (fn: () => Promise<unknown>) => { setBusy(true); try { await fn(); } catch (e) { toast.error(e instanceof Error ? e.message : t('Something went wrong')); } finally { setBusy(false); } };
+  const act = async (fn: () => Promise<unknown>) => { if (busyLock.current) return; busyLock.current = true; setBusy(true); try { await fn(); } catch (e) { toast.error(e instanceof Error ? e.message : t('Something went wrong')); } finally { busyLock.current = false; setBusy(false); } };
   const skip = async () => { await update({ skipped: true, welcomed: true }); await navigate({ to: '/dashboard' }); };
   const share = async () => {
     try {

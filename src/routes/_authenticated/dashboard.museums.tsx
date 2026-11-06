@@ -67,6 +67,9 @@ function DashboardMuseums() {
         setMuseumDialog({ id });
     };
     const saveMuseum = async () => {
+        if (saveLock.current) return;
+        saveLock.current = true;
+        setSaving(true);
         try {
             if (!museumForm.title.trim()) {
                 toast.error(t("Give your museum a title"));
