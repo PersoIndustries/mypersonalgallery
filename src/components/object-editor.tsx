@@ -1,5 +1,6 @@
 import { useI18n } from '@/lib/i18n';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,6 +63,8 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const { getMuseum, createObject, updateObject } = useStore();
     const museum = getMuseum(museumId);
     const [f, setF] = useState<Form>(() => toForm(object, museum?.category ?? CATEGORIES[0]));
+    const [saving, setSaving] = useState(false);
+    const saveLock = useRef(false);
     useEffect(() => {
         if (open)
             setF(toForm(object, museum?.category ?? CATEGORIES[0]));
@@ -70,6 +73,9 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...p, [k]: v }));
     const museumFlags = museumFeatures(museum);
     const save = async () => {
+        if (saveLock.current) return;
+        saveLock.current = true;
+        setSaving(true);
         try {
             if (!f.title.trim()) {
                 toast.error(t("Give the object a title"));
@@ -116,14 +122,18 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
             onOpenChange(false);
         }
         catch (e) {
-            toast.error(e instanceof Error ? e.message : "Unable to save object");
+            toast.error(e instanceof Error ? e.message : t("Unable to save object"));
+        }
+        finally {
+            saveLock.current = false;
+            setSaving(false);
         }
     };
     const field = (id: keyof Form, label: string, placeholder?: string) => (<div className="space-y-2">
       <Label htmlFor={`oe-${id}`}>{t(label)}</Label>
       <Input id={`oe-${id}`} value={f[id] as string} placeholder={placeholder} onChange={(e) => set(id, e.target.value as never)}/>
     </div>);
-    return (<Dialog open={open} onOpenChange={onOpenChange}>
+    return (<Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next); }}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
@@ -216,8 +226,8 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
-          <Button onClick={save}>{object ? t("Save changes") : t("Add object")}</Button>
+          <Button variant="ghost" disabled={saving} onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
+          <Button disabled={saving} onClick={() => void save()}>{saving && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : object ? t("Save changes") : t("Add object")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>);

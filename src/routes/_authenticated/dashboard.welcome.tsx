@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Check, Copy, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,13 +38,14 @@ function Welcome() {
   const [objectTitle, setObjectTitle] = useState('');
   const [objectImage, setObjectImage] = useState('');
   const [busy, setBusy] = useState(false);
+  const busyLock = useRef(false);
   if (!currentUser) return null;
   const museums = museumsOf(currentUser.id);
   const museum = museums[museums.length - 1];
   const objects = museum ? objectsOf(museum.id) : [];
   const step = !category && !museum ? 0 : !museum ? 1 : objects.length === 0 ? 2 : !museum.isPublic || !state?.shared ? 3 : state?.plansSeen ? 5 : 4;
   const publicUrl = museum ? `${typeof window === 'undefined' ? '' : window.location.origin}/m/${museum.slug}` : '';
-  const act = async (fn: () => Promise<unknown>) => { setBusy(true); try { await fn(); } catch (e) { toast.error(e instanceof Error ? e.message : t('Something went wrong')); } finally { setBusy(false); } };
+  const act = async (fn: () => Promise<unknown>) => { if (busyLock.current) return; busyLock.current = true; setBusy(true); try { await fn(); } catch (e) { toast.error(e instanceof Error ? e.message : t('Something went wrong')); } finally { busyLock.current = false; setBusy(false); } };
   const skip = async () => { await update({ skipped: true, welcomed: true }); await navigate({ to: '/dashboard' }); };
   const share = async () => {
     try {
@@ -118,7 +119,7 @@ function Welcome() {
           <div className="flex justify-center gap-2"><Button asChild><Link to="/dashboard" search={{ tour: true }}>{t('Take the tour')}</Link></Button><Button asChild variant="outline"><Link to="/dashboard/museums">{t('Manage museums')}</Link></Button></div>
         </div>}
       </section>
-      {step < 5 && <Button variant="ghost" onClick={() => void skip()}>{t('Skip for now')}</Button>}
+      {step < 5 && <Button variant="ghost" disabled={busy} onClick={() => void act(skip)}>{t('Skip for now')}</Button>}
     </div>
   );
 }

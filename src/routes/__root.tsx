@@ -2,11 +2,11 @@ import { useI18n } from '@/lib/i18n';
 import {I18nProvider} from '@/lib/i18n';
 import { QueryClient, QueryClientProvider, useSuspenseQuery } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, type ErrorComponentProps, } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { installImageFallback } from "@/lib/placeholder";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { getPublicCatalog } from "@/lib/catalog.functions";
+import { publicCatalogQuery } from "@/lib/public-catalog-query";
 import { StoreProvider } from "@/lib/store";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -30,18 +30,41 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     const { t } = useI18n();
     console.error(error);
     const router = useRouter();
+    const [retrying, setRetrying] = useState(false);
+    const retryLock = useRef(false);
+    const automaticRetry = useRef(false);
+    const retry = useCallback(async () => {
+        if (retryLock.current) return;
+        retryLock.current = true;
+        setRetrying(true);
+        try {
+            await router.invalidate();
+            reset();
+        }
+        finally {
+            retryLock.current = false;
+            setRetrying(false);
+        }
+    }, [router, reset]);
     useEffect(() => {
         reportLovableError(error, { boundary: "tanstack_root_error_component" });
-    }, [error]);
+        const reconnect = () => { void retry(); };
+        window.addEventListener("online", reconnect);
+        const timer = automaticRetry.current ? undefined : window.setTimeout(() => {
+            automaticRetry.current = true;
+            void retry();
+        }, 1500);
+        return () => {
+            window.removeEventListener("online", reconnect);
+            if (timer !== undefined) window.clearTimeout(timer);
+        };
+    }, [error, retry]);
     return (<div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight">{t("This page didn't load")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("Something went wrong on our end. You can try refreshing or head back home.")}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button onClick={() => {
-            router.invalidate();
-            reset();
-        }} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">{t("Try again")}</button>
+          <button disabled={retrying} onClick={() => void retry()} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50">{retrying ? t("Retrying…") : t("Try again")}</button>
           <a href="/" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent">{t("Go home")}</a>
         </div>
       </div>
@@ -50,7 +73,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 export const Route = createRootRouteWithContext<{
     queryClient: QueryClient;
 }>()({
-    loader: ({ context }) => context.queryClient.ensureQueryData({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }),
+    loader: ({ context }) => context.queryClient.ensureQueryData(publicCatalogQuery),
     head: () => ({
         meta: [
             { charSet: "utf-8" },
@@ -95,7 +118,7 @@ function RootShell({ children }: {
 function RootComponent() {
     const { queryClient } = Route.useRouteContext();
     useEffect(() => installImageFallback(document), []);
-    const { data: catalog } = useSuspenseQuery({ queryKey: ["public-catalog"], queryFn: () => getPublicCatalog(), staleTime: 120000, gcTime: 600000 }, queryClient);
+    const { data: catalog } = useSuspenseQuery(publicCatalogQuery, queryClient);
     return (<QueryClientProvider client={queryClient}>
       <StoreProvider initialCatalog={catalog}>
         <div className="flex min-h-screen flex-col">

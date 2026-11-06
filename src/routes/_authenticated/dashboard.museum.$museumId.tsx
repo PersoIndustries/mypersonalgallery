@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Boxes, Eye, EyeOff, ExternalLink, Globe, Lock, Pencil, Plus, Trash2, } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/cards";
 import { ObjectEditor } from "@/components/object-editor";
@@ -38,6 +38,8 @@ function MuseumSetup() {
         object: CollectionObject | null;
     } | null>(null);
     const [visitorView, setVisitorView] = useState(false);
+    const [pendingSwitch, setPendingSwitch] = useState<string | null>(null);
+    const switchLock = useRef(false);
     if (!museum || museum.ownerId !== currentUser?.id) {
         return (<EmptyState icon={Boxes} title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action={<Button asChild variant="outline">
             <Link to="/dashboard/museums">{t("Back to museums")}</Link>
@@ -46,7 +48,22 @@ function MuseumSetup() {
     const objs = objectsOf(museum.id);
     const visibleCount = objs.filter((o) => o.isVisible !== false).length;
     const flags = museumFeatures(museum);
-    const setFlag = (k: FeatureKey, v: boolean) => void updateMuseum(museum.id, { features: { ...flags, [k]: v } }).catch(e => toast.error(e.message));
+    const saveSwitch = async (key: string, action: () => Promise<void>) => {
+        if (switchLock.current) return;
+        switchLock.current = true;
+        setPendingSwitch(key);
+        try {
+            await action();
+        }
+        catch (e) {
+            toast.error(e instanceof Error ? e.message : t("Unable to save changes"));
+        }
+        finally {
+            switchLock.current = false;
+            setPendingSwitch(null);
+        }
+    };
+    const setFlag = (k: FeatureKey, v: boolean) => void saveSwitch(`feature:${k}`, () => updateMuseum(museum.id, { features: { ...flags, [k]: v } }));
     const previewItems = visitorView ? objs.filter((o) => o.isVisible !== false) : objs;
     return (<div className="space-y-6">
       <Link to="/dashboard/museums" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
@@ -152,7 +169,7 @@ function MuseumSetup() {
                         <label className="flex items-center gap-2 text-xs text-muted-foreground">
                           {visible ? <Eye className="size-4"/> : <EyeOff className="size-4"/>}
                           {visible ? t("Visible") : t("Hidden")}
-                          <Switch checked={visible} onCheckedChange={(v) => void updateObject(o.id, { isVisible: v }).catch(e => toast.error(e.message))} aria-label={t("Visible to visitors")}/>
+                          <Switch checked={visible} disabled={pendingSwitch !== null} onCheckedChange={(v) => void saveSwitch(`object:${o.id}`, () => updateObject(o.id, { isVisible: v }))} aria-label={t("Visible to visitors")}/>
                         </label>
                         <div className="flex">
                           <Button variant="ghost" size="icon" onClick={() => setEditor({ object: o })} aria-label={t("Edit")}><Pencil className="size-4"/></Button>
@@ -176,7 +193,7 @@ function MuseumSetup() {
                   <p className="text-xs text-muted-foreground">{museum.isPublic ? t("Anyone with the link can visit it.") : t("Only you can see it until you publish it.")}</p>
                 </div>
               </div>
-              <Switch checked={museum.isPublic} aria-label={t("Public")} onCheckedChange={(v) => void updateMuseum(museum.id, { isPublic: v }).then(() => toast.success(v ? t("Museum is now public") : t("Museum is now private"))).catch(e => toast.error(e.message))}/>
+              <Switch checked={museum.isPublic} disabled={pendingSwitch !== null} aria-label={t("Public")} onCheckedChange={(v) => void saveSwitch("museum:public", async () => { await updateMuseum(museum.id, { isPublic: v }); toast.success(v ? t("Museum is now public") : t("Museum is now private")); })}/>
             </CardContent>
           </Card>
           <Card>
@@ -211,7 +228,7 @@ function MuseumSetup() {
                     <span className="block text-sm">{t(feat.label)}</span>
                     <span className="block text-xs text-muted-foreground">{t(feat.hint)}</span>
                   </span>
-                  <Switch checked={flags[feat.key]} onCheckedChange={(v) => setFlag(feat.key, v)}/>
+                  <Switch checked={flags[feat.key]} disabled={pendingSwitch !== null} onCheckedChange={(v) => setFlag(feat.key, v)}/>
                 </label>))}
             </CardContent>
           </Card>

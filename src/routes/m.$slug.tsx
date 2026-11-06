@@ -1,5 +1,5 @@
 import { useI18n } from '@/lib/i18n';
-import { getPublicCatalog } from '@/lib/catalog.functions';
+import { publicCatalogQuery } from '@/lib/public-catalog-query';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Boxes, Landmark, Lock, Search, Settings2 } from "lucide-react";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/m/$slug")({
-    loader: async ({ params }) => { const c = await getPublicCatalog(); return c.museums.find(m => m.slug === params.slug) ?? null; },
+    loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.museums.find(m => m.slug === params.slug) ?? null; },
     head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A curated digital museum on MyOwnMuseum.'; const image = loaderData?.cover; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
     component: MuseumPage,
 });

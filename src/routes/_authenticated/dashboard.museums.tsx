@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ObjectEditor } from "@/components/object-editor";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,8 @@ function DashboardMuseums() {
     const [objectDialog, setObjectDialog] = useState<string | null>(null);
     const [editObj, setEditObj] = useState<CollectionObject | null>(null);
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+    const saveLock = useRef(false);
     if (!currentUser)
         return null;
     const myMuseums = museumsOf(currentUser.id);
@@ -65,6 +67,9 @@ function DashboardMuseums() {
         setMuseumDialog({ id });
     };
     const saveMuseum = async () => {
+        if (saveLock.current) return;
+        saveLock.current = true;
+        setSaving(true);
         try {
             if (!museumForm.title.trim()) {
                 toast.error(t("Give your museum a title"));
@@ -81,7 +86,11 @@ function DashboardMuseums() {
             setMuseumDialog(null);
         }
         catch (e) {
-            toast.error(e instanceof Error ? e.message : "Unable to save museum");
+            toast.error(e instanceof Error ? e.message : t("Unable to save museum"));
+        }
+        finally {
+            saveLock.current = false;
+            setSaving(false);
         }
     };
     return (<div className="space-y-6">
@@ -154,7 +163,7 @@ function DashboardMuseums() {
             })}
         </div>)}
 
-      <Dialog open={!!museumDialog} onOpenChange={(o) => !o && setMuseumDialog(null)}>
+      <Dialog open={!!museumDialog} onOpenChange={(o) => !o && !saving && setMuseumDialog(null)}>
         <DialogContent className="max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl">
@@ -197,8 +206,8 @@ function DashboardMuseums() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setMuseumDialog(null)}>{t("Cancel")}</Button>
-            <Button onClick={saveMuseum}>{t("Save museum")}</Button>
+            <Button variant="ghost" disabled={saving} onClick={() => setMuseumDialog(null)}>{t("Cancel")}</Button>
+            <Button disabled={saving} onClick={() => void saveMuseum()}>{saving && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : t("Save museum")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
