@@ -163,7 +163,7 @@ function DashboardMuseums() {
             })}
         </div>)}
 
-      <Dialog open={!!museumDialog} onOpenChange={(o) => !o && setMuseumDialog(null)}>
+      <Dialog open={!!museumDialog} onOpenChange={(o) => !o && !saving && setMuseumDialog(null)}>
         <DialogContent className="max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl">

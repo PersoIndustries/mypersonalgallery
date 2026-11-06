@@ -193,7 +193,7 @@ function MuseumSetup() {
                   <p className="text-xs text-muted-foreground">{museum.isPublic ? t("Anyone with the link can visit it.") : t("Only you can see it until you publish it.")}</p>
                 </div>
               </div>
-              <Switch checked={museum.isPublic} aria-label={t("Public")} onCheckedChange={(v) => void updateMuseum(museum.id, { isPublic: v }).then(() => toast.success(v ? t("Museum is now public") : t("Museum is now private"))).catch(e => toast.error(e.message))}/>
+              <Switch checked={museum.isPublic} disabled={pendingSwitch !== null} aria-label={t("Public")} onCheckedChange={(v) => void saveSwitch("museum:public", async () => { await updateMuseum(museum.id, { isPublic: v }); toast.success(v ? t("Museum is now public") : t("Museum is now private")); })}/>
             </CardContent>
           </Card>
           <Card>

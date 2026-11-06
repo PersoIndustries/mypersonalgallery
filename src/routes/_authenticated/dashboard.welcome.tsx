@@ -119,7 +119,7 @@ function Welcome() {
           <div className="flex justify-center gap-2"><Button asChild><Link to="/dashboard" search={{ tour: true }}>{t('Take the tour')}</Link></Button><Button asChild variant="outline"><Link to="/dashboard/museums">{t('Manage museums')}</Link></Button></div>
         </div>}
       </section>
-      {step < 5 && <Button variant="ghost" onClick={() => void skip()}>{t('Skip for now')}</Button>}
+      {step < 5 && <Button variant="ghost" disabled={busy} onClick={() => void act(skip)}>{t('Skip for now')}</Button>}
     </div>
   );
 }

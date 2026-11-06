@@ -133,7 +133,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
       <Label htmlFor={`oe-${id}`}>{t(label)}</Label>
       <Input id={`oe-${id}`} value={f[id] as string} placeholder={placeholder} onChange={(e) => set(id, e.target.value as never)}/>
     </div>);
-    return (<Dialog open={open} onOpenChange={onOpenChange}>
+    return (<Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next); }}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
