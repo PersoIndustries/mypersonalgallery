@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ObjectEditor } from "@/components/object-editor";
 import { Button } from "@/components/ui/button";

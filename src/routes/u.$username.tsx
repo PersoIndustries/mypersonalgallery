@@ -1,5 +1,5 @@
 import { useI18n } from '@/lib/i18n';
-import { getPublicCatalog } from '@/lib/catalog.functions';
+import { publicCatalogQuery } from '@/lib/public-catalog-query';
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CalendarDays, Landmark, MapPin } from "lucide-react";
 import { EmptyState, MuseumCard } from "@/components/cards";

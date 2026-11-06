@@ -1,5 +1,5 @@
 import { useI18n } from '@/lib/i18n';
-import { getPublicCatalog } from '@/lib/catalog.functions';
+import { publicCatalogQuery } from '@/lib/public-catalog-query';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Boxes, Landmark, Lock, Search, Settings2 } from "lucide-react";
 import { useState } from "react";

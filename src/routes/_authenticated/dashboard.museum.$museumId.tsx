@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Boxes, Eye, EyeOff, ExternalLink, Globe, Lock, Pencil, Plus, Trash2, } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/cards";
 import { ObjectEditor } from "@/components/object-editor";
