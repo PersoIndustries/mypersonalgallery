@@ -86,7 +86,11 @@ function DashboardMuseums() {
             setMuseumDialog(null);
         }
         catch (e) {
-            toast.error(e instanceof Error ? e.message : "Unable to save museum");
+            toast.error(e instanceof Error ? e.message : t("Unable to save museum"));
+        }
+        finally {
+            saveLock.current = false;
+            setSaving(false);
         }
     };
     return (<div className="space-y-6">

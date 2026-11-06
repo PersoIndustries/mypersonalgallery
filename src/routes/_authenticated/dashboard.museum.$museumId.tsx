@@ -169,7 +169,7 @@ function MuseumSetup() {
                         <label className="flex items-center gap-2 text-xs text-muted-foreground">
                           {visible ? <Eye className="size-4"/> : <EyeOff className="size-4"/>}
                           {visible ? t("Visible") : t("Hidden")}
-                          <Switch checked={visible} onCheckedChange={(v) => void updateObject(o.id, { isVisible: v }).catch(e => toast.error(e.message))} aria-label={t("Visible to visitors")}/>
+                          <Switch checked={visible} disabled={pendingSwitch !== null} onCheckedChange={(v) => void saveSwitch(`object:${o.id}`, () => updateObject(o.id, { isVisible: v }))} aria-label={t("Visible to visitors")}/>
                         </label>
                         <div className="flex">
                           <Button variant="ghost" size="icon" onClick={() => setEditor({ object: o })} aria-label={t("Edit")}><Pencil className="size-4"/></Button>

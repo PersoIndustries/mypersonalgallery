@@ -30,9 +30,35 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     const { t } = useI18n();
     console.error(error);
     const router = useRouter();
+    const [retrying, setRetrying] = useState(false);
+    const retryLock = useRef(false);
+    const automaticRetry = useRef(false);
+    const retry = useCallback(async () => {
+        if (retryLock.current) return;
+        retryLock.current = true;
+        setRetrying(true);
+        try {
+            await router.invalidate();
+            reset();
+        }
+        finally {
+            retryLock.current = false;
+            setRetrying(false);
+        }
+    }, [router, reset]);
     useEffect(() => {
         reportLovableError(error, { boundary: "tanstack_root_error_component" });
-    }, [error]);
+        const reconnect = () => { void retry(); };
+        window.addEventListener("online", reconnect);
+        const timer = automaticRetry.current ? undefined : window.setTimeout(() => {
+            automaticRetry.current = true;
+            void retry();
+        }, 1500);
+        return () => {
+            window.removeEventListener("online", reconnect);
+            if (timer !== undefined) window.clearTimeout(timer);
+        };
+    }, [error, retry]);
     return (<div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight">{t("This page didn't load")}</h1>

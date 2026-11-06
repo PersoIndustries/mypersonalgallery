@@ -122,7 +122,11 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
             onOpenChange(false);
         }
         catch (e) {
-            toast.error(e instanceof Error ? e.message : "Unable to save object");
+            toast.error(e instanceof Error ? e.message : t("Unable to save object"));
+        }
+        finally {
+            saveLock.current = false;
+            setSaving(false);
         }
     };
     const field = (id: keyof Form, label: string, placeholder?: string) => (<div className="space-y-2">
