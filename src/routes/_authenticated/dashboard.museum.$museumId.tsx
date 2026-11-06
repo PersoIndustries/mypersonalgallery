@@ -38,6 +38,8 @@ function MuseumSetup() {
         object: CollectionObject | null;
     } | null>(null);
     const [visitorView, setVisitorView] = useState(false);
+    const [pendingSwitch, setPendingSwitch] = useState<string | null>(null);
+    const switchLock = useRef(false);
     if (!museum || museum.ownerId !== currentUser?.id) {
         return (<EmptyState icon={Boxes} title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action={<Button asChild variant="outline">
             <Link to="/dashboard/museums">{t("Back to museums")}</Link>

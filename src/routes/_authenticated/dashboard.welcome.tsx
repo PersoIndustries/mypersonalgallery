@@ -38,6 +38,7 @@ function Welcome() {
   const [objectTitle, setObjectTitle] = useState('');
   const [objectImage, setObjectImage] = useState('');
   const [busy, setBusy] = useState(false);
+  const busyLock = useRef(false);
   if (!currentUser) return null;
   const museums = museumsOf(currentUser.id);
   const museum = museums[museums.length - 1];

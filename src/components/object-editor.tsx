@@ -63,6 +63,8 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const { getMuseum, createObject, updateObject } = useStore();
     const museum = getMuseum(museumId);
     const [f, setF] = useState<Form>(() => toForm(object, museum?.category ?? CATEGORIES[0]));
+    const [saving, setSaving] = useState(false);
+    const saveLock = useRef(false);
     useEffect(() => {
         if (open)
             setF(toForm(object, museum?.category ?? CATEGORIES[0]));

@@ -44,6 +44,8 @@ function DashboardMuseums() {
     const [objectDialog, setObjectDialog] = useState<string | null>(null);
     const [editObj, setEditObj] = useState<CollectionObject | null>(null);
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+    const saveLock = useRef(false);
     if (!currentUser)
         return null;
     const myMuseums = museumsOf(currentUser.id);
