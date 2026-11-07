@@ -327,6 +327,7 @@
   "Go home": "Ir al inicio",
   "Try again": "Reintentar",
   "Retrying…": "Reintentando…",
+  "You're offline. You can browse loaded pages; reconnect to refresh or save changes.": "No tienes conexión. Puedes recorrer las páginas ya cargadas; vuelve a conectarte para actualizar o guardar cambios.",
   "Unable to save changes": "No se pudieron guardar los cambios",
   "This page didn't load": "No se pudo cargar esta página",
   "Something went wrong on our end. You can try refreshing or head back home.": "Se ha producido un problema. Puedes reintentar o volver al inicio.",
