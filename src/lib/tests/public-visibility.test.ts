@@ -41,7 +41,11 @@ test('a direct public lookup cannot resolve a hidden object or an object in a pr
 test('owners and admins retain complete private records without sharing them with other collectors', () => {
   const owner = catalogForViewer(catalog, publicMuseum.ownerId);
   assert.equal(owner.objects.find(object => object.id === hiddenObject.id)?.documents.length, hiddenObject.documents.length);
-  assert.equal(owner.objects.find(object => object.id === privateObject.id), undefined);
+  assert.equal(owner.objects.find(object => object.id === privateObject.id)?.documents.length, privateObject.documents.length);
+  const otherCollector = catalogForViewer(catalog, 'another-collector');
+  assert.equal(otherCollector.objects.find(object => object.id === privateObject.id), undefined);
+  assert.equal(otherCollector.objects.find(object => object.id === hiddenObject.id), undefined);
+  assert.deepEqual(otherCollector.objects.find(object => object.id === visibleObject.id)?.documents, []);
   const admin = catalogForViewer(catalog, 'administrator', true);
   assert.equal(admin.objects.length, 3);
   assert.equal(admin.objects.find(object => object.id === visibleObject.id)?.modelUrl, visibleObject.modelUrl);
