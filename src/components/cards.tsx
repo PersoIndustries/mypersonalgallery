@@ -1,7 +1,8 @@
 import { useI18n } from '@/lib/i18n';
 import { Link } from "@tanstack/react-router";
 import { Boxes, MapPin } from "lucide-react";
-import type { CollectionObject, Museum, User } from "@/lib/types";
+import { museumFeatures, showFeature, type CollectionObject, type Museum, type User } from "@/lib/types";
+import { useStore } from "@/lib/store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +12,7 @@ export function MuseumCard({ museum, owner, count, }: {
     count: number;
 }) {
     const { t } = useI18n();
+    const flags = museumFeatures(museum);
     return (<Link to="/m/$slug" params={{ slug: museum.slug }} className="group relative flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
       <div className="relative aspect-16/10 overflow-hidden bg-muted">
         <img src={museum.cover} alt={museum.title} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105"/>
@@ -23,11 +25,11 @@ export function MuseumCard({ museum, owner, count, }: {
         <h3 className="font-display text-xl leading-tight transition-colors group-hover:text-primary">
           {museum.title}
         </h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        {flags.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
           {museum.description}
-        </p>
+        </p>}
         <div className="mt-4 flex items-center justify-between border-t border-border/70 pt-4">
-          {owner ? (<span className="flex items-center gap-2 text-xs text-muted-foreground">
+          {flags.curator && owner ? (<span className="flex items-center gap-2 text-xs text-muted-foreground">
               <Avatar className="size-6">
                 <AvatarImage src={owner.avatar} alt={owner.name}/>
                 <AvatarFallback>{owner.name.slice(0, 2)}</AvatarFallback>
@@ -44,6 +46,8 @@ export function ObjectCard({ object }: {
     object: CollectionObject;
 }) {
     const { t } = useI18n();
+    const { museums } = useStore();
+    const museum = museums.find(item => item.id === object.museumId);
     return (<Link to="/o/$objectId" params={{ objectId: object.id }} className="group flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
       <div className="relative aspect-4/3 overflow-hidden bg-muted">
         <img src={object.images[0]} alt={object.title} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"/>
@@ -56,14 +60,14 @@ export function ObjectCard({ object }: {
         <h3 className="mt-1.5 font-display text-lg leading-snug transition-colors group-hover:text-primary">
           {object.title}
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+        {showFeature(museum, object, "description") && <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
           {object.description}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5 pt-1">
+        </p>}
+        {showFeature(museum, object, "tags") && <div className="mt-3 flex flex-wrap gap-1.5 pt-1">
           {object.tags.slice(0, 3).map((t) => (<Badge key={t} variant="outline" className="text-[10px] font-medium">
               {t}
             </Badge>))}
-        </div>
+        </div>}
       </div>
     </Link>);
 }

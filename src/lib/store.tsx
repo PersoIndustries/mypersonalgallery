@@ -12,7 +12,7 @@ import { museumSchema, museumPatchSchema, objectSchema, objectPatchSchema, profi
 import { countrySchema, diagnosticPath } from './platform-rules';
 import { reportAppError } from './platform.functions';
 import { capturePasswordLink, markPasswordRecovery, clearPasswordLink, shouldRoutePasswordLink } from './password-link';
-import { createSingleFlight } from './async-actions';
+import { createSingleFlight, withReadRetries } from './async-actions';
 import { patchById, rollbackById } from './optimistic';
 
 export interface StoreValue extends Catalog {
@@ -61,7 +61,7 @@ export function StoreProvider({ children, initialCatalog = empty }: { children: 
   const refresh = useCallback(() => singleFlight('refresh-catalog', async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      const data = await privateCatalog();
+      const data = await withReadRetries(() => privateCatalog());
       setState(data);
       setUserId(data.currentUserId);
       setAdmin(data.isAdmin);

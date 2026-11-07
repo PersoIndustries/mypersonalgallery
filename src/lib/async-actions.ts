@@ -22,3 +22,20 @@ export function shouldRetryRead(failureCount: number): boolean {
 export function readRetryDelay(attempt: number): number {
   return Math.min(500 * 2 ** attempt, 3000);
 }
+
+const wait = (milliseconds: number) => new Promise<void>(resolve => setTimeout(resolve, milliseconds));
+
+/** Retries reads up to three total attempts; callers choose which reads are safe. */
+export async function withReadRetries<T>(
+  action: () => Promise<T>,
+  pause: (milliseconds: number) => Promise<void> = wait,
+): Promise<T> {
+  for (let failureCount = 0; ; failureCount++) {
+    try {
+      return await action();
+    } catch (error) {
+      if (!shouldRetryRead(failureCount)) throw error;
+      await pause(readRetryDelay(failureCount));
+    }
+  }
+}

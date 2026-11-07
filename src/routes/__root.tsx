@@ -11,6 +11,27 @@ import { StoreProvider } from "@/lib/store";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { WifiOff } from "lucide-react";
+
+function ConnectionBanner() {
+    const { t } = useI18n();
+    const [offline, setOffline] = useState(false);
+    useEffect(() => {
+        const sync = () => setOffline(!navigator.onLine);
+        sync();
+        window.addEventListener("online", sync);
+        window.addEventListener("offline", sync);
+        return () => {
+            window.removeEventListener("online", sync);
+            window.removeEventListener("offline", sync);
+        };
+    }, []);
+    if (!offline) return null;
+    return (<div role="status" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-xl items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm text-card-foreground shadow-lg">
+      <WifiOff className="size-5 shrink-0 text-primary" aria-hidden="true"/>
+      <span>{t("You're offline. You can browse loaded pages; reconnect to refresh or save changes.")}</span>
+    </div>);
+}
 function NotFoundComponent() {
     const { t } = useI18n();
     return (<div className="flex min-h-[70vh] items-center justify-center px-4">
@@ -129,6 +150,7 @@ function RootComponent() {
           </main>
           <SiteFooter />
         </div>
+        <ConnectionBanner />
         <Toaster position="bottom-right"/>
       </StoreProvider>
     </QueryClientProvider>);
