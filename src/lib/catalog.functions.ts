@@ -4,10 +4,11 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import type { Database, Json } from '@/integrations/supabase/types';
-import type { Museum, User, CollectionObject } from './types';
+import type { Catalog, Museum, User, CollectionObject } from './types';
 import { museumSchema, museumPatchSchema, objectSchema, objectPatchSchema, profileSchema, taskSchema } from './catalog.schemas';
+import { catalogForViewer, onlyPublicCatalog } from './public-visibility';
 
-export interface Catalog { museums:Museum[]; objects:CollectionObject[]; users:User[] }
+export type { Catalog } from './types';
 const date = (s:string) => s.slice(0,10);
 async function readCatalog(client:SupabaseClient<Database>):Promise<Catalog> {
   const [m,o,u] = await Promise.all([client.from('museums').select('*').order('created_at'),client.from('objects').select('*').order('created_at'),client.from('profiles').select('id,name,username,avatar,bio,location,joined')]);
@@ -19,7 +20,7 @@ export const getPublicCatalog = createServerFn({method:'GET'}).handler(async () 
   if(!key || !url) throw new Error('Supabase is unavailable');
   const client=createClient<Database>(url,key,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:(input,init)=>{const headers=new Headers(init?.headers);if(key.startsWith('sb_') && headers.get('Authorization')===`Bearer ${key}`) headers.delete('Authorization');headers.set('apikey',key);return fetch(input,{...init,headers});}}});
   const {cachedPublicCatalog}=await import('./public-cache.server');
-  return cachedPublicCatalog(()=>readCatalog(client));
+  return cachedPublicCatalog(async()=>onlyPublicCatalog(await readCatalog(client)));
 });
 export const getPrivateCatalog = createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async ({context}) => {
   setResponseHeader('Cache-Control','no-store');
@@ -27,7 +28,8 @@ export const getPrivateCatalog = createServerFn({method:'POST'}).middleware([req
   if(role.error) throw new Error(role.error.message);
   const {data:profile}=await context.supabase.from('profiles').select('country').eq('user_id',context.userId).maybeSingle();
   catalog.users=catalog.users.map(u=>u.id===context.userId?{...u,country:profile?.country??null}:u);
-  return {...catalog,currentUserId:context.userId,isAdmin:role.data === true};
+  const isAdmin=role.data === true;
+  return {...catalogForViewer(catalog,context.userId,isAdmin),currentUserId:context.userId,isAdmin};
 });
 const id = z.string().min(1).max(100);
 export const mutationSchema=z.discriminatedUnion('action',[

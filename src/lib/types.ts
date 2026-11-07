@@ -51,6 +51,12 @@ export const DEFAULT_FEATURES: FeatureFlags = {
   price: false,
 };
 
+export interface Catalog {
+  museums: Museum[];
+  objects: CollectionObject[];
+  users: User[];
+}
+
 export interface Museum {
   id: string;
   slug: string;
@@ -97,7 +103,7 @@ export interface CollectionObject {
   images: string[];
   modelUrl: string | null;
   documents: MuseumDocument[];
-  condition: Condition;
+  condition?: Condition;
   featured?: boolean;
   createdAt: string;
   isVisible?: boolean;
