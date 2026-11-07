@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
+import { showFeature, type FeatureKey } from "@/lib/types";
 export const Route = createFileRoute("/o/$objectId")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.objects.find(o => o.id === params.objectId) ?? null; },
     head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A collection object on MyOwnMuseum.'; const image = loaderData?.images?.[0]; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
@@ -19,8 +20,8 @@ export const Route = createFileRoute("/o/$objectId")({
 function ObjectPage() {
     const { t } = useI18n();
     const { objectId } = Route.useParams();
-    const { getObject, museums, users, currentUser } = useStore();
-    const object = getObject(objectId);
+    const { publicObjects, publicMuseums, users, currentUser } = useStore();
+    const object = publicObjects.find(item => item.id === objectId);
     const [active, setActive] = useState(0);
     const [lightbox, setLightbox] = useState<number | null>(null);
     if (!object) {
@@ -30,8 +31,10 @@ function ObjectPage() {
             </Button>}/>
       </div>);
     }
-    const museum = museums.find((m) => m.id === object.museumId);
+    const museum = publicMuseums.find((m) => m.id === object.museumId);
     const owner = users.find((u) => u.id === museum?.ownerId);
+    const can = (key: FeatureKey) => showFeature(museum, object, key);
+    const hasTabs = can("specs") || can("history") || can("documents");
     return (<div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <nav className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Link to="/explore" className="hover:text-foreground">{t("Explore")}</Link>
@@ -58,7 +61,7 @@ function ObjectPage() {
               </button>))}
           </div>
 
-          <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-5">
+          {can("model3d") && <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-dashed border-primary/30 bg-primary/5 p-5">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-primary/25">
                 <Rotate3d className="size-5"/>
@@ -74,12 +77,12 @@ function ObjectPage() {
             <Button variant="outline" size="sm" disabled={!object.modelUrl}>
               {object.modelUrl ? t("Launch viewer") : t("Not available")}
             </Button>
-          </div>
+          </div>}
         </div>
 
         <div className="fade-up">
           <p className="eyebrow">
-            {object.category}{t(" \u00B7 ")}{object.condition}
+            {object.category}{can("condition") && object.condition ? <>{t(" \u00B7 ")}{object.condition}</> : null}
           </p>
           <h1 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">{object.title}</h1>
           <p className="mt-2 text-muted-foreground">
@@ -88,17 +91,21 @@ function ObjectPage() {
 
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             <Stat icon={Calendar} label={t("Year")} value={object.year}/>
-            <Stat icon={ShieldCheck} label={t("Condition")} value={object.condition}/>
+            {can("condition") && object.condition && <Stat icon={ShieldCheck} label={t("Condition")} value={object.condition}/>}
             <Stat icon={Boxes} label={t("Catalogued")} value={object.createdAt}/>
           </div>
 
-          <p className="mt-6 leading-relaxed text-muted-foreground">{object.description}</p>
+          {can("description") && <p className="mt-6 leading-relaxed text-muted-foreground">{object.description}</p>}
+          {can("price") && object.price && <p className="mt-4 text-lg text-primary">{t("≈ ")}{object.price}</p>}
 
-          <div className="mt-5 flex flex-wrap gap-2">
+          {can("tags") && <div className="mt-5 flex flex-wrap gap-2">
             {object.tags.map((t) => (<Badge key={t} variant="outline" className="gap-1">
                 <Tag className="size-3"/> {t}
               </Badge>))}
-          </div>
+          </div>}
+          {can("links") && object.links && object.links.length > 0 && <div className="mt-5 flex flex-wrap gap-3 text-sm">
+            {object.links.map(link => <a key={link.url} href={link.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">{link.label}</a>)}
+          </div>}
 
           {museum && owner && (<>
               <Separator className="my-7"/>
@@ -108,10 +115,10 @@ function ObjectPage() {
                   <Link to="/m/$slug" params={{ slug: museum.slug }} className="font-display text-lg hover:text-primary">
                     {museum.title}
                   </Link>
-                  <p className="text-xs text-muted-foreground">{t("curated by")}{" "}
+                  {can("curator") && <p className="text-xs text-muted-foreground">{t("curated by")}{" "}
                     <Link to="/u/$username" params={{ username: owner.username }} className="text-primary/85 hover:underline">{t("@")}{owner.username}
                     </Link>
-                  </p>
+                  </p>}
                 </div>
                 <Button asChild variant="outline" size="sm">
                   <Link to="/m/$slug" params={{ slug: museum.slug }}>{t("Visit museum")}</Link>
@@ -119,29 +126,29 @@ function ObjectPage() {
               </div>
             </>)}
 
-          <Tabs defaultValue="specs" className="mt-8">
+          {hasTabs && <Tabs defaultValue={can("specs") ? "specs" : can("history") ? "history" : "docs"} className="mt-8">
             <TabsList>
-              <TabsTrigger value="specs">{t("Specifications")}</TabsTrigger>
-              <TabsTrigger value="history">{t("Provenance")}</TabsTrigger>
-              <TabsTrigger value="docs">{t("Documents (")}{object.documents.length}{t(")")}</TabsTrigger>
+              {can("specs") && <TabsTrigger value="specs">{t("Specifications")}</TabsTrigger>}
+              {can("history") && <TabsTrigger value="history">{t("Provenance")}</TabsTrigger>}
+              {can("documents") && <TabsTrigger value="docs">{t("Documents (")}{object.documents.length}{t(")")}</TabsTrigger>}
             </TabsList>
 
-            <TabsContent value="specs" className="mt-5">
+            {can("specs") && <TabsContent value="specs" className="mt-5">
               <dl className="divide-y divide-border/70 overflow-hidden rounded-xl border border-border/80">
                 {object.specs.map((s) => (<div key={s.key} className="flex gap-4 px-4 py-3 text-sm odd:bg-surface/40">
                     <dt className="w-40 shrink-0 text-muted-foreground">{s.key}</dt>
                     <dd>{s.value}</dd>
                   </div>))}
               </dl>
-            </TabsContent>
+            </TabsContent>}
 
-            <TabsContent value="history" className="mt-5">
+            {can("history") && <TabsContent value="history" className="mt-5">
               <div className="rounded-xl border border-border/80 bg-surface/40 p-5 text-sm leading-relaxed text-muted-foreground">
                 {object.history || t("No provenance recorded yet.")}
               </div>
-            </TabsContent>
+            </TabsContent>}
 
-            <TabsContent value="docs" className="mt-5">
+            {can("documents") && <TabsContent value="docs" className="mt-5">
               {object.documents.length === 0 ? (<div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">{t("No documents archived for this object.")}</div>) : (<ul className="space-y-2">
                   {object.documents.map((d) => (<li key={d.id} className="flex items-center gap-3 rounded-lg border border-border/80 bg-card px-4 py-3">
                       <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
@@ -160,8 +167,8 @@ function ObjectPage() {
                       </Button>
                     </li>))}
                 </ul>)}
-            </TabsContent>
-          </Tabs>
+            </TabsContent>}
+          </Tabs>}
         </div>
       </div>
 
