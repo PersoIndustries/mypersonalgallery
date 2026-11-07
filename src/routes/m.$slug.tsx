@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
+import { museumFeatures } from "@/lib/types";
 export const Route = createFileRoute("/m/$slug")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.museums.find(m => m.slug === params.slug) ?? null; },
     head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A curated digital museum on MyOwnMuseum.'; const image = loaderData?.cover; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
@@ -18,8 +19,8 @@ export const Route = createFileRoute("/m/$slug")({
 function MuseumPage() {
     const { t } = useI18n();
     const { slug } = Route.useParams();
-    const { getMuseum, objectsOf, users, currentUser } = useStore();
-    const museum = getMuseum(slug);
+    const { publicMuseums, publicObjects, users, currentUser } = useStore();
+    const museum = publicMuseums.find(item => item.slug === slug);
     const [query, setQuery] = useState("");
     if (!museum) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
@@ -29,7 +30,8 @@ function MuseumPage() {
       </div>);
     }
     const owner = users.find((u) => u.id === museum.ownerId);
-    const items = objectsOf(museum.id);
+    const items = publicObjects.filter(object => object.museumId === museum.id);
+    const flags = museumFeatures(museum);
     const term = query.toLowerCase();
     const shown = items.filter((o) => !term ||
         [o.title, o.manufacturer, o.model, o.year, ...o.tags].join(" ").toLowerCase().includes(term));
@@ -47,11 +49,11 @@ function MuseumPage() {
           <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight sm:text-6xl">
             {museum.title}
           </h1>
-          <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+          {flags.description && <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
             {museum.description}
-          </p>
+          </p>}
           <div className="mt-7 flex flex-wrap items-center gap-5">
-            {owner && (<Link to="/u/$username" params={{ username: owner.username }} className="group flex items-center gap-2.5">
+            {flags.curator && owner && (<Link to="/u/$username" params={{ username: owner.username }} className="group flex items-center gap-2.5">
                 <Avatar className="size-9 ring-1 ring-border">
                   <AvatarImage src={owner.avatar} alt={owner.name}/>
                   <AvatarFallback>{owner.name.slice(0, 2)}</AvatarFallback>
