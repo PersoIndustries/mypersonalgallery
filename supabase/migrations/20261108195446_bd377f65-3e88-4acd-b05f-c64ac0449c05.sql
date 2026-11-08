@@ -1,0 +1,1 @@
+UPDATE public.dev_tasks SET payload = jsonb_set(payload,'{status}','"done"') WHERE id IN ('t3','t4','platform-46');
