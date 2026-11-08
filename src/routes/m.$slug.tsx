@@ -22,6 +22,7 @@ function MuseumPage() {
     const { publicMuseums, publicObjects, users, currentUser } = useStore();
     const museum = publicMuseums.find(item => item.slug === slug);
     const [query, setQuery] = useState("");
+    const [activeCollection, setActiveCollection] = useState<string | null>(null);
     if (!museum) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
         <EmptyState icon={Landmark} title={t("Museum not found")} description={t("This museum may have been closed or renamed.")} action={<Button asChild variant="outline">
@@ -33,7 +34,8 @@ function MuseumPage() {
     const items = publicObjects.filter(object => object.museumId === museum.id);
     const flags = museumFeatures(museum);
     const term = query.toLowerCase();
-    const shown = items.filter((o) => !term ||
+    const collections = (museum.collections ?? []).filter((c) => items.some((o) => (o.collectionIds ?? []).includes(c.id)));
+    const shown = items.filter((o) => !activeCollection || (o.collectionIds ?? []).includes(activeCollection)).filter((o) => !term ||
         [o.title, o.manufacturer, o.model, o.year, ...o.tags].join(" ").toLowerCase().includes(term));
     const isOwner = currentUser?.id === museum.ownerId;
     return (<div>
@@ -85,6 +87,10 @@ function MuseumPage() {
           </div>
         </div>
 
+        {collections.length > 0 && (<div className="mt-6 flex flex-wrap gap-2" role="group" aria-label={t("Collections")}>
+            <Button size="sm" variant={activeCollection === null ? "default" : "outline"} onClick={() => setActiveCollection(null)}>{t("All")}</Button>
+            {collections.map((c) => (<Button key={c.id} size="sm" variant={activeCollection === c.id ? "default" : "outline"} onClick={() => setActiveCollection(c.id)}>{c.name}</Button>))}
+          </div>)}
         {shown.length === 0 ? (<div className="mt-8">
             <EmptyState icon={Boxes} title={items.length === 0 ? "No objects yet" : "Nothing matches that search"} description={items.length === 0
                 ? "The curator hasn't catalogued anything in this museum."

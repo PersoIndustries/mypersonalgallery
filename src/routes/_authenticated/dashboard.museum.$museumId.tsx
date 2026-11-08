@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Boxes, Eye, EyeOff, ExternalLink, Globe, Lock, Pencil, Plus, Trash2, } from "lucide-react";
+import { ArrowLeft, Boxes, Eye, EyeOff, ExternalLink, FolderOpen, Globe, Lock, Pencil, Plus, Trash2, } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/cards";
@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useStore } from "@/lib/store";
+import { addCollection, objectsInCollection, toggleId } from "@/lib/collections";
 import { FEATURES, museumFeatures, showFeature, type CollectionObject, type FeatureKey, } from "@/lib/types";
 export const Route = createFileRoute("/_authenticated/dashboard/museum/$museumId")({
     head: () => ({
@@ -40,6 +41,8 @@ function MuseumSetup() {
     const [visitorView, setVisitorView] = useState(false);
     const [pendingSwitch, setPendingSwitch] = useState<string | null>(null);
     const switchLock = useRef(false);
+    const [newCollection, setNewCollection] = useState("");
+    const [openCollection, setOpenCollection] = useState<string | null>(null);
     if (!museum || museum.ownerId !== currentUser?.id) {
         return (<EmptyState icon={Boxes} title={t("Museum not found")} description={t("This museum doesn't exist or isn't yours.")} action={<Button asChild variant="outline">
             <Link to="/dashboard/museums">{t("Back to museums")}</Link>
@@ -64,6 +67,14 @@ function MuseumSetup() {
         }
     };
     const setFlag = (k: FeatureKey, v: boolean) => void saveSwitch(`feature:${k}`, () => updateMuseum(museum.id, { features: { ...flags, [k]: v } }));
+    const collections = museum.collections ?? [];
+    const saveCollections = (next: typeof collections) => void saveSwitch("collections", () => updateMuseum(museum.id, { collections: next }));
+    const createCollection = () => {
+        const next = addCollection(collections, newCollection, crypto.randomUUID());
+        if (next === collections) { if (newCollection.trim()) toast.error(t("That collection already exists")); return; }
+        setNewCollection("");
+        saveCollections(next);
+    };
     const previewItems = visitorView ? objs.filter((o) => o.isVisible !== false) : objs;
     return (<div className="space-y-6">
       <Link to="/dashboard/museums" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
@@ -96,6 +107,7 @@ function MuseumSetup() {
       <Tabs defaultValue="objects">
         <TabsList>
           <TabsTrigger value="objects">{t("Objects")} ({objs.length})</TabsTrigger>
+          <TabsTrigger value="collections">{t("Collections")} ({collections.length})</TabsTrigger>
           <TabsTrigger value="preview">{t("Preview")}</TabsTrigger>
           <TabsTrigger value="setup">{t("Settings")}</TabsTrigger>
         </TabsList>
@@ -179,6 +191,42 @@ function MuseumSetup() {
                     </div>
                   </div>);
         })}
+            </div>)}
+        </TabsContent>
+
+        {/* COLLECTIONS */}
+        <TabsContent value="collections" className="mt-5 space-y-5">
+          <form className="flex max-w-lg gap-2" onSubmit={(e) => { e.preventDefault(); createCollection(); }}>
+            <Input aria-label={t("Collection name")} placeholder={t("New collection, e.g. WWII radios")} value={newCollection} maxLength={120} onChange={(e) => setNewCollection(e.target.value)}/>
+            <Button type="submit" disabled={pendingSwitch !== null || !newCollection.trim()}><Plus className="size-4"/>{t("Create")}</Button>
+          </form>
+          {collections.length === 0 ? (<EmptyState icon={FolderOpen} title={t("No collections yet")} description={t("Group objects into collections. One object can belong to several.")}/>) : (<div className="space-y-3">
+              {collections.map((c) => {
+                const members = objectsInCollection(objs, c.id);
+                const expanded = openCollection === c.id;
+                return (<Card key={c.id}>
+                    <CardContent className="pt-5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <button type="button" className="flex items-center gap-2 text-left" onClick={() => setOpenCollection(expanded ? null : c.id)}>
+                          <FolderOpen className="size-4 text-primary"/>
+                          <span className="font-display text-lg">{c.name}</span>
+                          <Badge variant="secondary">{t("{count} objects", { count: members.length })}</Badge>
+                        </button>
+                        <div className="flex gap-1">
+                          <Button variant="outline" size="sm" onClick={() => setOpenCollection(expanded ? null : c.id)}>{expanded ? t("Done") : t("Choose objects")}</Button>
+                          <Button variant="ghost" size="icon" aria-label={t("Delete")} disabled={pendingSwitch !== null} onClick={() => { if (window.confirm(t("Delete this collection? Its objects are kept."))) saveCollections(collections.filter((x) => x.id !== c.id)); }}><Trash2 className="size-4 text-destructive"/></Button>
+                        </div>
+                      </div>
+                      {expanded && (objs.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">{t("Add objects to the museum first.")}</p> : (<div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                          {objs.map((o) => { const on = (o.collectionIds ?? []).includes(c.id); return (<label key={o.id} className={`flex cursor-pointer items-center gap-3 rounded-md border p-2 text-sm ${on ? "border-primary bg-primary/5" : "border-border/70"}`}>
+                              <input type="checkbox" className="accent-primary" checked={on} disabled={pendingSwitch !== null} onChange={() => void saveSwitch(`object:${o.id}`, () => updateObject(o.id, { collectionIds: toggleId(o.collectionIds ?? [], c.id) }))}/>
+                              <img src={o.images[0]} alt="" className="size-10 rounded object-cover"/>
+                              <span className="truncate">{o.title}</span>
+                            </label>); })}
+                        </div>))}
+                    </CardContent>
+                  </Card>);
+              })}
             </div>)}
         </TabsContent>
 

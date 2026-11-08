@@ -1,6 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { useEffect, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
+import { addTag, cleanSpecs, toggleId } from "@/lib/collections";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "
 import { useStore } from "@/lib/store";
 import { ImageUploader } from "@/components/image-uploader";
 import { PLACEHOLDER_IMAGE } from "@/lib/placeholder";
-import { CATEGORIES, CONDITIONS, FEATURES, museumFeatures, type CollectionObject, type Condition, type FeatureKey, } from "@/lib/types";
+import { CATEGORIES, CONDITIONS, FEATURES, museumFeatures, type CollectionObject, type Condition, type FeatureKey, type SpecPair, } from "@/lib/types";
 interface Form {
     title: string;
     description: string;
@@ -22,8 +23,10 @@ interface Form {
     category: string;
     condition: Condition;
     images: string;
-    tags: string;
-    specs: string;
+    tags: string[];
+    tagDraft: string;
+    specs: SpecPair[];
+    collectionIds: string[];
     history: string;
     modelUrl: string;
     price: string;
@@ -40,8 +43,10 @@ const toForm = (o: CollectionObject | null, category: string): Form => ({
     category: o?.category ?? category,
     condition: o?.condition ?? "Excellent",
     images: (o?.images ?? []).filter((i) => !i.includes("picsum.photos/seed/newobject")).join("\n"),
-    tags: (o?.tags ?? []).join(", "),
-    specs: (o?.specs ?? []).map((s) => `${s.key}: ${s.value}`).join("\n"),
+    tags: o?.tags ?? [],
+    tagDraft: "",
+    specs: o?.specs?.length ? o.specs.map((s) => ({ ...s })) : [{ key: "", value: "" }],
+    collectionIds: o?.collectionIds ?? [],
     history: o?.history ?? "",
     modelUrl: o?.modelUrl ?? "",
     price: o?.price ?? "",
@@ -72,6 +77,9 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     }, [open, object?.id]);
     const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...p, [k]: v }));
     const museumFlags = museumFeatures(museum);
+    const collections = museum?.collections ?? [];
+    const setSpec = (i: number, patch: Partial<SpecPair>) => setF((p) => ({ ...p, specs: p.specs.map((s, j) => j === i ? { ...s, ...patch } : s) }));
+    const commitTag = () => setF((p) => ({ ...p, tags: addTag(p.tags, p.tagDraft), tagDraft: "" }));
     const save = async () => {
         if (saveLock.current) return;
         saveLock.current = true;
@@ -90,16 +98,9 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
                 model: f.model,
                 category: f.category,
                 condition: f.condition,
-                tags: f.tags
-                    .split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean),
-                specs: lines(f.specs).map((l) => {
-                    const i = l.indexOf(":");
-                    return i === -1
-                        ? { key: l, value: "" }
-                        : { key: l.slice(0, i).trim(), value: l.slice(i + 1).trim() };
-                }),
+                tags: addTag(f.tags, f.tagDraft),
+                specs: cleanSpecs(f.specs),
+                collectionIds: f.collectionIds.filter((id) => collections.some((c) => c.id === id)),
                 history: f.history,
                 images: images.length ? images : [PLACEHOLDER_IMAGE],
                 modelUrl: f.modelUrl.trim() || null,
@@ -193,10 +194,32 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
             <Label>{t("Images")}</Label>
             <ImageUploader images={lines(f.images).filter((i) => i !== PLACEHOLDER_IMAGE)} onChange={(fn) => setF((p) => ({ ...p, images: fn(lines(p.images).filter((i) => i !== PLACEHOLDER_IMAGE)).join("\n") }))}/>
           </div>
-          {field("tags", "Tags (comma separated)", "WWII, portable, AM")}
           <div className="space-y-2">
-            <Label htmlFor="oe-specs">{t("Specifications (one \"Key: value\" per line)")}</Label>
-            <Textarea id="oe-specs" rows={4} value={f.specs} placeholder={"Frequency: 3.5–6 MHz\nWeight: 2.3 kg"} onChange={(e) => set("specs", e.target.value)}/>
+            <Label htmlFor="oe-tags">{t("Tags")}</Label>
+            <div className="flex flex-wrap items-center gap-1.5 rounded-md border border-input px-2 py-1.5 focus-within:ring-1 focus-within:ring-ring">
+              {f.tags.map((tag) => (<span key={tag} className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs text-secondary-foreground">
+                  {tag}
+                  <button type="button" aria-label={`${t("Remove")} ${tag}`} onClick={() => set("tags", f.tags.filter((x) => x !== tag))}><X className="size-3"/></button>
+                </span>))}
+              <input id="oe-tags" className="min-w-32 flex-1 bg-transparent py-1 text-sm outline-none" value={f.tagDraft} placeholder={t("Type a tag and press Enter")} onChange={(e) => { const v = e.target.value; if (v.endsWith(",")) setF((p) => ({ ...p, tags: addTag(p.tags, v), tagDraft: "" })); else set("tagDraft", v); }} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitTag(); } else if (e.key === "Backspace" && !f.tagDraft && f.tags.length) set("tags", f.tags.slice(0, -1)); }} onBlur={commitTag}/>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>{t("Specifications")}</Label>
+            <div className="space-y-2">
+              {f.specs.map((sp, i) => (<div key={i} className="flex gap-2">
+                  <Input aria-label={t("Name")} placeholder={t("e.g. Weight")} value={sp.key} onChange={(e) => setSpec(i, { key: e.target.value })} className="w-2/5"/>
+                  <Input aria-label={t("Value")} placeholder={t("e.g. 2.3 kg")} value={sp.value} onChange={(e) => setSpec(i, { value: e.target.value })}/>
+                  <Button type="button" variant="ghost" size="icon" aria-label={t("Remove")} onClick={() => set("specs", f.specs.filter((_, j) => j !== i))}><X className="size-4"/></Button>
+                </div>))}
+              <Button type="button" variant="outline" size="sm" onClick={() => set("specs", [...f.specs, { key: "", value: "" }])}><Plus className="size-4"/>{t("Add specification")}</Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>{t("Collections")}</Label>
+            {collections.length === 0 ? (<p className="text-xs text-muted-foreground">{t("Create collections from the museum's Collections tab to group objects.")}</p>) : (<div className="flex flex-wrap gap-2">
+                {collections.map((c) => { const on = f.collectionIds.includes(c.id); return (<Button key={c.id} type="button" size="sm" variant={on ? "default" : "outline"} aria-pressed={on} onClick={() => set("collectionIds", toggleId(f.collectionIds, c.id))}>{c.name}</Button>); })}
+              </div>)}
           </div>
           <div className="space-y-2">
             <Label htmlFor="oe-history">{t("Provenance")}</Label>

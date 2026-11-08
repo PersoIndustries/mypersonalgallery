@@ -242,6 +242,7 @@ export type Database = {
       museums: {
         Row: {
           category: string
+          collections: Json
           cover: string
           created_at: string
           description: string
@@ -255,6 +256,7 @@ export type Database = {
         }
         Insert: {
           category?: string
+          collections?: Json
           cover?: string
           created_at?: string
           description?: string
@@ -268,6 +270,7 @@ export type Database = {
         }
         Update: {
           category?: string
+          collections?: Json
           cover?: string
           created_at?: string
           description?: string
