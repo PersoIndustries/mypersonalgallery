@@ -46,7 +46,7 @@ export const mutateCatalog = createServerFn({method:'POST'}).middleware([require
   }
   if(data.action==='updateMuseum'){
     const p=data.data; const patch:Database['public']['Tables']['museums']['Update']={};
-    if(p.title!==undefined)patch.title=p.title;if(p.description!==undefined)patch.description=p.description;if(p.cover!==undefined)patch.cover=p.cover;if(p.category!==undefined)patch.category=p.category;if(p.isPublic!==undefined)patch.is_public=p.isPublic;if(p.features!==undefined)patch.features=p.features;if(p.collections!==undefined)(patch as Record<string,unknown>).collections=p.collections;
+    if(p.title!==undefined)patch.title=p.title;if(p.description!==undefined)patch.description=p.description;if(p.cover!==undefined)patch.cover=p.cover;if(p.category!==undefined)patch.category=p.category;if(p.isPublic!==undefined)patch.is_public=p.isPublic;if(p.features!==undefined)patch.features=p.features;if(p.collections!==undefined)(patch as Record<string,unknown>)['collections']=p.collections;
     const {error}=await c.from('museums').update(patch).eq('id',data.id).select('id').single();if(error) throw new Error(error.message);return data.id;
   }
   if(data.action==='deleteMuseum' || data.action==='deleteObject'){
