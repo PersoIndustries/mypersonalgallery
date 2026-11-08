@@ -68,6 +68,12 @@ export interface Museum {
   isPublic: boolean;
   createdAt: string;
   features?: Partial<FeatureFlags>;
+  collections?: MuseumCollection[];
+}
+
+export interface MuseumCollection {
+  id: string;
+  name: string;
 }
 
 export interface SpecPair {
@@ -110,6 +116,7 @@ export interface CollectionObject {
   price?: string;
   links?: ObjectLink[];
   hiddenFeatures?: FeatureKey[];
+  collectionIds?: string[];
 }
 
 export const museumFeatures = (m: Museum | undefined): FeatureFlags => ({
