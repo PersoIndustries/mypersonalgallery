@@ -1,0 +1,2 @@
+ALTER TABLE public.museums ADD COLUMN IF NOT EXISTS collections jsonb NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE public.museums ADD CONSTRAINT museums_collections_array CHECK (jsonb_typeof(collections) = 'array' AND jsonb_array_length(collections) <= 100);
