@@ -7,7 +7,6 @@ import { useI18n } from '@/lib/i18n';
 import { PLACEHOLDER_IMAGE } from '@/lib/placeholder';
 import { uploadObjectImage, IMAGE_TYPES, IMAGE_MAX_BYTES } from '@/lib/images.functions';
 import { resizeImage } from '@/lib/resize-image';
-import { supabase } from '@/integrations/supabase/client';
 import { useServerFn } from '@tanstack/react-start';
 
 type Update = (fn: (prev: string[]) => string[]) => void;
@@ -70,7 +69,7 @@ export function ImageUploader({ images, onChange, onUploadingChange }: { images:
       <Button type="button" variant="outline" onClick={() => input.current?.click()} disabled={uploading > 0}
         onDragOver={e => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
         onDrop={e => { e.preventDefault(); setDrag(false); if (e.dataTransfer.files.length) void upload(e.dataTransfer.files); }}
-        className={`flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-sm transition-colors ${drag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/60'}`}>
+        className={`flex h-auto w-full flex-col items-center justify-center gap-2 whitespace-normal rounded-lg border-2 border-dashed p-6 text-sm transition-colors ${drag ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/60'}`}>
         {uploading > 0 ? <Loader2 className="size-6 animate-spin text-primary" /> : <ImagePlus className="size-6 text-muted-foreground" />}
         <span className="font-medium">{uploading > 0 ? t('Uploading {count}…', { count: uploading }) : t('Drop images here or click to choose')}</span>
         <span className="text-xs text-muted-foreground">{t('JPG, PNG, WEBP, GIF · max 10 MB each')}</span>
