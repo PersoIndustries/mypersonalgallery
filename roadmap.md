@@ -1,4 +1,8 @@
 # Platform improvements
+- [ ] Review and verify platform-34 real invitation/recovery links; blocked without a fresh valid email link and external hosted auth settings access.
+- [ ] Review t2 real authentication and complete missing Google sign-in, keeping required signup country.
+- [ ] Review platform-43 image upload, persistence and previews; update DEV only after verification.
+- [ ] Implement and verify platform-51 default Free plan assignment and selected state without enabling payments.
 - [x] Create a temporary developer administrator with real password sign-in; verified account and admin pages. Remove before launch (platform-40).
 - [x] Prepare private invoice history, atomic refund requests/review and administrator subscription history without enabling Stripe. Real checkout, cancellation, invoices and refunds await provider/products (platform-37).
 - [x] Add daily UTC account snapshots at 00:17 with unavailable payment/login metrics clearly distinguished from zero; reliable login/payment sources await platform-39.
