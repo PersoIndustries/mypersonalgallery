@@ -3,6 +3,7 @@ export const countryCodes = ('AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA
 export const countrySchema = z.string().refine(code => countryCodes.includes(code), 'Select your country of origin');
 export const planSchema = z.enum(['free', 'pro', 'studio']);
 export const PAYMENTS_ENABLED = false;
+export function selectedPlan(interest: string | null, subscription: { plan: string }) { return interest ?? subscription.plan; }
 export function requireAdminRole(value: unknown) { if (value !== true) throw new Error('Administrator access required'); }
 export const diagnosticSchema = z.object({ category: z.enum(['runtime','unhandled_rejection','operation','route']), path: z.string().regex(/^\/[a-zA-Z0-9/_.$-]{0,200}$/), fingerprint: z.string().regex(/^[a-f0-9]{8,64}$/) });
 export function diagnosticPath(path: string) { return path.split(/[?#]/)[0]?.replace(/[^a-zA-Z0-9/_.$-]/g, '').slice(0,201) || '/'; }
