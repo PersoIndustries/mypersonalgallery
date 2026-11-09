@@ -69,6 +69,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const museum = getMuseum(museumId);
     const [f, setF] = useState<Form>(() => toForm(object, museum?.category ?? CATEGORIES[0]));
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const saveLock = useRef(false);
     useEffect(() => {
         if (open)
@@ -81,7 +82,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
     const setSpec = (i: number, patch: Partial<SpecPair>) => setF((p) => ({ ...p, specs: p.specs.map((s, j) => j === i ? { ...s, ...patch } : s) }));
     const commitTag = () => setF((p) => ({ ...p, tags: addTag(p.tags, p.tagDraft), tagDraft: "" }));
     const save = async () => {
-        if (saveLock.current) return;
+        if (saveLock.current || uploading) return;
         saveLock.current = true;
         setSaving(true);
         try {
@@ -134,7 +135,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
       <Label htmlFor={`oe-${id}`}>{t(label)}</Label>
       <Input id={`oe-${id}`} value={f[id] as string} placeholder={placeholder} onChange={(e) => set(id, e.target.value as never)}/>
     </div>);
-    return (<Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next); }}>
+    return (<Dialog open={open} onOpenChange={(next) => { if (!saving && !uploading) onOpenChange(next); }}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">
@@ -192,7 +193,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
           </div>
           <div className="space-y-2">
             <Label>{t("Images")}</Label>
-            <ImageUploader images={lines(f.images).filter((i) => i !== PLACEHOLDER_IMAGE)} onChange={(fn) => setF((p) => ({ ...p, images: fn(lines(p.images).filter((i) => i !== PLACEHOLDER_IMAGE)).join("\n") }))}/>
+            <ImageUploader onUploadingChange={setUploading} images={lines(f.images).filter((i) => i !== PLACEHOLDER_IMAGE)} onChange={(fn) => setF((p) => ({ ...p, images: fn(lines(p.images).filter((i) => i !== PLACEHOLDER_IMAGE)).join("\n") }))}/>
           </div>
           <div className="space-y-2">
             <Label htmlFor="oe-tags">{t("Tags")}</Label>
@@ -249,8 +250,8 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" disabled={saving} onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
-          <Button disabled={saving} onClick={() => void save()}>{saving && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : object ? t("Save changes") : t("Add object")}</Button>
+          <Button variant="ghost" disabled={saving || uploading} onClick={() => onOpenChange(false)}>{t("Cancel")}</Button>
+          <Button disabled={saving || uploading} onClick={() => void save()}>{(saving || uploading) && <Loader2 className="animate-spin"/>}{saving ? t("Saving…") : object ? t("Save changes") : t("Add object")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>);
