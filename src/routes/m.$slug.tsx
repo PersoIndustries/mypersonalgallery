@@ -13,7 +13,7 @@ import { useStore } from "@/lib/store";
 import { museumFeatures } from "@/lib/types";
 export const Route = createFileRoute("/m/$slug")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.museums.find(m => m.slug === params.slug) ?? null; },
-    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A curated digital museum on MyOwnMuseum.'; const image = loaderData?.cover; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
+    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.description || 'A curated digital museum on Moon Collector.'; const image = loaderData?.cover; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
     component: MuseumPage,
 });
 function MuseumPage() {
@@ -38,7 +38,7 @@ function MuseumPage() {
     const shown = items.filter((o) => !activeCollection || (o.collectionIds ?? []).includes(activeCollection)).filter((o) => !term ||
         [o.title, o.manufacturer, o.model, o.year, ...o.tags].join(" ").toLowerCase().includes(term));
     const isOwner = currentUser?.id === museum.ownerId;
-    return (<div>
+    return (<div data-museum-skin={museum.skin ?? "lunar"}>
       <section className="relative overflow-hidden border-b border-border/70">
         <img src={museum.cover} alt={museum.title} className="absolute inset-0 size-full object-cover opacity-30"/>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/50"/>

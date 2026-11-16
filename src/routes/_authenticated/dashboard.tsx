@@ -7,12 +7,12 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "Curator dashboard — MyOwnMuseum" },
+            { title: "Curator dashboard — Moon Collector" },
             {
                 name: "description",
                 content: "Manage your digital museums, catalogue new objects and edit your curator profile.",
             },
-            { property: "og:title", content: "Curator dashboard — MyOwnMuseum" },
+            { property: "og:title", content: "Curator dashboard — Moon Collector" },
             {
                 property: "og:description",
                 content: "Manage museums, objects and your public curator profile.",

@@ -69,7 +69,11 @@ export interface Museum {
   createdAt: string;
   features?: Partial<FeatureFlags>;
   collections?: MuseumCollection[];
+  skin?: MuseumSkin;
 }
+
+export const MUSEUM_SKINS = ['lunar', 'nebula', 'observatory'] as const;
+export type MuseumSkin = (typeof MUSEUM_SKINS)[number];
 
 export interface MuseumCollection {
   id: string;

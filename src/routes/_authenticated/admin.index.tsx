@@ -10,7 +10,7 @@ import { getOnboardingFunnel } from '@/lib/onboarding.functions';
 const options = queryOptions({ queryKey: ['admin-metrics'], queryFn: () => getAdminMetrics(), staleTime: 60000 });
 export const Route = createFileRoute("/_authenticated/admin/")({
     loader: ({ context }) => context.queryClient.ensureQueryData(options),
-    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Platform overview — MyOwnMuseum" }, { name: "description", content: "Platform overview." }, { property: "og:title", content: "Platform overview — MyOwnMuseum" }, { property: "og:description", content: "Platform overview." }, { name: "robots", content: "noindex" }] }),
+    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Platform overview — Moon Collector" }, { name: "description", content: "Platform overview." }, { property: "og:title", content: "Platform overview — Moon Collector" }, { property: "og:description", content: "Platform overview." }, { name: "robots", content: "noindex" }] }),
     component: AdminOverview,
 });
 function AdminOverview() {

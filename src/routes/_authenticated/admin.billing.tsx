@@ -12,7 +12,7 @@ import { WEEKLY_REPORT_RECIPIENT } from '@/lib/billing-rules';
 const options = (page: number) => queryOptions({ queryKey: ['admin-billing', page], queryFn: () => getAdminBilling({ data: { page } }), staleTime: 60000 });
 export const Route = createFileRoute('/_authenticated/admin/billing')({
   loader: ({ context }) => context.queryClient.ensureQueryData(options(0)),
-  head: () => ({ meta: [{ title: 'Billing administration — MyOwnMuseum' }, { name: 'description', content: 'Administrator subscription reviews and daily UTC summaries.' }, { property: 'og:title', content: 'Billing administration — MyOwnMuseum' }, { property: 'og:description', content: 'Private subscription, refund and daily report administration.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Billing administration — Moon Collector' }, { name: 'description', content: 'Administrator subscription reviews and daily UTC summaries.' }, { property: 'og:title', content: 'Billing administration — Moon Collector' }, { property: 'og:description', content: 'Private subscription, refund and daily report administration.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: AdminBilling,
 });
 function AdminBilling() {

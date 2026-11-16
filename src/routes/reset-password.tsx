@@ -11,7 +11,7 @@ import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
 import { completePasswordLink, clearPasswordLink, passwordLinkError, passwordResetRedirect } from '@/lib/password-link';
 import { passwordStrength, type PasswordStrength } from '@/lib/password-strength';
 
-export const Route = createFileRoute('/reset-password')({ head: () => ({ meta: [{ title: 'Set password — MyOwnMuseum' }, { name: 'description', content: 'Choose a secure password for your curator account.' }, { property: 'og:title', content: 'Set password — MyOwnMuseum' }, { property: 'og:description', content: 'Reset your curator account password.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: ResetPassword });
+export const Route = createFileRoute('/reset-password')({ head: () => ({ meta: [{ title: 'Set password — Moon Collector' }, { name: 'description', content: 'Choose a secure password for your curator account.' }, { property: 'og:title', content: 'Set password — Moon Collector' }, { property: 'og:description', content: 'Reset your curator account password.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: ResetPassword });
 
 let callbackCheck: Promise<boolean> | undefined;
 

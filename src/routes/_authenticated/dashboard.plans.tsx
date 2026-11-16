@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getBilling, selectPlan } from '@/lib/platform.functions';
 import { selectedPlan } from '@/lib/platform-rules';
 const options = queryOptions({ queryKey: ['billing'], queryFn: () => getBilling(), staleTime: 60000 });
-export const Route = createFileRoute('/_authenticated/dashboard/plans')({ loader: ({ context }) => context.queryClient.ensureQueryData(options), head: () => ({ meta: [{ title: 'Museum plans — MyOwnMuseum' }, { name: 'description', content: 'Your private museum plan selection.' }, { property: 'og:title', content: 'Museum plans — MyOwnMuseum' }, { property: 'og:description', content: 'Manage your museum plan interest.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: Plans });
+export const Route = createFileRoute('/_authenticated/dashboard/plans')({ loader: ({ context }) => context.queryClient.ensureQueryData(options), head: () => ({ meta: [{ title: 'Museum plans — Moon Collector' }, { name: 'description', content: 'Your private museum plan selection.' }, { property: 'og:title', content: 'Museum plans — Moon Collector' }, { property: 'og:description', content: 'Manage your museum plan interest.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: Plans });
 function Plans() {
     const { t } = useI18n();
     const { data } = useSuspenseQuery(options);

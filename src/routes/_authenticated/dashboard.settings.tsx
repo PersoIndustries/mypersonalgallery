@@ -15,7 +15,7 @@ import { uploadAvatar } from '@/lib/images.functions';
 import { makeAvatar } from '@/lib/resize-image';
 import { supabase } from '@/integrations/supabase/client';
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
-    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Curator profile settings — MyOwnMuseum" }, { name: "description", content: "Curator profile settings." }, { property: "og:title", content: "Curator profile settings — MyOwnMuseum" }, { property: "og:description", content: "Curator profile settings." }, { name: "robots", content: "noindex" }] }),
+    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Curator profile settings — Moon Collector" }, { name: "description", content: "Curator profile settings." }, { property: "og:title", content: "Curator profile settings — Moon Collector" }, { property: "og:description", content: "Curator profile settings." }, { name: "robots", content: "noindex" }] }),
     component: DashboardSettings,
 });
 function DashboardSettings() {

@@ -15,15 +15,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useStore } from "@/lib/store";
 import { addCollection, objectsInCollection, toggleId } from "@/lib/collections";
-import { FEATURES, museumFeatures, showFeature, type CollectionObject, type FeatureKey, } from "@/lib/types";
+import { FEATURES, museumFeatures, showFeature, type CollectionObject, type FeatureKey, MUSEUM_SKINS, type MuseumSkin, } from "@/lib/types";
 export const Route = createFileRoute("/_authenticated/dashboard/museum/$museumId")({
     head: () => ({
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "Museum setup — MyOwnMuseum" },
+            { title: "Museum setup — Moon Collector" },
             { name: "description", content: "Configure visibility and public sections of your museum." },
-            { property: "og:title", content: "Museum setup — MyOwnMuseum" },
+            { property: "og:title", content: "Museum setup — Moon Collector" },
             { property: "og:description", content: "Preview and configure your digital museum." },
             { name: "robots", content: "noindex" },
         ],
@@ -242,6 +242,27 @@ function MuseumSetup() {
                 </div>
               </div>
               <Switch checked={museum.isPublic} disabled={pendingSwitch !== null} aria-label={t("Public")} onCheckedChange={(v) => void saveSwitch("museum:public", async () => { await updateMuseum(museum.id, { isPublic: v }); toast.success(v ? t("Museum is now public") : t("Museum is now private")); })}/>
+            </CardContent>
+          </Card>
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="font-display text-xl">{t("Museum atmosphere")}</CardTitle>
+              <CardDescription>{t("Choose the look visitors see in your museum and its objects.")}</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-3">
+              {MUSEUM_SKINS.map((skin: MuseumSkin) => {
+                const active = (museum.skin ?? "lunar") === skin;
+                return (<button key={skin} type="button" disabled={pendingSwitch !== null} aria-pressed={active} onClick={() => void saveSwitch("museum:skin", () => updateMuseum(museum.id, { skin }))} className={`rounded-xl border-2 p-1 text-left transition ${active ? "border-primary" : "border-transparent hover:border-border"}`}>
+                  <div data-museum-skin={skin} className="rounded-lg p-4">
+                    <div className="h-14 rounded-md bg-card vault-glow border border-border"/>
+                    <div className="mt-3 flex gap-1.5">
+                      <span className="size-4 rounded-full bg-primary"/><span className="size-4 rounded-full bg-gold"/><span className="size-4 rounded-full bg-accent"/>
+                    </div>
+                    <p className="mt-3 font-display text-lg">{t(`skin.${skin}`)}</p>
+                    <p className="text-xs text-muted-foreground">{t(`skin.${skin}.hint`)}</p>
+                  </div>
+                </button>);
+              })}
             </CardContent>
           </Card>
           <Card>

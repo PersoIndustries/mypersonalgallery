@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { Link } from "@tanstack/react-router";
-import { Landmark } from "lucide-react";
+import { MoonStar } from "lucide-react";
 export function SiteFooter() {
     const { t } = useI18n();
     return (<footer className="mt-24 border-t border-border/70">
@@ -8,9 +8,9 @@ export function SiteFooter() {
         <div className="max-w-sm">
           <div className="flex items-center gap-2.5">
             <span className="flex size-8 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
-              <Landmark className="size-4"/>
+              <MoonStar className="size-4"/>
             </span>
-            <span className="font-display text-lg">{t("MyOwn")}<span className="text-primary">{t("Museum")}</span>
+            <span className="font-display text-lg">Moon <span className="text-primary">Collector</span>
             </span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("A home for private collections. Catalogue your objects with the care of a curator and share them with the world.")}</p>
@@ -31,6 +31,6 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" MyOwnMuseum \u2014 built for collectors.")}</div>
+      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" Moon Collector \u2014 built for collectors.")}</div>
     </footer>);
 }

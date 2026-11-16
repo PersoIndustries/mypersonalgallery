@@ -13,7 +13,7 @@ import { adminContentOptions, DeleteButton, FilterChips, fmtDate, SectionHeader,
 
 export const Route = createFileRoute('/_authenticated/admin/users')({
   loader: ({ context }) => context.queryClient.ensureQueryData(adminContentOptions),
-  head: () => ({ meta: [{ title: 'Collectors — MyOwnMuseum Admin' }, { name: 'description', content: 'Manage collector accounts.' }, { property: 'og:title', content: 'Collectors — MyOwnMuseum Admin' }, { property: 'og:description', content: 'Manage collector accounts.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Collectors — Moon Collector Admin' }, { name: 'description', content: 'Manage collector accounts.' }, { property: 'og:title', content: 'Collectors — Moon Collector Admin' }, { property: 'og:description', content: 'Manage collector accounts.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: UsersAdmin,
 });
 

@@ -14,7 +14,7 @@ import { useStore } from "@/lib/store";
 import { showFeature, type FeatureKey } from "@/lib/types";
 export const Route = createFileRoute("/o/$objectId")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.objects.find(o => o.id === params.objectId) ?? null; },
-    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A collection object on MyOwnMuseum.'; const image = loaderData?.images?.[0]; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
+    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.description || 'A collection object on Moon Collector.'; const image = loaderData?.images?.[0]; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
     component: ObjectPage,
 });
 function ObjectPage() {
@@ -35,7 +35,7 @@ function ObjectPage() {
     const owner = users.find((u) => u.id === museum?.ownerId);
     const can = (key: FeatureKey) => showFeature(museum, object, key);
     const hasTabs = can("specs") || can("history") || can("documents");
-    return (<div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    return (<div data-museum-skin={museum?.skin ?? "lunar"}><div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <nav className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Link to="/explore" className="hover:text-foreground">{t("Explore")}</Link>
         <span>{t("/")}</span>
@@ -174,7 +174,7 @@ function ObjectPage() {
 
       <Lightbox images={object.images} index={lightbox} onClose={() => setLightbox(null)} onIndexChange={setLightbox} title={object.title}/>
       {!currentUser && <div className="mt-12"><CreateMuseumCta/></div>}
-    </div>);
+    </div></div>);
 }
 function Stat({ icon: Icon, label, value, }: {
     icon: React.ComponentType<{

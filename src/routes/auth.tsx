@@ -17,7 +17,7 @@ import { useResetCooldown, isRateLimitError } from '@/lib/reset-cooldown';
 import { passwordResetRedirect } from '@/lib/password-link';
 export const Route = createFileRoute('/auth')({ validateSearch: (s: Record<string, unknown>): {
         mode?: 'signup' | undefined;
-    } => ({ mode: s['mode'] === 'signup' ? 'signup' : undefined }), head: () => ({ meta: [{ title: 'Curator access — MyOwnMuseum' }, { name: 'description', content: 'Sign in or create your curator account.' }, { property: 'og:title', content: 'Curator access — MyOwnMuseum' }, { property: 'og:description', content: 'Sign in to manage your digital museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }), component: AuthPage });
+    } => ({ mode: s['mode'] === 'signup' ? 'signup' : undefined }), head: () => ({ meta: [{ title: 'Curator access — Moon Collector' }, { name: 'description', content: 'Sign in or create your curator account.' }, { property: 'og:title', content: 'Curator access — Moon Collector' }, { property: 'og:description', content: 'Sign in to manage your digital museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }), component: AuthPage });
 function AuthPage() {
     const { t } = useI18n();
     const { mode } = Route.useSearch();
