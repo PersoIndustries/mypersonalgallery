@@ -42,7 +42,7 @@ export const mutateCatalog = createServerFn({method:'POST'}).middleware([require
   const {clearPublicCatalogCache}=await import('./public-cache.server');await clearPublicCatalogCache();
   if(data.action==='createMuseum'){
     const uuid=crypto.randomUUID(); const slug=(data.data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'museum')+'-'+uuid.slice(0,8);
-    const {error}=await c.from('museums').insert({id:uuid,slug,owner_id:context.userId,title:data.data.title,description:data.data.description,cover:data.data.cover,category:data.data.category,is_public:data.data.isPublic,features:data.data.features as Json,...(data.data.collections?{collections:data.data.collections as unknown as Json}:{})} as Database['public']['Tables']['museums']['Insert']);if(error) throw new Error(error.message);return uuid;
+    const {error}=await c.from('museums').insert({id:uuid,slug,owner_id:context.userId,title:data.data.title,description:data.data.description,cover:data.data.cover,category:data.data.category,is_public:data.data.isPublic,features:data.data.features as Json,collections:(data.data.collections?.length?data.data.collections:[{id:crypto.randomUUID(),name:'General'}]) as unknown as Json} as Database['public']['Tables']['museums']['Insert']);if(error) throw new Error(error.message);return uuid;
   }
   if(data.action==='updateMuseum'){
     const p=data.data; const patch:Database['public']['Tables']['museums']['Update']={};
