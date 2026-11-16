@@ -8,7 +8,7 @@ export function SiteFooter() {
         <div className="max-w-sm">
           <div className="flex items-center gap-2.5">
             <span className="flex size-8 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
-              <Landmark className="size-4"/>
+              <MoonStar className="size-4"/>
             </span>
             <span className="font-display text-lg">Moon <span className="text-primary">Collector</span>
             </span>

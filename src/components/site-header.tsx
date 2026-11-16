@@ -18,7 +18,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-1 px-3 sm:gap-3 sm:px-6">
         <Link to="/" className="group flex shrink-0 items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25 transition-colors group-hover:bg-primary/20">
-            <Landmark className="size-4.5"/>
+            <Moon className="size-4.5"/>
           </span>
           <span className="font-display text-lg leading-none sm:text-xl">Moon <span className="text-primary">Collector</span>
           </span>
