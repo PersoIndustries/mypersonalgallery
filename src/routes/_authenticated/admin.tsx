@@ -10,7 +10,7 @@ const sections = [
     { to: "/admin/billing", label: "Billing", icon: CreditCard },
     { to: "/admin/errors", label: "Diagnostics", icon: AlertTriangle },
     { to: "/admin/dev", label: "Dev", icon: Code2 },
-] as const;
+] as { to: "/admin" | "/admin/users" | "/admin/museums" | "/admin/objects" | "/admin/billing" | "/admin/errors" | "/admin/dev"; label: string; icon: typeof Users; exact?: boolean }[];
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/_authenticated/admin")({
     beforeLoad: async () => { await assertAdmin(); },
