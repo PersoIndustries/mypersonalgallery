@@ -10,6 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useStore } from "@/lib/store";
 import { CountrySelect } from '@/components/country-select';
+import { useServerFn } from '@tanstack/react-start';
+import { uploadAvatar } from '@/lib/images.functions';
+import { makeAvatar } from '@/lib/resize-image';
 import { supabase } from '@/integrations/supabase/client';
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
     head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Curator profile settings — MyOwnMuseum" }, { name: "description", content: "Curator profile settings." }, { property: "og:title", content: "Curator profile settings — MyOwnMuseum" }, { property: "og:description", content: "Curator profile settings." }, { name: "robots", content: "noindex" }] }),
@@ -25,6 +28,21 @@ function DashboardSettings() {
         avatar: currentUser?.avatar ?? "",
         country: currentUser?.country ?? "",
     }));
+    const sendAvatar = useServerFn(uploadAvatar);
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
+    const onAvatarFile = async (file: File | undefined) => {
+        if (!file || uploadingAvatar) return;
+        setUploadingAvatar(true);
+        try {
+            const fd = new FormData();
+            fd.append('file', await makeAvatar(file));
+            const { url } = await sendAvatar({ data: fd });
+            setForm(f => ({ ...f, avatar: url }));
+            await updateProfile({ avatar: url });
+            toast.success(t("Profile photo updated"));
+        } catch (e) { toast.error(e instanceof Error ? e.message : 'Upload failed'); }
+        finally { setUploadingAvatar(false); }
+    };
     const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -82,8 +100,9 @@ function DashboardSettings() {
             <Input id="p-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}/>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="p-avatar">{t("Avatar image URL")}</Label>
-            <Input id="p-avatar" value={form.avatar} onChange={(e) => setForm({ ...form, avatar: e.target.value })}/>
+            <Label htmlFor="p-avatar">{t("Profile photo")}</Label>
+            <Input id="p-avatar" type="file" accept="image/*" disabled={uploadingAvatar} onChange={(e) => { void onAvatarFile(e.target.files?.[0]); e.target.value = ''; }}/>
+            <p className="text-xs text-muted-foreground">{uploadingAvatar ? t("Uploading…") : t("Saved instantly as a small square image; your previous photo is deleted.")}</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="p-location">{t("Location")}</Label>

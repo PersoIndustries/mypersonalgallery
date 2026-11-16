@@ -664,5 +664,9 @@
   "Content removed, but the login could not be deleted": "Contenido eliminado, pero no se pudo borrar la cuenta de acceso",
   "Administrators cannot be suspended": "Los administradores no pueden suspenderse",
   "You cannot suspend yourself": "No puedes suspenderte a ti mismo",
-  "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.": "Añade fotos, especificaciones, etiquetas y colecciones. Tu museo ya tiene una colección «General»."
+  "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.": "Añade fotos, especificaciones, etiquetas y colecciones. Tu museo ya tiene una colección «General».",
+  "Profile photo": "Foto de perfil",
+  "Profile photo updated": "Foto de perfil actualizada",
+  "Uploading…": "Subiendo…",
+  "Saved instantly as a small square image; your previous photo is deleted.": "Se guarda al instante como imagen cuadrada ligera; tu foto anterior se elimina."
 }

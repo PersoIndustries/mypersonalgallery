@@ -626,5 +626,9 @@
   "Content removed, but the login could not be deleted": "Content removed, but the login could not be deleted",
   "Administrators cannot be suspended": "Administrators cannot be suspended",
   "You cannot suspend yourself": "You cannot suspend yourself",
-  "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.": "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection."
+  "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.": "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.",
+  "Profile photo": "Profile photo",
+  "Profile photo updated": "Profile photo updated",
+  "Uploading…": "Uploading…",
+  "Saved instantly as a small square image; your previous photo is deleted.": "Saved instantly as a small square image; your previous photo is deleted."
 }
