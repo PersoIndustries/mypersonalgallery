@@ -72,7 +72,7 @@ export interface Museum {
   skin?: MuseumSkin;
 }
 
-export const MUSEUM_SKINS = ['lunar', 'nebula', 'observatory'] as const;
+export const MUSEUM_SKINS = ['lunar', 'nebula', 'observatory', 'forest', 'wood', 'cyberpunk'] as const;
 export type MuseumSkin = (typeof MUSEUM_SKINS)[number];
 
 export interface MuseumCollection {

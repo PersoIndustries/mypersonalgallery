@@ -640,5 +640,11 @@
   "skin.nebula": "Nebula",
   "skin.nebula.hint": "Cosmic violet and stellar cyan.",
   "skin.observatory": "Observatory",
-  "skin.observatory.hint": "Night blue and antique brass."
+  "skin.observatory.hint": "Night blue and antique brass.",
+  "skin.forest": "Forest",
+  "skin.forest.hint": "Deep pine and moss green.",
+  "skin.wood": "Noble wood",
+  "skin.wood.hint": "Walnut, oak and warm amber.",
+  "skin.cyberpunk": "Cyberpunk",
+  "skin.cyberpunk.hint": "Neon magenta, cyan and acid lime."
 }

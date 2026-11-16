@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { useStore } from "@/lib/store";
-import { CATEGORIES, type CollectionObject } from "@/lib/types";
+import { CATEGORIES, MUSEUM_SKINS, type CollectionObject, type MuseumSkin } from "@/lib/types";
 export const Route = createFileRoute("/_authenticated/dashboard/museums")({
     head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Manage museums — Moon Collector" }, { name: "description", content: "Manage museums." }, { property: "og:title", content: "Manage museums — Moon Collector" }, { property: "og:description", content: "Manage museums." }, { name: "robots", content: "noindex" }] }),
     component: DashboardMuseums,
@@ -25,6 +25,7 @@ interface MuseumForm {
     cover: string;
     category: string;
     isPublic: boolean;
+    skin: MuseumSkin;
 }
 const emptyMuseum: MuseumForm = {
     title: "",
@@ -32,6 +33,7 @@ const emptyMuseum: MuseumForm = {
     cover: "/placeholder-object.svg",
     category: CATEGORIES[0],
     isPublic: true,
+    skin: "lunar",
 };
 function DashboardMuseums() {
     const { t } = useI18n();
@@ -63,6 +65,7 @@ function DashboardMuseums() {
             cover: m.cover,
             category: m.category,
             isPublic: m.isPublic,
+            skin: m.skin ?? "lunar",
         });
         setMuseumDialog({ id });
     };
@@ -203,6 +206,20 @@ function DashboardMuseums() {
                 <p className="text-xs text-muted-foreground">{t("Public museums appear in Explore and on your profile.")}</p>
               </div>
               <Switch checked={museumForm.isPublic} onCheckedChange={(v) => setMuseumForm({ ...museumForm, isPublic: v })}/>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("Museum atmosphere")}</Label>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {MUSEUM_SKINS.map((skin) => {
+                  const active = museumForm.skin === skin;
+                  return (<button key={skin} type="button" aria-pressed={active} onClick={() => setMuseumForm({ ...museumForm, skin })} className={`rounded-lg border-2 p-0.5 text-left transition ${active ? "border-primary" : "border-transparent hover:border-border"}`}>
+                    <div data-museum-skin={skin} className="rounded-md p-2.5">
+                      <div className="flex gap-1"><span className="size-3 rounded-full bg-primary"/><span className="size-3 rounded-full bg-gold"/><span className="size-3 rounded-full bg-accent"/></div>
+                      <p className="mt-2 text-sm font-medium">{t(`skin.${skin}`)}</p>
+                    </div>
+                  </button>);
+                })}
+              </div>
             </div>
           </div>
           <DialogFooter>
