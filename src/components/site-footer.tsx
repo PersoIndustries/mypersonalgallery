@@ -31,6 +31,6 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" MyOwnMuseum \u2014 built for collectors.")}</div>
+      <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" Moon Collector \u2014 built for collectors.")}</div>
     </footer>);
 }

@@ -23,12 +23,12 @@ export const Route = createFileRoute("/explore")({
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "Explore museums and collectors — MyOwnMuseum" },
+            { title: "Explore museums and collectors — Moon Collector" },
             {
                 name: "description",
                 content: "Browse public museums of vintage radios, avionics, watches and cameras, and discover the collectors behind them.",
             },
-            { property: "og:title", content: "Explore collections on MyOwnMuseum" },
+            { property: "og:title", content: "Explore collections on Moon Collector" },
             {
                 property: "og:description",
                 content: "Search museums, objects and collectors across the platform.",

@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export const Route = createFileRoute('/_authenticated/dashboard/notifications')({
-  head: () => ({ meta: [{ title: 'Your notifications — MyOwnMuseum' }, { name: 'description', content: 'Private account and museum activity for MyOwnMuseum collectors.' }, { property: 'og:title', content: 'Your notifications — MyOwnMuseum' }, { property: 'og:description', content: 'Your personal museum and account notifications.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Your notifications — Moon Collector' }, { name: 'description', content: 'Private account and museum activity for Moon Collector collectors.' }, { property: 'og:title', content: 'Your notifications — Moon Collector' }, { property: 'og:description', content: 'Your personal museum and account notifications.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: Notifications,
 });
 

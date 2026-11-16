@@ -99,7 +99,7 @@ export const Route = createRootRouteWithContext<{
         meta: [
             { charSet: "utf-8" },
             { name: "viewport", content: "width=device-width, initial-scale=1" },
-            { title: "MyOwnMuseum — Digital museums for collectors" },
+            { title: "Moon Collector — Digital museums for collectors" },
             {
                 name: "description",
                 content: "Create beautiful digital museums for your collection: vintage radios, watches, cameras and more.",

@@ -12,7 +12,7 @@ import { useOnboarding } from "@/lib/use-onboarding";
 import { shouldSuggestUpgrade } from "@/lib/onboarding";
 export const Route = createFileRoute("/_authenticated/dashboard/")({
     validateSearch: (s: Record<string, unknown>): { tour?: boolean } => (s['tour'] === true || s['tour'] === 'true' ? { tour: true } : {}),
-    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Your collection overview — MyOwnMuseum" }, { name: "description", content: "Your collection overview." }, { property: "og:title", content: "Your collection overview — MyOwnMuseum" }, { property: "og:description", content: "Your collection overview." }, { name: "robots", content: "noindex" }] }),
+    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Your collection overview — Moon Collector" }, { name: "description", content: "Your collection overview." }, { property: "og:title", content: "Your collection overview — Moon Collector" }, { property: "og:description", content: "Your collection overview." }, { name: "robots", content: "noindex" }] }),
     component: DashboardOverview,
 });
 function DashboardOverview() {

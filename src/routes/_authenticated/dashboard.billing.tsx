@@ -13,7 +13,7 @@ import { invoiceDocumentUrl, refundable } from '@/lib/billing-rules';
 const options = (page: number) => queryOptions({ queryKey: ['billing-history', page], queryFn: () => getBillingHistory({ data: { page } }), staleTime: 60000 });
 export const Route = createFileRoute('/_authenticated/dashboard/billing')({
   loader: ({ context }) => context.queryClient.ensureQueryData(options(0)),
-  head: () => ({ meta: [{ title: 'Invoices and refunds — MyOwnMuseum' }, { name: 'description', content: 'Private collector billing history and refund requests.' }, { property: 'og:title', content: 'Invoices and refunds — MyOwnMuseum' }, { property: 'og:description', content: 'Collector invoices and refund requests.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Invoices and refunds — Moon Collector' }, { name: 'description', content: 'Private collector billing history and refund requests.' }, { property: 'og:title', content: 'Invoices and refunds — Moon Collector' }, { property: 'og:description', content: 'Collector invoices and refund requests.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: Billing,
 });
 function Billing() {

@@ -13,7 +13,7 @@ import { adminContentOptions, DeleteButton, FilterChips, fmtDate, SectionHeader,
 
 export const Route = createFileRoute('/_authenticated/admin/museums')({
   loader: ({ context }) => context.queryClient.ensureQueryData(adminContentOptions),
-  head: () => ({ meta: [{ title: 'Museums — MyOwnMuseum Admin' }, { name: 'description', content: 'Moderate museums.' }, { property: 'og:title', content: 'Museums — MyOwnMuseum Admin' }, { property: 'og:description', content: 'Moderate museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Museums — Moon Collector Admin' }, { name: 'description', content: 'Moderate museums.' }, { property: 'og:title', content: 'Museums — Moon Collector Admin' }, { property: 'og:description', content: 'Moderate museums.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: MuseumsAdmin,
 });
 

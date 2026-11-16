@@ -13,7 +13,7 @@ export function notificationText(notification: CollectorNotification, t: Transla
   const title = typeof data['title'] === 'string' ? data['title'] : '';
   const plan = typeof data['plan'] === 'string' ? data['plan'] : '';
   switch (notification.kind) {
-    case 'welcome': return t('Welcome to MyOwnMuseum');
+    case 'welcome': return t('Welcome to Moon Collector');
     case 'museum_created': return t('Your museum was created: {title}', { title });
     case 'museum_published': return t('Your museum is public: {title}', { title });
     case 'museum_private': return t('Your museum is private: {title}', { title });

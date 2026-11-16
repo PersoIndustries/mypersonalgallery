@@ -14,7 +14,7 @@ import { useOnboarding } from '@/lib/use-onboarding';
 import { selectPlan } from '@/lib/platform.functions';
 
 export const Route = createFileRoute('/_authenticated/dashboard/welcome')({
-  head: () => ({ meta: [{ title: 'Welcome to your museum — MyOwnMuseum' }, { name: 'description', content: 'Open your first digital museum in three steps.' }, { property: 'og:title', content: 'Welcome to your museum — MyOwnMuseum' }, { property: 'og:description', content: 'Open your first digital museum in three steps.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
+  head: () => ({ meta: [{ title: 'Welcome to your museum — Moon Collector' }, { name: 'description', content: 'Open your first digital museum in three steps.' }, { property: 'og:title', content: 'Welcome to your museum — Moon Collector' }, { property: 'og:description', content: 'Open your first digital museum in three steps.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }),
   component: Welcome,
 });
 

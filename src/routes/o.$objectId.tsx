@@ -14,7 +14,7 @@ import { useStore } from "@/lib/store";
 import { showFeature, type FeatureKey } from "@/lib/types";
 export const Route = createFileRoute("/o/$objectId")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.objects.find(o => o.id === params.objectId) ?? null; },
-    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — MyOwnMuseum'; const description = loaderData?.description || 'A collection object on MyOwnMuseum.'; const image = loaderData?.images?.[0]; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
+    head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.description || 'A collection object on Moon Collector.'; const image = loaderData?.images?.[0]; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
     component: ObjectPage,
 });
 function ObjectPage() {

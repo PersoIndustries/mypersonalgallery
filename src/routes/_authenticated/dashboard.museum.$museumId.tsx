@@ -21,9 +21,9 @@ export const Route = createFileRoute("/_authenticated/dashboard/museum/$museumId
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "Museum setup — MyOwnMuseum" },
+            { title: "Museum setup — Moon Collector" },
             { name: "description", content: "Configure visibility and public sections of your museum." },
-            { property: "og:title", content: "Museum setup — MyOwnMuseum" },
+            { property: "og:title", content: "Museum setup — Moon Collector" },
             { property: "og:description", content: "Preview and configure your digital museum." },
             { name: "robots", content: "noindex" },
         ],

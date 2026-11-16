@@ -10,12 +10,12 @@ export const Route = createFileRoute("/")({
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "MyOwnMuseum — Build a digital museum for your collection" },
+            { title: "Moon Collector — Build a digital museum for your collection" },
             {
                 name: "description",
                 content: "Catalogue vintage radios, watches, cameras or any collection in a beautiful public museum. Images, documents, specs and provenance in one place.",
             },
-            { property: "og:title", content: "MyOwnMuseum — Digital museums for collectors" },
+            { property: "og:title", content: "Moon Collector — Digital museums for collectors" },
             {
                 property: "og:description",
                 content: "Catalogue your collection beautifully and share it with the world.",

@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "
 import { useStore } from "@/lib/store";
 import { CATEGORIES, type CollectionObject } from "@/lib/types";
 export const Route = createFileRoute("/_authenticated/dashboard/museums")({
-    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Manage museums — MyOwnMuseum" }, { name: "description", content: "Manage museums." }, { property: "og:title", content: "Manage museums — MyOwnMuseum" }, { property: "og:description", content: "Manage museums." }, { name: "robots", content: "noindex" }] }),
+    head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Manage museums — Moon Collector" }, { name: "description", content: "Manage museums." }, { property: "og:title", content: "Manage museums — Moon Collector" }, { property: "og:description", content: "Manage museums." }, { name: "robots", content: "noindex" }] }),
     component: DashboardMuseums,
 });
 interface MuseumForm {
