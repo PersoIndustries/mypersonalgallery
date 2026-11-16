@@ -30,7 +30,7 @@ interface Form {
     history: string;
     modelUrl: string;
     price: string;
-    links: string;
+    links: { label: string; url: string }[];
     isVisible: boolean;
     hiddenFeatures: FeatureKey[];
 }
@@ -50,7 +50,7 @@ const toForm = (o: CollectionObject | null, category: string): Form => ({
     history: o?.history ?? "",
     modelUrl: o?.modelUrl ?? "",
     price: o?.price ?? "",
-    links: (o?.links ?? []).map((l) => `${l.label} | ${l.url}`).join("\n"),
+    links: o?.links?.length ? o.links.map((l) => ({ label: l.label, url: l.url })) : [{ label: "", url: "" }],
     isVisible: o?.isVisible !== false,
     hiddenFeatures: o?.hiddenFeatures ?? [],
 });
@@ -106,10 +106,7 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
                 images: images.length ? images : [PLACEHOLDER_IMAGE],
                 modelUrl: f.modelUrl.trim() || null,
                 price: f.price.trim(),
-                links: lines(f.links).map((l) => {
-                    const [label, url] = l.includes("|") ? l.split("|").map((s) => s.trim()) : [l, l];
-                    return { label: label || url || "", url: url || label || "" };
-                }),
+                links: f.links.map((l) => ({ label: l.label.trim(), url: l.url.trim() })).filter((l) => l.url).map((l) => ({ label: l.label || l.url, url: l.url })),
                 isVisible: f.isVisible,
                 hiddenFeatures: f.hiddenFeatures,
             };
@@ -228,8 +225,15 @@ export function ObjectEditor({ museumId, object, open, onOpenChange, }: {
           </div>
           {field("modelUrl", "3D model URL (.glb)", "https://…/model.glb")}
           <div className="space-y-2">
-            <Label htmlFor="oe-links">{t("Links (one \"Label | URL\" per line)")}</Label>
-            <Textarea id="oe-links" rows={2} value={f.links} placeholder={t("Wikipedia | https://en.wikipedia.org/\u2026")} onChange={(e) => set("links", e.target.value)}/>
+            <Label>{t("Links")}</Label>
+            <div className="space-y-2">
+              {f.links.map((l, i) => (<div key={i} className="flex gap-2">
+                  <Input aria-label={t("Name")} placeholder={t("e.g. Wikipedia")} value={l.label} onChange={(e) => set("links", f.links.map((x, j) => j === i ? { ...x, label: e.target.value } : x))} className="w-2/5"/>
+                  <Input type="url" aria-label="URL" placeholder="https://…" value={l.url} onChange={(e) => set("links", f.links.map((x, j) => j === i ? { ...x, url: e.target.value } : x))}/>
+                  <Button type="button" variant="ghost" size="icon" aria-label={t("Remove")} onClick={() => set("links", f.links.filter((_, j) => j !== i))}><X className="size-4"/></Button>
+                </div>))}
+              <Button type="button" variant="outline" size="sm" onClick={() => set("links", [...f.links, { label: "", url: "" }])}><Plus className="size-4"/>{t("Add link")}</Button>
+            </div>
           </div>
 
           <div className="rounded-md border border-border/70 p-3">
