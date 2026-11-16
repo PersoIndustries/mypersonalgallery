@@ -632,5 +632,13 @@
   "Uploading…": "Uploading…",
   "Saved instantly as a small square image; your previous photo is deleted.": "Saved instantly as a small square image; your previous photo is deleted.",
   "e.g. Wikipedia": "e.g. Wikipedia",
-  "Add link": "Add link"
+  "Add link": "Add link",
+  "Museum atmosphere": "Museum atmosphere",
+  "Choose the look visitors see in your museum and its objects.": "Choose the look visitors see in your museum and its objects.",
+  "skin.lunar": "Moonlight",
+  "skin.lunar.hint": "Obsidian and lunar silver.",
+  "skin.nebula": "Nebula",
+  "skin.nebula.hint": "Cosmic violet and stellar cyan.",
+  "skin.observatory": "Observatory",
+  "skin.observatory.hint": "Night blue and antique brass."
 }

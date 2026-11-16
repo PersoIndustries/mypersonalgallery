@@ -670,5 +670,13 @@
   "Uploading…": "Subiendo…",
   "Saved instantly as a small square image; your previous photo is deleted.": "Se guarda al instante como imagen cuadrada ligera; tu foto anterior se elimina.",
   "e.g. Wikipedia": "p. ej. Wikipedia",
-  "Add link": "Añadir enlace"
+  "Add link": "Añadir enlace",
+  "Museum atmosphere": "Atmósfera del museo",
+  "Choose the look visitors see in your museum and its objects.": "Elige el aspecto que verán los visitantes en tu museo y sus objetos.",
+  "skin.lunar": "Luz de luna",
+  "skin.lunar.hint": "Obsidiana y plata lunar.",
+  "skin.nebula": "Nebulosa",
+  "skin.nebula.hint": "Violeta cósmico y cian estelar.",
+  "skin.observatory": "Observatorio",
+  "skin.observatory.hint": "Azul noche y latón antiguo."
 }

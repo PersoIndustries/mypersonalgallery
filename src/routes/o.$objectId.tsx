@@ -174,7 +174,7 @@ function ObjectPage() {
 
       <Lightbox images={object.images} index={lightbox} onClose={() => setLightbox(null)} onIndexChange={setLightbox} title={object.title}/>
       {!currentUser && <div className="mt-12"><CreateMuseumCta/></div>}
-    </div>);
+    </div></div>);
 }
 function Stat({ icon: Icon, label, value, }: {
     icon: React.ComponentType<{
