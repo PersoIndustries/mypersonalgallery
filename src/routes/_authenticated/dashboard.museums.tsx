@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { useStore } from "@/lib/store";
-import { CATEGORIES, type CollectionObject } from "@/lib/types";
+import { CATEGORIES, MUSEUM_SKINS, type CollectionObject, type MuseumSkin } from "@/lib/types";
 export const Route = createFileRoute("/_authenticated/dashboard/museums")({
     head: () => ({ meta: [{ property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { title: "Manage museums — Moon Collector" }, { name: "description", content: "Manage museums." }, { property: "og:title", content: "Manage museums — Moon Collector" }, { property: "og:description", content: "Manage museums." }, { name: "robots", content: "noindex" }] }),
     component: DashboardMuseums,
@@ -25,6 +25,7 @@ interface MuseumForm {
     cover: string;
     category: string;
     isPublic: boolean;
+    skin: MuseumSkin;
 }
 const emptyMuseum: MuseumForm = {
     title: "",
@@ -32,6 +33,7 @@ const emptyMuseum: MuseumForm = {
     cover: "/placeholder-object.svg",
     category: CATEGORIES[0],
     isPublic: true,
+    skin: "lunar",
 };
 function DashboardMuseums() {
     const { t } = useI18n();
@@ -63,6 +65,7 @@ function DashboardMuseums() {
             cover: m.cover,
             category: m.category,
             isPublic: m.isPublic,
+            skin: m.skin ?? "lunar",
         });
         setMuseumDialog({ id });
     };

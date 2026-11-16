@@ -10,7 +10,7 @@ import { catalogForViewer, onlyPublicCatalog } from './public-visibility';
 
 export type { Catalog } from './types';
 const date = (s:string) => s.slice(0,10);
-function splitSkin(raw:unknown):{features:NonNullable<Museum['features']>;skin?:NonNullable<Museum['skin']>}{const {skin,...features}=(raw && typeof raw==='object'?raw:{}) as Record<string,unknown>;const found=(['lunar','nebula','observatory'] as const).find(s=>s===skin);return found?{features:features as NonNullable<Museum['features']>,skin:found}:{features:features as NonNullable<Museum['features']>};}
+function splitSkin(raw:unknown):{features:NonNullable<Museum['features']>;skin?:NonNullable<Museum['skin']>}{const {skin,...features}=(raw && typeof raw==='object'?raw:{}) as Record<string,unknown>;const found=(['lunar','nebula','observatory','forest','wood','cyberpunk'] as const).find(s=>s===skin);return found?{features:features as NonNullable<Museum['features']>,skin:found}:{features:features as NonNullable<Museum['features']>};}
 async function readCatalog(client:SupabaseClient<Database>):Promise<Catalog> {
   const [m,o,u] = await Promise.all([client.from('museums').select('*').order('created_at'),client.from('objects').select('*').order('created_at'),client.from('profiles').select('id,name,username,avatar,bio,location,joined')]);
   for (const result of [m,o,u]) if(result.error) throw new Error(result.error.message);

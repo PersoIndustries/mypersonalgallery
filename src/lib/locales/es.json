@@ -678,5 +678,11 @@
   "skin.nebula": "Nebulosa",
   "skin.nebula.hint": "Violeta cósmico y cian estelar.",
   "skin.observatory": "Observatorio",
-  "skin.observatory.hint": "Azul noche y latón antiguo."
+  "skin.observatory.hint": "Azul noche y latón antiguo.",
+  "skin.forest": "Bosque",
+  "skin.forest.hint": "Pino profundo y verde musgo.",
+  "skin.wood": "Madera noble",
+  "skin.wood.hint": "Nogal, roble y ámbar cálido.",
+  "skin.cyberpunk": "Cyberpunk",
+  "skin.cyberpunk.hint": "Neón magenta, cian y lima ácida."
 }
