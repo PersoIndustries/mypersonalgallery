@@ -575,6 +575,7 @@ export type Database = {
     Functions: {
       admin_onboarding_funnel: { Args: never; Returns: Json }
       admin_platform_metrics: { Args: never; Returns: Json }
+      admin_purge_profile: { Args: { target_profile: string }; Returns: string }
       capture_daily_platform_summary: { Args: never; Returns: undefined }
       has_role: {
         Args: {
