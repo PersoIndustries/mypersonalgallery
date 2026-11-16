@@ -38,7 +38,7 @@ function MuseumPage() {
     const shown = items.filter((o) => !activeCollection || (o.collectionIds ?? []).includes(activeCollection)).filter((o) => !term ||
         [o.title, o.manufacturer, o.model, o.year, ...o.tags].join(" ").toLowerCase().includes(term));
     const isOwner = currentUser?.id === museum.ownerId;
-    return (<div>
+    return (<div data-museum-skin={museum.skin ?? "lunar"}>
       <section className="relative overflow-hidden border-b border-border/70">
         <img src={museum.cover} alt={museum.title} className="absolute inset-0 size-full object-cover opacity-30"/>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/50"/>

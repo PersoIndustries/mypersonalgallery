@@ -35,7 +35,7 @@ function ObjectPage() {
     const owner = users.find((u) => u.id === museum?.ownerId);
     const can = (key: FeatureKey) => showFeature(museum, object, key);
     const hasTabs = can("specs") || can("history") || can("documents");
-    return (<div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    return (<div data-museum-skin={museum?.skin ?? "lunar"}><div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <nav className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Link to="/explore" className="hover:text-foreground">{t("Explore")}</Link>
         <span>{t("/")}</span>
