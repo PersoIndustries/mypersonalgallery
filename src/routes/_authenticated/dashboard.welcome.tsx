@@ -1,3 +1,4 @@
+import { ObjectEditor } from '@/components/object-editor';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
 import { useRef, useState } from 'react';
@@ -30,13 +31,12 @@ const defaultCover = 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?
 function Welcome() {
   const { t } = useI18n();
   const navigate = useNavigate();
-  const { currentUser, museumsOf, objectsOf, createMuseum, createObject, updateMuseum } = useStore();
+  const { currentUser, museumsOf, objectsOf, createMuseum, updateMuseum } = useStore();
   const { state, update } = useOnboarding();
   const savePlan = useServerFn(selectPlan);
   const [category, setCategory] = useState<string>(state?.interest ?? '');
   const [title, setTitle] = useState('');
-  const [objectTitle, setObjectTitle] = useState('');
-  const [objectImage, setObjectImage] = useState('');
+  const [editorOpen, setEditorOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const busyLock = useRef(false);
   if (!currentUser) return null;
@@ -82,12 +82,12 @@ function Welcome() {
           <Button type="submit" disabled={busy || !title.trim()}>{t('Create museum')}</Button>
         </form>}
 
-        {step === 2 && museum && <form className="space-y-4" onSubmit={e => { e.preventDefault(); void act(() => createObject(museum.id, { title: objectTitle.trim(), description: '', year: '', manufacturer: '', model: '', category: museum.category, tags: [], specs: [], history: '', images: objectImage.trim() ? [objectImage.trim()] : [], modelUrl: null, documents: [], condition: 'Good' })); }}>
+        {step === 2 && museum && <div className="space-y-4">
           <h3 className="font-display text-2xl">{t('Add your first object')}</h3>
-          <div className="space-y-2"><Label htmlFor="object-title">{t('Object name')}</Label><Input id="object-title" required maxLength={200} value={objectTitle} onChange={e => setObjectTitle(e.target.value)} /></div>
-          <div className="space-y-2"><Label htmlFor="object-image">{t('Photo link (optional)')}</Label><Input id="object-image" type="url" placeholder="https://" value={objectImage} onChange={e => setObjectImage(e.target.value)} /></div>
-          <Button type="submit" disabled={busy || !objectTitle.trim()}>{t('Add object')}</Button>
-        </form>}
+          <p className="text-sm text-muted-foreground">{t('Add photos, specifications, tags and collections. Your museum already has a "General" collection.')}</p>
+          <Button onClick={() => setEditorOpen(true)}>{t('Add object')}</Button>
+          <ObjectEditor museumId={museum.id} object={null} open={editorOpen} onOpenChange={setEditorOpen} />
+        </div>}
 
         {step === 3 && museum && <div className="space-y-4">
           <h3 className="font-display text-2xl">{t('Publish and share')}</h3>

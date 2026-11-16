@@ -663,5 +663,6 @@
   "You cannot delete your own account here": "No puedes eliminar tu propia cuenta aquí",
   "Content removed, but the login could not be deleted": "Contenido eliminado, pero no se pudo borrar la cuenta de acceso",
   "Administrators cannot be suspended": "Los administradores no pueden suspenderse",
-  "You cannot suspend yourself": "No puedes suspenderte a ti mismo"
+  "You cannot suspend yourself": "No puedes suspenderte a ti mismo",
+  "Add photos, specifications, tags and collections. Your museum already has a \"General\" collection.": "Añade fotos, especificaciones, etiquetas y colecciones. Tu museo ya tiene una colección «General»."
 }
