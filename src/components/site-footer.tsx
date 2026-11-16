@@ -10,7 +10,7 @@ export function SiteFooter() {
             <span className="flex size-8 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
               <Landmark className="size-4"/>
             </span>
-            <span className="font-display text-lg">{t("MyOwn")}<span className="text-primary">{t("Museum")}</span>
+            <span className="font-display text-lg">Moon <span className="text-primary">Collector</span>
             </span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("A home for private collections. Catalogue your objects with the care of a curator and share them with the world.")}</p>
