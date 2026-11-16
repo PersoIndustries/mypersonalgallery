@@ -28,7 +28,6 @@ function DashboardSettings() {
         avatar: currentUser?.avatar ?? "",
         country: currentUser?.country ?? "",
     }));
-    const { refresh } = useStore();
     const sendAvatar = useServerFn(uploadAvatar);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const onAvatarFile = async (file: File | undefined) => {
@@ -39,7 +38,7 @@ function DashboardSettings() {
             fd.append('file', await makeAvatar(file));
             const { url } = await sendAvatar({ data: fd });
             setForm(f => ({ ...f, avatar: url }));
-            await refresh();
+            await updateProfile({ avatar: url });
             toast.success(t("Profile photo updated"));
         } catch (e) { toast.error(e instanceof Error ? e.message : 'Upload failed'); }
         finally { setUploadingAvatar(false); }
