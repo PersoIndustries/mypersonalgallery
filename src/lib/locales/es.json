@@ -684,5 +684,18 @@
   "skin.wood": "Madera noble",
   "skin.wood.hint": "Nogal, roble y ámbar cálido.",
   "skin.cyberpunk": "Cyberpunk",
-  "skin.cyberpunk.hint": "Neón magenta, cian y lima ácida."
+  "skin.cyberpunk.hint": "Neón magenta, cian y lima ácida.",
+  "Museum statistics": "Estadísticas del museo",
+  "Visits and average visit time of your public museum.": "Visitas y tiempo medio de visita de tu museo público.",
+  "Total visits": "Visitas totales",
+  "Last 7 days": "Últimos 7 días",
+  "Average visit time": "Tiempo medio de visita",
+  "Discover how many people visit your sanctuary and how long they admire your treasures.": "Descubre cuántas personas visitan tu santuario y cuánto tiempo admiran tus tesoros.",
+  "Unlock with Moon Collector Pro": "Desbloquear con Moon Collector Pro",
+  "Statistics": "Estadísticas",
+  "Visits": "Visitas",
+  "Avg. time": "Tiempo medio",
+  "Plan updated": "Plan actualizado",
+  "Unable to update plan": "No se pudo actualizar el plan",
+  "This plan is managed by a payment subscription": "Este plan lo gestiona una suscripción de pago"
 }

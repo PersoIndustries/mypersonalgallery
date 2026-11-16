@@ -7,6 +7,7 @@ import { Ban, ShieldCheck, Undo2 } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { matchesQuery } from '@/lib/admin-content';
 import { adminDeleteUser, adminSetUserBanned } from '@/lib/admin-content.functions';
+import { adminSetUserPlan } from '@/lib/metrics.functions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { adminContentOptions, DeleteButton, FilterChips, fmtDate, SectionHeader, tableWrap, td, th, useRefreshAdmin } from '@/components/admin/moderation';
@@ -24,6 +25,7 @@ function UsersAdmin() {
   const refresh = useRefreshAdmin();
   const del = useServerFn(adminDeleteUser);
   const ban = useServerFn(adminSetUserBanned);
+  const setPlan = useServerFn(adminSetUserPlan);
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const rows = useMemo(() => data.users.filter((u) => matchesQuery(q, u.name, u.username, u.email) && (filter === 'all' || (filter === 'accounts' && u.userId) || (filter === 'demo' && !u.userId) || (filter === 'suspended' && u.banned))), [data.users, q, filter]);
@@ -42,7 +44,7 @@ function UsersAdmin() {
           <td className={td}>{u.country ?? '—'}</td>
           <td className={`${td} tabular-nums`}>{u.museums}</td>
           <td className={`${td} tabular-nums`}>{u.objects}</td>
-          <td className={`${td} capitalize`}>{u.plan}</td>
+          <td className={td}>{u.userId ? <select aria-label={t('Plan')} className="rounded-md border border-border bg-background px-2 py-1 text-sm capitalize" value={u.plan} onChange={async (e) => { const plan = e.target.value as 'free' | 'pro' | 'studio'; try { await setPlan({ data: { userId: u.userId!, plan } }); await refresh(); toast.success(t('Plan updated')); } catch (err) { toast.error(t(err instanceof Error ? err.message : 'Unable to update plan')); } }}><option value="free">Free</option><option value="pro">Pro</option><option value="studio">Studio</option></select> : '—'}</td>
           <td className={`${td} text-muted-foreground`}>{fmtDate(u.createdAt)}</td>
           <td className={`${td} text-muted-foreground`}>{fmtDate(u.lastSignIn)}</td>
           <td className={`${td} text-right`}><div className="flex justify-end gap-1">

@@ -18,19 +18,22 @@ async function removeImages(db: any, paths: string[]) {
 }
 
 export type AdminUserRow = { id: string; userId: string | null; name: string; username: string; email: string | null; country: string | null; createdAt: string; lastSignIn: string | null; museums: number; objects: number; plan: string; isAdmin: boolean; banned: boolean };
-export type AdminMuseumRow = { id: string; slug: string; title: string; cover: string; isPublic: boolean; ownerId: string; ownerName: string; objects: number; createdAt: string };
+export type AdminMuseumRow = { id: string; slug: string; title: string; cover: string; isPublic: boolean; ownerId: string; ownerName: string; objects: number; createdAt: string; views: number; avgSeconds: number };
 export type AdminObjectRow = { id: string; title: string; image: string; isVisible: boolean; museumId: string; museumTitle: string; museumSlug: string; createdAt: string };
 
 export const listAdminContent = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const db = await admin(context as Ctx);
-  const [profiles, museums, objects, roles, subs, authUsers] = await Promise.all([
+  const [profiles, museums, objects, roles, subs, authUsers, metrics] = await Promise.all([
     db.from('profiles').select('id,user_id,name,username,country,created_at').order('created_at', { ascending: false }).limit(1000),
     db.from('museums').select('id,slug,title,cover,is_public,owner_id,created_at').order('created_at', { ascending: false }).limit(1000),
     db.from('objects').select('id,museum_id,is_visible,created_at,title:payload->>title,images:payload->images').order('created_at', { ascending: false }).limit(1000),
     db.from('user_roles').select('user_id,role'),
     db.from('subscriptions').select('user_id,plan,status'),
     db.auth.admin.listUsers({ perPage: 1000 }),
+    (db as any).from('museum_daily_metrics').select('museum_id,views,total_duration_seconds,timed_visits').limit(10000),
   ]);
+  const stat = new Map<string, { v: number; s: number; t: number }>();
+  for (const r of (metrics.data ?? []) as any[]) { const c = stat.get(r.museum_id) ?? { v: 0, s: 0, t: 0 }; c.v += r.views; c.s += Number(r.total_duration_seconds); c.t += r.timed_visits; stat.set(r.museum_id, c); }
   if (profiles.error || museums.error || objects.error) throw new Error('Unable to load content');
   const authById = new Map((authUsers.data?.users ?? []).map((u) => [u.id, u]));
   const admins = new Set((roles.data ?? []).filter((r) => r.role === 'admin').map((r) => r.user_id));
@@ -38,7 +41,7 @@ export const listAdminContent = createServerFn({ method: 'POST' }).middleware([r
   const objCount = new Map<string, number>();
   for (const o of objects.data ?? []) objCount.set(o.museum_id, (objCount.get(o.museum_id) ?? 0) + 1);
   const profileName = new Map((profiles.data ?? []).map((p) => [p.id, p.name]));
-  const museumRows: AdminMuseumRow[] = (museums.data ?? []).map((m) => ({ id: m.id, slug: m.slug, title: m.title, cover: m.cover, isPublic: m.is_public, ownerId: m.owner_id, ownerName: profileName.get(m.owner_id) ?? '—', objects: objCount.get(m.id) ?? 0, createdAt: m.created_at }));
+  const museumRows: AdminMuseumRow[] = (museums.data ?? []).map((m) => ({ id: m.id, slug: m.slug, title: m.title, cover: m.cover, isPublic: m.is_public, ownerId: m.owner_id, ownerName: profileName.get(m.owner_id) ?? '—', objects: objCount.get(m.id) ?? 0, createdAt: m.created_at, views: stat.get(m.id)?.v ?? 0, avgSeconds: (() => { const c = stat.get(m.id); return c && c.t ? Math.round(c.s / c.t) : 0; })() }));
   const museumBy = new Map(museumRows.map((m) => [m.id, m]));
   const users: AdminUserRow[] = (profiles.data ?? []).map((p) => {
     const own = museumRows.filter((m) => m.ownerId === p.id);

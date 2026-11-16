@@ -30,18 +30,20 @@ function MuseumsAdmin() {
   return (<div className="space-y-5">
     <SectionHeader title="Museums" count={rows.length} query={q} onQuery={setQ}><FilterChips value={filter} onChange={setFilter} options={[{ value: 'all', label: 'All' }, { value: 'public', label: 'Public' }, { value: 'private', label: 'Private' }, { value: 'empty', label: 'Empty' }]} /></SectionHeader>
     <div className={tableWrap}><table className="w-full text-sm">
-      <thead className="border-b border-border"><tr><th className={th}>{t('Museum')}</th><th className={th}>{t('Owner')}</th><th className={th}>{t('Objects')}</th><th className={th}>{t('Created')}</th><th className={th}>{t('Public')}</th><th className={th} /></tr></thead>
+      <thead className="border-b border-border"><tr><th className={th}>{t('Museum')}</th><th className={th}>{t('Owner')}</th><th className={th}>{t('Objects')}</th><th className={th}>{t('Visits')}</th><th className={th}>{t('Avg. time')}</th><th className={th}>{t('Created')}</th><th className={th}>{t('Public')}</th><th className={th} /></tr></thead>
       <tbody className="divide-y divide-border">{rows.map((m) => (<tr key={m.id} className="hover:bg-muted/40">
         <td className={td}><div className="flex items-center gap-3"><img src={m.cover || '/placeholder-object.svg'} alt="" className="size-10 shrink-0 rounded object-cover bg-muted" loading="lazy" /><div className="min-w-0"><p className="font-medium">{m.title}</p><p className="font-mono text-xs text-muted-foreground">/{m.slug}</p></div></div></td>
         <td className={td}>{m.ownerName}</td>
         <td className={`${td} tabular-nums`}>{m.objects}</td>
+        <td className={`${td} tabular-nums`}>{m.views}</td>
+        <td className={`${td} tabular-nums`}>{m.avgSeconds ? `${Math.floor(m.avgSeconds / 60)}:${String(m.avgSeconds % 60).padStart(2, '0')}` : '—'}</td>
         <td className={`${td} text-muted-foreground`}>{fmtDate(m.createdAt)}</td>
         <td className={td}><Switch checked={m.isPublic} aria-label={t('Public')} onCheckedChange={async (v) => { try { await setPublic({ data: { id: m.id, isPublic: v } }); await refresh(); toast.success(v ? t('Museum published') : t('Museum made private')); } catch { toast.error(t('Unable to update museum')); } }} /></td>
         <td className={`${td} text-right`}><div className="flex justify-end gap-1">
           <Button asChild size="icon" variant="ghost" aria-label={t('Open museum')}><Link to="/dashboard/museum/$museumId" params={{ museumId: m.id }}><ExternalLink className="size-4" /></Link></Button>
           <DeleteButton title={t('Delete museum {name}?', { name: m.title })} confirmText={m.slug} description={<p>{t('This museum contains {n} objects that will also be deleted, together with their photos.', { n: m.objects })}</p>} onConfirm={async () => { await del({ data: { id: m.id } }); await refresh(); }} />
         </div></td>
-      </tr>))}{rows.length === 0 ? <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">{t('No results')}</td></tr> : null}</tbody>
+      </tr>))}{rows.length === 0 ? <tr><td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">{t('No results')}</td></tr> : null}</tbody>
     </table></div>
   </div>);
 }

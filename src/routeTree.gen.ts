@@ -34,6 +34,7 @@ import { Route as AuthenticatedDashboardNotificationsRouteImport } from './route
 import { Route as AuthenticatedDashboardPlansRouteImport } from './routes/_authenticated/dashboard.plans'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardWelcomeRouteImport } from './routes/_authenticated/dashboard.welcome'
+import { Route as ApiPublicMuseumVisitRouteImport } from './routes/api/public/museum-visit'
 import { Route as AuthenticatedDashboardMuseumMuseumIdRouteImport } from './routes/_authenticated/dashboard.museum.$museumId'
 import { Route as ApiPublicImagesSplatRouteImport } from './routes/api/public/images.$'
 
@@ -172,6 +173,11 @@ const AuthenticatedDashboardWelcomeRoute =
     path: '/welcome',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const ApiPublicMuseumVisitRoute = ApiPublicMuseumVisitRouteImport.update({
+  id: '/api/public/museum-visit',
+  path: '/api/public/museum-visit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardMuseumMuseumIdRoute =
   AuthenticatedDashboardMuseumMuseumIdRouteImport.update({
     id: '/museum/$museumId',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
+  '/api/public/museum-visit': typeof ApiPublicMuseumVisitRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
+  '/api/public/museum-visit': typeof ApiPublicMuseumVisitRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/plans': typeof AuthenticatedDashboardPlansRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/welcome': typeof AuthenticatedDashboardWelcomeRoute
+  '/api/public/museum-visit': typeof ApiPublicMuseumVisitRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/museum/$museumId': typeof AuthenticatedDashboardMuseumMuseumIdRoute
@@ -293,6 +302,7 @@ export interface FileRouteTypes {
     | '/dashboard/plans'
     | '/dashboard/settings'
     | '/dashboard/welcome'
+    | '/api/public/museum-visit'
     | '/admin/'
     | '/dashboard/'
     | '/dashboard/museum/$museumId'
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
     | '/dashboard/plans'
     | '/dashboard/settings'
     | '/dashboard/welcome'
+    | '/api/public/museum-visit'
     | '/admin'
     | '/dashboard'
     | '/dashboard/museum/$museumId'
@@ -348,6 +359,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/plans'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/welcome'
+    | '/api/public/museum-visit'
     | '/_authenticated/admin/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/museum/$museumId'
@@ -364,6 +376,7 @@ export interface RootRouteChildren {
   MSlugRoute: typeof MSlugRoute
   OObjectIdRoute: typeof OObjectIdRoute
   UUsernameRoute: typeof UUsernameRoute
+  ApiPublicMuseumVisitRoute: typeof ApiPublicMuseumVisitRoute
   ApiPublicImagesSplatRoute: typeof ApiPublicImagesSplatRoute
 }
 
@@ -544,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardWelcomeRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/api/public/museum-visit': {
+      id: '/api/public/museum-visit'
+      path: '/api/public/museum-visit'
+      fullPath: '/api/public/museum-visit'
+      preLoaderRoute: typeof ApiPublicMuseumVisitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard/museum/$museumId': {
       id: '/_authenticated/dashboard/museum/$museumId'
       path: '/museum/$museumId'
@@ -637,6 +657,7 @@ const rootRouteChildren: RootRouteChildren = {
   MSlugRoute: MSlugRoute,
   OObjectIdRoute: OObjectIdRoute,
   UUsernameRoute: UUsernameRoute,
+  ApiPublicMuseumVisitRoute: ApiPublicMuseumVisitRoute,
   ApiPublicImagesSplatRoute: ApiPublicImagesSplatRoute,
 }
 export const routeTree = rootRouteImport

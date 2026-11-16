@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/cards";
 import { ObjectEditor } from "@/components/object-editor";
+import { MuseumStats } from "@/components/museum-stats";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,9 +109,12 @@ function MuseumSetup() {
         <TabsList>
           <TabsTrigger value="objects">{t("Objects")} ({objs.length})</TabsTrigger>
           <TabsTrigger value="collections">{t("Collections")} ({collections.length})</TabsTrigger>
+          <TabsTrigger value="stats">{t("Statistics")}</TabsTrigger>
           <TabsTrigger value="preview">{t("Preview")}</TabsTrigger>
           <TabsTrigger value="setup">{t("Settings")}</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="stats" className="mt-5"><MuseumStats museumId={museum.id}/></TabsContent>
 
         {/* PREVIEW */}
         <TabsContent value="preview" className="mt-5 space-y-5">
