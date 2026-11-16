@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { Link } from "@tanstack/react-router";
-import { Landmark } from "lucide-react";
+import { MoonStar } from "lucide-react";
 export function SiteFooter() {
     const { t } = useI18n();
     return (<footer className="mt-24 border-t border-border/70">
