@@ -302,3 +302,15 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
 }
+
+/* Atmosphere hint on cards: only the edge and a faint top reflection. */
+[data-card-skin] { position: relative; isolation: isolate; border-color: var(--skin-edge) !important; }
+[data-card-skin]::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit; background: linear-gradient(180deg, var(--skin-glow) 0%, transparent 38%); opacity: 0.55; transition: opacity 300ms; }
+[data-card-skin]:hover { border-color: var(--skin-edge-hover) !important; box-shadow: 0 0 0 1px var(--skin-edge-hover), 0 18px 40px -28px var(--skin-edge-hover); }
+[data-card-skin]:hover::before { opacity: 0.9; }
+[data-card-skin="lunar"] { --skin-edge: oklch(0.85 0.02 250 / 0.28); --skin-edge-hover: oklch(0.9 0.02 250 / 0.6); --skin-glow: oklch(0.95 0.01 250 / 0.07); }
+[data-card-skin="nebula"] { --skin-edge: oklch(0.6 0.16 300 / 0.4); --skin-edge-hover: oklch(0.78 0.15 230 / 0.65); --skin-glow: oklch(0.7 0.17 310 / 0.09); }
+[data-card-skin="observatory"] { --skin-edge: oklch(0.65 0.1 70 / 0.35); --skin-edge-hover: oklch(0.76 0.12 75 / 0.65); --skin-glow: oklch(0.8 0.1 80 / 0.08); }
+[data-card-skin="forest"] { --skin-edge: oklch(0.55 0.1 150 / 0.4); --skin-edge-hover: oklch(0.78 0.13 145 / 0.6); --skin-glow: oklch(0.75 0.12 145 / 0.08); }
+[data-card-skin="wood"] { --skin-edge: oklch(0.55 0.09 55 / 0.45); --skin-edge-hover: oklch(0.72 0.12 60 / 0.65); --skin-glow: oklch(0.75 0.1 65 / 0.08); }
+[data-card-skin="cyberpunk"] { --skin-edge: oklch(0.65 0.24 340 / 0.45); --skin-edge-hover: oklch(0.88 0.17 195 / 0.75); --skin-glow: oklch(0.72 0.27 340 / 0.1); }

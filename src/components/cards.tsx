@@ -13,7 +13,7 @@ export function MuseumCard({ museum, owner, count, }: {
 }) {
     const { t } = useI18n();
     const flags = museumFeatures(museum);
-    return (<Link to="/m/$slug" params={{ slug: museum.slug }} className="group relative flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
+    return (<Link to="/m/$slug" params={{ slug: museum.slug }} data-card-skin={museum.skin ?? "lunar"} className="group relative flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
       <div className="relative aspect-16/10 overflow-hidden bg-muted">
         <img src={museum.cover} alt={museum.title} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-105"/>
         <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/10 to-transparent"/>
@@ -48,7 +48,7 @@ export function ObjectCard({ object }: {
     const { t } = useI18n();
     const { museums } = useStore();
     const museum = museums.find(item => item.id === object.museumId);
-    return (<Link to="/o/$objectId" params={{ objectId: object.id }} className="group flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
+    return (<Link to="/o/$objectId" params={{ objectId: object.id }} data-card-skin={museum?.skin ?? "lunar"} className="group flex flex-col overflow-hidden rounded-xl border border-border/80 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 plinth">
       <div className="relative aspect-4/3 overflow-hidden bg-muted">
         <img src={object.images[0]} alt={object.title} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"/>
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent"/>
