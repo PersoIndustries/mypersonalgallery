@@ -207,6 +207,20 @@ function DashboardMuseums() {
               </div>
               <Switch checked={museumForm.isPublic} onCheckedChange={(v) => setMuseumForm({ ...museumForm, isPublic: v })}/>
             </div>
+            <div className="space-y-2">
+              <Label>{t("Museum atmosphere")}</Label>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {MUSEUM_SKINS.map((skin) => {
+                  const active = museumForm.skin === skin;
+                  return (<button key={skin} type="button" aria-pressed={active} onClick={() => setMuseumForm({ ...museumForm, skin })} className={`rounded-lg border-2 p-0.5 text-left transition ${active ? "border-primary" : "border-transparent hover:border-border"}`}>
+                    <div data-museum-skin={skin} className="rounded-md p-2.5">
+                      <div className="flex gap-1"><span className="size-3 rounded-full bg-primary"/><span className="size-3 rounded-full bg-gold"/><span className="size-3 rounded-full bg-accent"/></div>
+                      <p className="mt-2 text-sm font-medium">{t(`skin.${skin}`)}</p>
+                    </div>
+                  </button>);
+                })}
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="ghost" disabled={saving} onClick={() => setMuseumDialog(null)}>{t("Cancel")}</Button>
