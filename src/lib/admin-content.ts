@@ -7,11 +7,6 @@ export function extractImagePaths(value: unknown): string[] {
   return [...new Set([...text.matchAll(IMAGE_PATH)].map((m) => m[1]!))];
 }
 
-/** Removes a deleted object ID from every collection list of a museum. */
-export function withoutObjectInCollections<T extends { objectIds?: string[] }>(collections: T[], objectId: string): T[] {
-  return collections.map((c) => (Array.isArray(c.objectIds) ? { ...c, objectIds: c.objectIds.filter((id) => id !== objectId) } : c));
-}
-
 /** Case-insensitive match against any of the given fields. */
 export function matchesQuery(query: string, ...fields: (string | null | undefined)[]): boolean {
   const q = query.trim().toLowerCase();
