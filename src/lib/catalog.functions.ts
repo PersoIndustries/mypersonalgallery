@@ -10,10 +10,11 @@ import { catalogForViewer, onlyPublicCatalog } from './public-visibility';
 
 export type { Catalog } from './types';
 const date = (s:string) => s.slice(0,10);
+function splitSkin(raw:unknown):{features:NonNullable<Museum['features']>;skin?:Museum['skin']}{const {skin,...features}=(raw && typeof raw==='object'?raw:{}) as Record<string,unknown>;return {features:features as NonNullable<Museum['features']>,skin:(['lunar','nebula','observatory'] as const).find(s=>s===skin)};}
 async function readCatalog(client:SupabaseClient<Database>):Promise<Catalog> {
   const [m,o,u] = await Promise.all([client.from('museums').select('*').order('created_at'),client.from('objects').select('*').order('created_at'),client.from('profiles').select('id,name,username,avatar,bio,location,joined')]);
   for (const result of [m,o,u]) if(result.error) throw new Error(result.error.message);
-  return { museums:(m.data ?? []).map(r => ({id:r.id,slug:r.slug,ownerId:r.owner_id,title:r.title,description:r.description,cover:r.cover,category:r.category,isPublic:r.is_public,features:r.features as NonNullable<Museum['features']>,collections:((r as {collections?:unknown}).collections ?? []) as NonNullable<Museum['collections']>,createdAt:date(r.created_at)})), objects:(o.data ?? []).map(r => ({...(r.payload as unknown as CollectionObject),id:r.id,museumId:r.museum_id,isVisible:r.is_visible,createdAt:date(r.created_at)})), users:(u.data ?? []).map(r => ({...r,joined:r.joined})) };
+  return { museums:(m.data ?? []).map(r => ({id:r.id,slug:r.slug,ownerId:r.owner_id,title:r.title,description:r.description,cover:r.cover,category:r.category,isPublic:r.is_public,...splitSkin(r.features),collections:((r as {collections?:unknown}).collections ?? []) as NonNullable<Museum['collections']>,createdAt:date(r.created_at)})), objects:(o.data ?? []).map(r => ({...(r.payload as unknown as CollectionObject),id:r.id,museumId:r.museum_id,isVisible:r.is_visible,createdAt:date(r.created_at)})), users:(u.data ?? []).map(r => ({...r,joined:r.joined})) };
 }
 export const getPublicCatalog = createServerFn({method:'GET'}).handler(async () => {
   const key=process.env['SUPABASE_PUBLISHABLE_KEY']; const url=process.env['SUPABASE_URL'];
@@ -42,11 +43,11 @@ export const mutateCatalog = createServerFn({method:'POST'}).middleware([require
   const {clearPublicCatalogCache}=await import('./public-cache.server');await clearPublicCatalogCache();
   if(data.action==='createMuseum'){
     const uuid=crypto.randomUUID(); const slug=(data.data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48)||'museum')+'-'+uuid.slice(0,8);
-    const {error}=await c.from('museums').insert({id:uuid,slug,owner_id:context.userId,title:data.data.title,description:data.data.description,cover:data.data.cover,category:data.data.category,is_public:data.data.isPublic,features:data.data.features as Json,collections:(data.data.collections?.length?data.data.collections:[{id:crypto.randomUUID(),name:'General'}]) as unknown as Json} as Database['public']['Tables']['museums']['Insert']);if(error) throw new Error(error.message);return uuid;
+    const {error}=await c.from('museums').insert({id:uuid,slug,owner_id:context.userId,title:data.data.title,description:data.data.description,cover:data.data.cover,category:data.data.category,is_public:data.data.isPublic,features:{...(data.data.features??{}),...(data.data.skin?{skin:data.data.skin}:{})} as Json,collections:(data.data.collections?.length?data.data.collections:[{id:crypto.randomUUID(),name:'General'}]) as unknown as Json} as Database['public']['Tables']['museums']['Insert']);if(error) throw new Error(error.message);return uuid;
   }
   if(data.action==='updateMuseum'){
     const p=data.data; const patch:Database['public']['Tables']['museums']['Update']={};
-    if(p.title!==undefined)patch.title=p.title;if(p.description!==undefined)patch.description=p.description;if(p.cover!==undefined)patch.cover=p.cover;if(p.category!==undefined)patch.category=p.category;if(p.isPublic!==undefined)patch.is_public=p.isPublic;if(p.features!==undefined)patch.features=p.features;if(p.collections!==undefined)(patch as Record<string,unknown>)['collections']=p.collections;
+    if(p.title!==undefined)patch.title=p.title;if(p.description!==undefined)patch.description=p.description;if(p.cover!==undefined)patch.cover=p.cover;if(p.category!==undefined)patch.category=p.category;if(p.isPublic!==undefined)patch.is_public=p.isPublic;if(p.features!==undefined || p.skin!==undefined){let base:Record<string,unknown>={};if(p.features===undefined || p.skin===undefined){const {data:cur,error:e}=await c.from('museums').select('features').eq('id',data.id).single();if(e) throw new Error(e.message);base=(cur.features??{}) as Record<string,unknown>;}patch.features={...base,...(p.features??{}),...(p.skin!==undefined?{skin:p.skin}:{skin:base['skin']})} as Json;}if(p.collections!==undefined)(patch as Record<string,unknown>)['collections']=p.collections;
     const {error}=await c.from('museums').update(patch).eq('id',data.id).select('id').single();if(error) throw new Error(error.message);return data.id;
   }
   if(data.action==='deleteMuseum' || data.action==='deleteObject'){
