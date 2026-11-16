@@ -86,7 +86,7 @@ function Welcome() {
           <h3 className="font-display text-2xl">{t('Add your first object')}</h3>
           <p className="text-sm text-muted-foreground">{t('Add photos, specifications, tags and collections. Your museum already has a "General" collection.')}</p>
           <Button onClick={() => setEditorOpen(true)}>{t('Add object')}</Button>
-          <ObjectEditor museumId={museum.id} open={editorOpen} onOpenChange={setEditorOpen} />
+          <ObjectEditor museumId={museum.id} object={null} open={editorOpen} onOpenChange={setEditorOpen} />
         </div>}
 
         {step === 3 && museum && <div className="space-y-4">
