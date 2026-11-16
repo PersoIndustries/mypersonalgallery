@@ -24,6 +24,9 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminBillingRouteImport } from './routes/_authenticated/admin.billing'
 import { Route as AuthenticatedAdminDevRouteImport } from './routes/_authenticated/admin.dev'
 import { Route as AuthenticatedAdminErrorsRouteImport } from './routes/_authenticated/admin.errors'
+import { Route as AuthenticatedAdminMuseumsRouteImport } from './routes/_authenticated/admin.museums'
+import { Route as AuthenticatedAdminObjectsRouteImport } from './routes/_authenticated/admin.objects'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
 import { Route as AuthenticatedDashboardMuseumsRouteImport } from './routes/_authenticated/dashboard.museums'
@@ -110,6 +113,23 @@ const AuthenticatedAdminErrorsRoute =
     path: '/errors',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMuseumsRoute =
+  AuthenticatedAdminMuseumsRouteImport.update({
+    id: '/museums',
+    path: '/museums',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminObjectsRoute =
+  AuthenticatedAdminObjectsRouteImport.update({
+    id: '/objects',
+    path: '/objects',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
@@ -178,6 +198,9 @@ export interface FileRoutesByFullPath {
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/admin/museums': typeof AuthenticatedAdminMuseumsRoute
+  '/admin/objects': typeof AuthenticatedAdminObjectsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -201,6 +224,9 @@ export interface FileRoutesByTo {
   '/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/admin/dev': typeof AuthenticatedAdminDevRoute
   '/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/admin/museums': typeof AuthenticatedAdminMuseumsRoute
+  '/admin/objects': typeof AuthenticatedAdminObjectsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -228,6 +254,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/billing': typeof AuthenticatedAdminBillingRoute
   '/_authenticated/admin/dev': typeof AuthenticatedAdminDevRoute
   '/_authenticated/admin/errors': typeof AuthenticatedAdminErrorsRoute
+  '/_authenticated/admin/museums': typeof AuthenticatedAdminMuseumsRoute
+  '/_authenticated/admin/objects': typeof AuthenticatedAdminObjectsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/museums': typeof AuthenticatedDashboardMuseumsRoute
   '/_authenticated/dashboard/notifications': typeof AuthenticatedDashboardNotificationsRoute
@@ -255,6 +284,9 @@ export interface FileRouteTypes {
     | '/admin/billing'
     | '/admin/dev'
     | '/admin/errors'
+    | '/admin/museums'
+    | '/admin/objects'
+    | '/admin/users'
     | '/dashboard/billing'
     | '/dashboard/museums'
     | '/dashboard/notifications'
@@ -278,6 +310,9 @@ export interface FileRouteTypes {
     | '/admin/billing'
     | '/admin/dev'
     | '/admin/errors'
+    | '/admin/museums'
+    | '/admin/objects'
+    | '/admin/users'
     | '/dashboard/billing'
     | '/dashboard/museums'
     | '/dashboard/notifications'
@@ -304,6 +339,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/billing'
     | '/_authenticated/admin/dev'
     | '/_authenticated/admin/errors'
+    | '/_authenticated/admin/museums'
+    | '/_authenticated/admin/objects'
+    | '/_authenticated/admin/users'
     | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/museums'
     | '/_authenticated/dashboard/notifications'
@@ -436,6 +474,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminErrorsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/museums': {
+      id: '/_authenticated/admin/museums'
+      path: '/museums'
+      fullPath: '/admin/museums'
+      preLoaderRoute: typeof AuthenticatedAdminMuseumsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/objects': {
+      id: '/_authenticated/admin/objects'
+      path: '/objects'
+      fullPath: '/admin/objects'
+      preLoaderRoute: typeof AuthenticatedAdminObjectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/'
@@ -506,6 +565,9 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBillingRoute: typeof AuthenticatedAdminBillingRoute
   AuthenticatedAdminDevRoute: typeof AuthenticatedAdminDevRoute
   AuthenticatedAdminErrorsRoute: typeof AuthenticatedAdminErrorsRoute
+  AuthenticatedAdminMuseumsRoute: typeof AuthenticatedAdminMuseumsRoute
+  AuthenticatedAdminObjectsRoute: typeof AuthenticatedAdminObjectsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -513,6 +575,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBillingRoute: AuthenticatedAdminBillingRoute,
   AuthenticatedAdminDevRoute: AuthenticatedAdminDevRoute,
   AuthenticatedAdminErrorsRoute: AuthenticatedAdminErrorsRoute,
+  AuthenticatedAdminMuseumsRoute: AuthenticatedAdminMuseumsRoute,
+  AuthenticatedAdminObjectsRoute: AuthenticatedAdminObjectsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
