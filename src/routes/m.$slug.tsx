@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { CreateMuseumCta } from "@/components/create-museum-cta";
 import { useStore } from "@/lib/store";
 import { museumFeatures } from "@/lib/types";
+import { useMuseumVisit } from "@/lib/use-museum-visit";
 export const Route = createFileRoute("/m/$slug")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.museums.find(m => m.slug === params.slug) ?? null; },
     head: ({ loaderData }) => { const title = (loaderData?.title ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.description || 'A curated digital museum on Moon Collector.'; const image = loaderData?.cover; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
@@ -23,6 +24,7 @@ function MuseumPage() {
     const museum = publicMuseums.find(item => item.slug === slug);
     const [query, setQuery] = useState("");
     const [activeCollection, setActiveCollection] = useState<string | null>(null);
+    useMuseumVisit(museum?.id, !!museum && currentUser?.id === museum.ownerId);
     if (!museum) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
         <EmptyState icon={Landmark} title={t("Museum not found")} description={t("This museum may have been closed or renamed.")} action={<Button asChild variant="outline">

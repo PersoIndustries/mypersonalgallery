@@ -6,4 +6,7 @@ export const PAYMENTS_ENABLED = false;
 export function selectedPlan(interest: string | null, subscription: { plan: string }) { return interest ?? subscription.plan; }
 export function requireAdminRole(value: unknown) { if (value !== true) throw new Error('Administrator access required'); }
 export const diagnosticSchema = z.object({ category: z.enum(['runtime','unhandled_rejection','operation','route']), path: z.string().regex(/^\/[a-zA-Z0-9/_.$-]{0,200}$/), fingerprint: z.string().regex(/^[a-f0-9]{8,64}$/) });
-export function diagnosticPath(path: string) { return path.split(/[?#]/)[0]?.replace(/[^a-zA-Z0-9/_.$-]/g, '').slice(0,201) || '/'; }
+export function diagnosticPath(path: string) { return path.split(/[?#]/)[0]?.replace(/[^a-zA-Z0-9/_.$-]/g, '').slice(0,201) || '/'; }export const PAID_PLANS = ['pro', 'studio'] as const;
+/** Metrics are unlocked only for an active paid plan (paid or granted by an admin). */
+export function hasPaidAccess(sub: { plan: string; status: string } | null | undefined) { return !!sub && sub.status === 'active' && (PAID_PLANS as readonly string[]).includes(sub.plan); }
+export function averageVisitSeconds(totalSeconds: number, timedVisits: number) { return timedVisits > 0 ? Math.round(totalSeconds / timedVisits) : 0; }
