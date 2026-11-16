@@ -34,7 +34,7 @@ function UsersAdmin() {
       <tbody className="divide-y divide-border">{rows.map((u) => {
         const self = u.userId === data.me;
         return (<tr key={u.id} className="hover:bg-muted/40">
-          <td className={td}><div className="flex items-center gap-2"><div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">{u.name.slice(0, 1).toUpperCase()}</div><div className="min-w-0"><Link to="/c/$username" params={{ username: u.username }} className="font-medium hover:underline">{u.name}</Link><p className="text-xs text-muted-foreground">@{u.username}</p></div>
+          <td className={td}><div className="flex items-center gap-2"><div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">{u.name.slice(0, 1).toUpperCase()}</div><div className="min-w-0"><Link to="/u/$username" params={{ username: u.username }} className="font-medium hover:underline">{u.name}</Link><p className="text-xs text-muted-foreground">@{u.username}</p></div>
             {u.isAdmin ? <Badge variant="secondary" className="gap-1"><ShieldCheck className="size-3" />{t('Admin')}</Badge> : null}
             {u.banned ? <Badge variant="destructive">{t('Suspended')}</Badge> : null}
             {!u.userId ? <Badge variant="outline">{t('Demo')}</Badge> : null}</div></td>
