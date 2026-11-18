@@ -239,6 +239,38 @@ export type Database = {
         }
         Relationships: []
       }
+      museum_daily_metrics: {
+        Row: {
+          day: string
+          museum_id: string
+          timed_visits: number
+          total_duration_seconds: number
+          views: number
+        }
+        Insert: {
+          day: string
+          museum_id: string
+          timed_visits?: number
+          total_duration_seconds?: number
+          views?: number
+        }
+        Update: {
+          day?: string
+          museum_id?: string
+          timed_visits?: number
+          total_duration_seconds?: number
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "museum_daily_metrics_museum_id_fkey"
+            columns: ["museum_id"]
+            isOneToOne: false
+            referencedRelation: "museums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       museums: {
         Row: {
           category: string
@@ -583,6 +615,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      record_museum_visit: {
+        Args: { new_visit: boolean; seconds: number; target_museum: string }
+        Returns: undefined
       }
       report_app_error: {
         Args: {
