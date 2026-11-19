@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { CoverUpload } from "@/components/cover-upload";
 import { ObjectEditor } from "@/components/object-editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -184,8 +185,8 @@ function DashboardMuseums() {
               <Textarea id="m-desc" rows={4} value={museumForm.description} onChange={(e) => setMuseumForm({ ...museumForm, description: e.target.value })} placeholder={t("What is this collection about?")}/>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="m-cover">{t("Cover image URL")}</Label>
-              <Input id="m-cover" value={museumForm.cover} onChange={(e) => setMuseumForm({ ...museumForm, cover: e.target.value })}/>
+              <Label htmlFor="m-cover">{t("Cover image")}</Label>
+              <CoverUpload id="m-cover" value={museumForm.cover} onChange={(cover) => setMuseumForm((f) => ({ ...f, cover }))}/>
             </div>
             <div className="space-y-2">
               <Label>{t("Category")}</Label>

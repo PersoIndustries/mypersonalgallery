@@ -4,6 +4,7 @@ import { ArrowLeft, Boxes, Eye, EyeOff, ExternalLink, FolderOpen, Globe, Lock, P
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/cards";
+import { CoverUpload } from "@/components/cover-upload";
 import { ObjectEditor } from "@/components/object-editor";
 import { MuseumStats } from "@/components/museum-stats";
 import { Badge } from "@/components/ui/badge";
@@ -284,8 +285,8 @@ function MuseumSetup() {
                 <Textarea id="s-desc" rows={4} defaultValue={museum.description} onBlur={(e) => void updateMuseum(museum.id, { description: e.target.value }).catch(e => toast.error(e.message))}/>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="s-cover">{t("Cover image URL")}</Label>
-                <Input id="s-cover" defaultValue={museum.cover} onBlur={(e) => void updateMuseum(museum.id, { cover: e.target.value }).catch(e => toast.error(e.message))}/>
+                <Label htmlFor="s-cover">{t("Cover image")}</Label>
+                <CoverUpload id="s-cover" value={museum.cover} onChange={(cover) => void updateMuseum(museum.id, { cover }).catch(e => toast.error(e.message))}/>
               </div>
             </CardContent>
           </Card>
