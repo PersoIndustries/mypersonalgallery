@@ -699,5 +699,6 @@
   "Unable to update plan": "No se pudo actualizar el plan",
   "This plan is managed by a payment subscription": "Este plan lo gestiona una suscripción de pago",
   "Legal": "Legal",
-  "Privacy policy": "Política de privacidad"
+  "Privacy policy": "Política de privacidad",
+  "Terms of use": "Términos de uso"
 }

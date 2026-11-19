@@ -32,6 +32,7 @@ export function SiteFooter() {
           <div className="space-y-3">
             <p className="eyebrow">{t("Legal")}</p>
             <Link to="/privacy" className="block text-muted-foreground hover:text-foreground">{t("Privacy policy")}</Link>
+            <Link to="/terms" className="block text-muted-foreground hover:text-foreground">{t("Terms of use")}</Link>
             <Link to="/help" className="block text-muted-foreground hover:text-foreground">{t("Help")}</Link>
           </div>
         </div>
