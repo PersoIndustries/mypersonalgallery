@@ -29,6 +29,11 @@ export function SiteFooter() {
             <Link to="/dashboard/settings" className="block text-muted-foreground hover:text-foreground">{t("Settings")}</Link>
             <Link to="/dashboard/plans" className="block text-muted-foreground hover:text-foreground">{t("Museum plans")}</Link>
           </div>
+          <div className="space-y-3">
+            <p className="eyebrow">{t("Legal")}</p>
+            <Link to="/privacy" className="block text-muted-foreground hover:text-foreground">{t("Privacy policy")}</Link>
+            <Link to="/help" className="block text-muted-foreground hover:text-foreground">{t("Help")}</Link>
+          </div>
         </div>
       </div>
       <div className="border-t border-border/70 py-6 text-center text-xs text-muted-foreground">{t("\u00A9 ")}{new Date().getFullYear()}{t(" Moon Collector \u2014 built for collectors.")}</div>

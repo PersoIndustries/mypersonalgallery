@@ -659,5 +659,7 @@
   "Avg. time": "Avg. time",
   "Plan updated": "Plan updated",
   "Unable to update plan": "Unable to update plan",
-  "This plan is managed by a payment subscription": "This plan is managed by a payment subscription"
+  "This plan is managed by a payment subscription": "This plan is managed by a payment subscription",
+  "Legal": "Legal",
+  "Privacy policy": "Privacy policy"
 }

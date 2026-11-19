@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -60,6 +61,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/m/$slug': typeof MSlugRoute
   '/o/$objectId': typeof OObjectIdRoute
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/explore': typeof ExploreRoute
   '/help': typeof HelpRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/help'
+    | '/privacy'
     | '/reset-password'
     | '/admin'
     | '/dashboard'
@@ -313,6 +323,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/help'
+    | '/privacy'
     | '/reset-password'
     | '/m/$slug'
     | '/o/$objectId'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/explore'
     | '/help'
+    | '/privacy'
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
@@ -372,6 +384,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ExploreRoute: typeof ExploreRoute
   HelpRoute: typeof HelpRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   MSlugRoute: typeof MSlugRoute
   OObjectIdRoute: typeof OObjectIdRoute
@@ -415,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -653,6 +673,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ExploreRoute: ExploreRoute,
   HelpRoute: HelpRoute,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   MSlugRoute: MSlugRoute,
   OObjectIdRoute: OObjectIdRoute,
