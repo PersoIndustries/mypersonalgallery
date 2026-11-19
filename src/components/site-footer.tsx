@@ -1,15 +1,12 @@
 import { useI18n } from '@/lib/i18n';
 import { Link } from "@tanstack/react-router";
-import { MoonStar } from "lucide-react";
 export function SiteFooter() {
     const { t } = useI18n();
     return (<footer className="mt-24 border-t border-border/70">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary/12 text-primary ring-1 ring-primary/25">
-              <MoonStar className="size-4"/>
-            </span>
+            <img src="/favicon.svg" alt="" className="size-8 rounded-md ring-1 ring-primary/25"/>
             <span className="font-display text-lg">Moon <span className="text-primary">Collector</span>
             </span>
           </div>
