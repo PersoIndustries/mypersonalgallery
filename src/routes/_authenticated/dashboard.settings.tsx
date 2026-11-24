@@ -75,7 +75,7 @@ function DashboardSettings() {
         return null;
     return (<div className="space-y-6">
       <div>
-        <h2 className="font-display text-2xl">{t("Curator profile")}</h2>
+        <h2 className="font-display text-2xl">{t("Collector profile")}</h2>
         <p className="text-sm text-muted-foreground">{t("This is what visitors see on your public profile page.")}</p>
       </div>
 
@@ -86,7 +86,7 @@ function DashboardSettings() {
             <AvatarFallback>{form.name.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle className="font-display text-xl">{form.name || t("Unnamed curator")}</CardTitle>
+            <CardTitle className="font-display text-xl">{form.name || t("Unnamed collector")}</CardTitle>
             <p className="text-xs text-muted-foreground">{t("@")}{currentUser.username}</p>
           </div>
           <Button asChild variant="ghost" size="sm" className="ml-auto">

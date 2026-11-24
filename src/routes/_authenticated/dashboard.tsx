@@ -1,21 +1,21 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, Landmark, Settings, Bell } from "lucide-react";
+import { LayoutDashboard, MoonStar, Settings, Bell, Gem, Receipt } from "lucide-react";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/_authenticated/dashboard")({
     head: () => ({
         meta: [
             { property: "og:type", content: "website" },
             { name: "twitter:card", content: "summary_large_image" },
-            { title: "Curator dashboard — Moon Collector" },
+            { title: "Collector dashboard — Moon Collector" },
             {
                 name: "description",
-                content: "Manage your digital museums, catalogue new objects and edit your curator profile.",
+                content: "Manage your digital museums, catalogue new objects and edit your collector profile.",
             },
-            { property: "og:title", content: "Curator dashboard — Moon Collector" },
+            { property: "og:title", content: "Collector dashboard — Moon Collector" },
             {
                 property: "og:description",
-                content: "Manage museums, objects and your public curator profile.",
+                content: "Manage museums, objects and your public collector profile.",
             },
             { name: "robots", content: "noindex" },
         ],
@@ -24,11 +24,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 const links = [
     { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { to: "/dashboard/museums", label: "Museums", icon: Landmark },
+    { to: "/dashboard/museums", label: "Museums", icon: MoonStar },
     { to: "/dashboard/settings", label: "Settings", icon: Settings },
     { to: "/dashboard/notifications", label: "Notifications", icon: Bell },
-    { to: "/dashboard/plans", label: "Plans", icon: Landmark },
-    { to: "/dashboard/billing", label: "Billing", icon: LayoutDashboard },
+    { to: "/dashboard/plans", label: "Plans", icon: Gem },
+    { to: "/dashboard/billing", label: "Billing", icon: Receipt },
 ] as const;
 function DashboardLayout() {
     const { t } = useI18n();
@@ -37,7 +37,7 @@ function DashboardLayout() {
         return (<div className="mx-auto max-w-7xl px-4 py-24 text-center text-sm text-muted-foreground sm:px-6">{t("Loading your dashboard\u2026")}</div>);
     }
     return (<div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <p className="eyebrow">{t("Curator tools")}</p>
+      <p className="eyebrow">{t("Collector tools")}</p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">{t("Welcome back, ")}{currentUser.name.split(" ")[0]}
       </h1>
 

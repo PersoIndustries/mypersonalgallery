@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Boxes, Camera, Landmark, Radio, ScanLine, Sparkles } from "lucide-react";
+import { ArrowRight, Boxes, Camera, MoonStar, Shield, Radio, ScanLine, Sparkles } from "lucide-react";
 import { CardSkeletonGrid, MuseumCard, ObjectCard } from "@/components/cards";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,7 @@ function Home() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:py-28">
           <div className="fade-up">
             <Badge variant="outline" className="border-primary/30 text-primary">
-              <Sparkles className="size-3"/>{t(" For collectors and curators")}</Badge>
+              <Sparkles className="size-3"/>{t("For collectors")}</Badge>
             <h1 className="mt-6 font-display text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">{t("Your collection")}<br />{t("deserves a")}{" "}
               <span className="italic text-gradient-gold">{t("museum")}</span>
             </h1>
@@ -100,7 +100,7 @@ function Home() {
       {/* Featured objects */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="mb-8 hairline pb-5">
-          <p className="eyebrow">{t("Curator's picks")}</p>
+          <p className="eyebrow">{t("Collector's picks")}</p>
           <h2 className="mt-2 font-display text-3xl sm:text-4xl">{t("Remarkable objects")}</h2>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -116,7 +116,7 @@ function Home() {
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
             {[
             {
-                icon: Landmark,
+                icon: MoonStar,
                 title: "Create a museum",
                 body: "One museum per collection — WWII field radios, dive watches, press cameras. Give it a cover, a category and a story.",
             },
@@ -148,11 +148,11 @@ function Home() {
           {[
             { label: "Radios", icon: Radio },
             { label: "Aircraft Avionics", icon: ScanLine },
-            { label: "Military Gear", icon: Landmark },
+            { label: "Military Gear", icon: Shield },
             { label: "Watches", icon: Sparkles },
             { label: "Cameras", icon: Camera },
         ].map((c) => (<Button key={t(c.label)} asChild variant="outline" size="sm">
-              <Link to="/explore" search={{ q: c.label }}>
+              <Link to="/explore" search={{ category: c.label }}>
                 <c.icon className="size-3.5"/> {t(c.label)}
               </Link>
             </Button>))}

@@ -1,14 +1,14 @@
 import { useI18n } from '@/lib/i18n';
 import { publicCatalogQuery } from '@/lib/public-catalog-query';
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { CalendarDays, Landmark, MapPin } from "lucide-react";
+import { CalendarDays, MoonStar, MapPin } from "lucide-react";
 import { EmptyState, MuseumCard } from "@/components/cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/u/$username")({
     loader: async ({ params, context }) => { const c = await context.queryClient.ensureQueryData(publicCatalogQuery); return c.users.find(u => u.username === params.username) ?? null; },
-    head: ({ loaderData }) => { const title = (loaderData?.name ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.bio || 'A curator profile on Moon Collector.'; const image = loaderData?.avatar; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
+    head: ({ loaderData }) => { const title = (loaderData?.name ?? 'Collection') + ' — Moon Collector'; const description = loaderData?.bio || 'A collector profile on Moon Collector.'; const image = loaderData?.avatar; return { meta: [{ title }, { name: 'description', content: description }, { property: 'og:title', content: title }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }, ...(image?.startsWith('https://') ? [{ property: 'og:image', content: image }, { name: 'twitter:image', content: image }] : [])] }; },
     component: Profile,
 });
 function Profile() {
@@ -18,7 +18,7 @@ function Profile() {
     const user = users.find((u) => u.username.toLowerCase() === username.toLowerCase());
     if (!user) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
-        <EmptyState icon={Landmark} title={t("No collector here")} description={`We couldn't find anyone using @${username}.`} action={<Button asChild variant="outline">
+        <EmptyState icon={MoonStar} title={t("No collector here")} description={`We couldn't find anyone using @${username}.`} action={<Button asChild variant="outline">
               <Link to="/explore">Browse collectors</Link>
             </Button>}/>
       </div>);
@@ -34,7 +34,7 @@ function Profile() {
             <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div className="flex-1 fade-up">
-            <p className="eyebrow">{t("Curator")}</p>
+            <p className="eyebrow">{t("Collector")}</p>
             <h1 className="mt-1 font-display text-4xl sm:text-5xl">{user.name}</h1>
             <p className="mt-1 text-primary/85">{t("@")}{user.username}</p>
             {user.bio && (<p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -60,7 +60,7 @@ function Profile() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <h2 className="font-display text-2xl">{t("Museums")}</h2>
         {owned.length === 0 ? (<div className="mt-6">
-            <EmptyState icon={Landmark} title={t("No museums yet")} description={t("This curator hasn't opened a museum to the public.")}/>
+            <EmptyState icon={MoonStar} title={t("No museums yet")} description={t("This collector hasn't opened a museum to the public.")}/>
           </div>) : (<div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {owned.map((m) => (<MuseumCard key={m.id} museum={m} owner={user} count={objects.filter((o) => o.museumId === m.id).length}/>))}
           </div>)}

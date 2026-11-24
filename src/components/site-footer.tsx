@@ -10,7 +10,7 @@ export function SiteFooter() {
             <span className="font-display text-lg">Moon <span className="text-primary">Collector</span>
             </span>
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("A home for private collections. Catalogue your objects with the care of a curator and share them with the world.")}</p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("A home for private collections. Catalogue your objects with care and share them with the world.")}</p>
         </div>
         <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
           <div className="space-y-3">

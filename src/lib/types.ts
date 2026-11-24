@@ -27,7 +27,7 @@ export type FeatureFlags = Record<FeatureKey, boolean>;
 
 export const FEATURES: { key: FeatureKey; label: string; hint: string; museumOnly?: boolean }[] = [
   { key: "description", label: "Description", hint: "Museum and object descriptions" },
-  { key: "curator", label: "Curator", hint: "Your name and profile link", museumOnly: true },
+  { key: "curator", label: "Collector", hint: "Your name and profile link", museumOnly: true },
   { key: "tags", label: "Tags", hint: "Keyword chips on each object" },
   { key: "condition", label: "Condition", hint: "Conservation state" },
   { key: "specs", label: "Specifications", hint: "Technical data table" },

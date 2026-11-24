@@ -13,11 +13,13 @@ export const Route = createFileRoute("/explore")({
     validateSearch: (search: Record<string, unknown>): {
         q?: string | undefined;
         tab?: Tab | undefined;
+        category?: string | undefined;
     } => ({
         q: typeof search["q"] === "string" && search["q"] ? (search["q"] as string) : undefined,
         tab: (["museums", "objects", "collectors"] as const).includes(search["tab"] as Tab)
             ? (search["tab"] as Tab)
             : undefined,
+        category: typeof search["category"] === "string" && (CATEGORIES as readonly string[]).includes(search["category"] as string) ? (search["category"] as string) : undefined,
     }),
     head: () => ({
         meta: [
@@ -39,11 +41,14 @@ export const Route = createFileRoute("/explore")({
 });
 function Explore() {
     const { t } = useI18n();
-    const { q, tab } = Route.useSearch();
+    const { q, tab, category: categoryParam } = Route.useSearch();
     const navigate = useNavigate({ from: Route.fullPath });
     const { publicMuseums: museums, publicObjects: objects, users, ready } = useStore();
     const [query, setQuery] = useState(q ?? "");
-    const [category, setCategory] = useState<string>("All");
+    const category = categoryParam ?? "All";
+    const setCategory = (c: string) => navigate({ search: (prev) => ({ ...prev, category: c === "All" ? undefined : c }) });
+    const clearFilters = () => { setQuery(""); navigate({ search: (prev) => ({ ...prev, q: undefined, category: undefined }) }); };
+    const clearAction = (q || category !== "All") ? <Button variant="outline" onClick={clearFilters}>{t("Clear filters")}</Button> : undefined;
     const term = (q ?? "").toLowerCase();
     const matchCat = (c: string) => category === "All" || c === category;
     const filteredMuseums = museums.filter((m) => matchCat(m.category) &&
@@ -91,21 +96,19 @@ function Explore() {
         </TabsList>
 
         <TabsContent value="museums" className="mt-8">
-          {!ready ? (<CardSkeletonGrid />) : filteredMuseums.length === 0 ? (<EmptyState icon={SearchX} title={t("No museums match that search")} description={t("Try a broader term or clear the category filter.")} action={<Button variant="outline" onClick={() => setCategory("All")}>
-                  Clear filters
-                </Button>}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {!ready ? (<CardSkeletonGrid />) : filteredMuseums.length === 0 ? (<EmptyState icon={SearchX} title={t("No museums match that search")} description={t("Try a broader term or clear the category filter.")} action={clearAction}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredMuseums.map((m) => (<MuseumCard key={m.id} museum={m} owner={users.find((u) => u.id === m.ownerId)} count={objects.filter((o) => o.museumId === m.id).length}/>))}
             </div>)}
         </TabsContent>
 
         <TabsContent value="objects" className="mt-8">
-          {!ready ? (<CardSkeletonGrid />) : filteredObjects.length === 0 ? (<EmptyState icon={SearchX} title={t("No objects found")} description={t("Nothing in the catalogue matches that description yet.")}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {!ready ? (<CardSkeletonGrid />) : filteredObjects.length === 0 ? (<EmptyState icon={SearchX} title={t("No objects found")} description={t("Nothing in the catalogue matches that description yet.")} action={clearAction}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {filteredObjects.map((o) => (<ObjectCard key={o.id} object={o}/>))}
             </div>)}
         </TabsContent>
 
         <TabsContent value="collectors" className="mt-8">
-          {filteredUsers.length === 0 ? (<EmptyState icon={SearchX} title={t("No collectors found")} description={t("Try searching by name, callsign or city.")}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredUsers.length === 0 ? (<EmptyState icon={SearchX} title={t("No collectors found")} description={t("Try searching by name, callsign or city.")} action={clearAction}/>) : (<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredUsers.map((u) => (<CollectorCard key={u.id} user={u} museums={museums.filter((m) => m.ownerId === u.id).length}/>))}
             </div>)}
         </TabsContent>

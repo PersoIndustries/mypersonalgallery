@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { publicCatalogQuery } from '@/lib/public-catalog-query';
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Boxes, Landmark, Lock, Search, Settings2 } from "lucide-react";
+import { Boxes, MoonStar, Lock, Search, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { EmptyState, ObjectCard } from "@/components/cards";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,8 +27,8 @@ function MuseumPage() {
     useMuseumVisit(museum?.id, !!museum && currentUser?.id === museum.ownerId);
     if (!museum) {
         return (<div className="mx-auto max-w-3xl px-4 py-24">
-        <EmptyState icon={Landmark} title={t("Museum not found")} description={t("This museum may have been closed or renamed.")} action={<Button asChild variant="outline">
-              <Link to="/explore">Explore museums</Link>
+        <EmptyState icon={MoonStar} title={t("Museum not found")} description={t("This museum may have been closed or renamed.")} action={<Button asChild variant="outline">
+              <Link to="/explore">{t("Explore museums")}</Link>
             </Button>}/>
       </div>);
     }
@@ -66,7 +66,7 @@ function MuseumPage() {
                   <span className="block transition-colors group-hover:text-primary">
                     {owner.name}
                   </span>
-                  <span className="block text-xs text-muted-foreground">{t("Curator")}</span>
+                  <span className="block text-xs text-muted-foreground">{t("Collector")}</span>
                 </span>
               </Link>)}
             <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -94,9 +94,9 @@ function MuseumPage() {
             {collections.map((c) => (<Button key={c.id} size="sm" variant={activeCollection === c.id ? "default" : "outline"} onClick={() => setActiveCollection(c.id)}>{c.name}</Button>))}
           </div>)}
         {shown.length === 0 ? (<div className="mt-8">
-            <EmptyState icon={Boxes} title={items.length === 0 ? "No objects yet" : "Nothing matches that search"} description={items.length === 0
-                ? "The curator hasn't catalogued anything in this museum."
-                : "Try a different manufacturer, year or tag."}/>
+            <EmptyState icon={Boxes} title={t(items.length === 0 ? "No objects yet" : "Nothing matches that search")} description={t(items.length === 0
+                ? "The collector hasn't catalogued anything in this museum."
+                : "Try a different manufacturer, year or tag.")}/>
           </div>) : (<div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {shown.map((o) => (<ObjectCard key={o.id} object={o}/>))}
           </div>)}

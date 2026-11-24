@@ -1,7 +1,7 @@
 import { useI18n } from '@/lib/i18n';
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Landmark, Boxes, Eye, Sparkles } from "lucide-react";
+import { MoonStar, Boxes, Eye, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +35,7 @@ function DashboardOverview() {
     const publicCount = myMuseums.filter((m) => m.isPublic).length;
     const featured = myObjects.filter((o) => o.featured).length;
     const stats = [
-        { label: "Museums", value: myMuseums.length, icon: Landmark },
+        { label: "Museums", value: myMuseums.length, icon: MoonStar },
         { label: "Objects catalogued", value: myObjects.length, icon: Boxes },
         { label: "Public museums", value: publicCount, icon: Eye },
         { label: "Featured pieces", value: featured, icon: Sparkles },

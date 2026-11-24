@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 
 const steps = [
-  { target: 'nav', title: 'Your curator menu', body: 'Move between your overview, museums, settings, notifications and plans from here.' },
+  { target: 'nav', title: 'Your collector menu', body: 'Move between your overview, museums, settings, notifications and plans from here.' },
   { target: 'checklist', title: 'Your progress', body: 'Follow these steps to open your museum to the world. They tick themselves as you go.' },
   { target: 'museums', title: 'Your museums', body: 'Create museums, choose which sections visitors see and catalogue your objects.' },
   { target: 'help', title: 'Need help?', body: 'The help centre answers the most common questions. You can restart this tour from your overview at any time.' },

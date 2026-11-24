@@ -22,10 +22,10 @@ function Plans() {
     return <div className="space-y-6"><h2 className="font-display text-3xl">{t("Museum plans")}</h2><p className="text-sm text-muted-foreground">{t("Current plan: ")}{t(data.subscription.plan)}{t(". Payments are not available yet. Selecting an upcoming plan records your interest only; no charge or upgrade is applied.")}</p><div className="grid gap-4 sm:grid-cols-3">{(['free', 'pro', 'studio'] as const).map(plan => <article key={plan} className="flex flex-col gap-5 rounded-lg border border-border bg-card p-5"><h3 className="font-display text-2xl capitalize">{t(plan)}</h3><p className="text-sm text-muted-foreground">{plan === 'free' ? t("Current museum access") : t("Coming soon \u00B7 pricing and benefits to be confirmed")}</p><Button disabled={busy || selected === plan} variant={selected === plan ? 'secondary' : 'outline'} onClick={async () => { setBusy(true); try {
         await save({ data: plan });
         await client.invalidateQueries({ queryKey: ['billing'] });
-        toast.success('Plan interest saved');
+        toast.success(t('Plan interest saved'));
     }
     catch {
-        toast.error('Unable to save plan');
+        toast.error(t('Unable to save plan'));
     }
     finally {
         setBusy(false);

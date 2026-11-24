@@ -113,7 +113,7 @@ export function StoreProvider({ children, initialCatalog = empty }: { children: 
   useEffect(() => {
     document.documentElement.classList.toggle('light', theme === 'light');
     document.documentElement.style.colorScheme = theme;
-    localStorage.setItem('myownmuseum.theme', theme);
+    localStorage.setItem('mooncollector.theme', theme);
   }, [theme]);
 
   useEffect(() => {

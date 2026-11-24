@@ -115,7 +115,7 @@ function ObjectPage() {
                   <Link to="/m/$slug" params={{ slug: museum.slug }} className="font-display text-lg hover:text-primary">
                     {museum.title}
                   </Link>
-                  {can("curator") && <p className="text-xs text-muted-foreground">{t("curated by")}{" "}
+                  {can("curator") && <p className="text-xs text-muted-foreground">{t("collected by")}{" "}
                     <Link to="/u/$username" params={{ username: owner.username }} className="text-primary/85 hover:underline">{t("@")}{owner.username}
                     </Link>
                   </p>}
